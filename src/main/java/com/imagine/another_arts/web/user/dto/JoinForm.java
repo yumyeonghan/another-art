@@ -2,6 +2,7 @@ package com.imagine.another_arts.web.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -23,5 +24,6 @@ public class JoinForm {
 
     private String address;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
 }
