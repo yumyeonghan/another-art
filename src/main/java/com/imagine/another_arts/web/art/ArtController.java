@@ -20,11 +20,10 @@ public class ArtController {
     @GetMapping("/test")
     public ResultSortedArt<List<Object>> artList(
             @RequestParam(value = "sort", defaultValue = "RD") String sort,
-            @RequestParam(value = "lastArtId", defaultValue = Long.MAX_VALUE + "") Long lastArtId,
             @RequestParam(value = "scroll", defaultValue = "0") Integer scroll
     ){
         PageRequest pageRequest = PageRequest.of(scroll, SLICE_PER_PAGE);
-        List<Object> auctionArtSortList = artService.getSortedAuctionArtList(sort, lastArtId, pageRequest);
+        List<Object> auctionArtSortList = artService.getSortedAuctionArtList(sort, pageRequest);
 
         if(auctionArtSortList.size() == 0){
             throw new ArtNotFoundException("작품을 찾지 못하였습니다");

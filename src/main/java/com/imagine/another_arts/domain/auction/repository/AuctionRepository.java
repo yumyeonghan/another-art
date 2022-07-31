@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
@@ -13,9 +12,9 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
             " JOIN FETCH ac.art JOIN FETCH ac.user" +
-            " WHERE ac.art.saleType = 'AUCTION' AND ac.art.id < :lastArtId" +
+            " WHERE ac.art.saleType = 'AUCTION'" +
             " ORDER BY ac.art.registerDate DESC")
-    Slice<Auction> findAuctionArtSortByRegisterDate(@Param("lastArtId") Long lastArtId, Pageable pageable);
+    Slice<Auction> findAuctionArtSortByRegisterDate(Pageable pageable);
 
     // BidPrice 기준 정렬
     @Query("SELECT DISTINCT ac" +

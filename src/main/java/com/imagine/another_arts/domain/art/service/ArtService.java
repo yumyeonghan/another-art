@@ -29,12 +29,12 @@ public class ArtService {
     private final AuctionRepository auctionRepository;
 
     // 기준(sortType)에 따라 정렬된 작품들 return
-    public <T> List<T> getSortedAuctionArtList(String sortType, Long lastArtId, Pageable pageRequest){
+    public <T> List<T> getSortedAuctionArtList(String sortType, Pageable pageRequest){
 
         if (sortType.equals("RD")) { // RegisterDate (RD = default)
             return (List<T>) getResultOrderByRegisterDate(
                     artRepository.findArtList(),
-                    auctionRepository.findAuctionArtSortByRegisterDate(lastArtId, pageRequest).getContent(),
+                    auctionRepository.findAuctionArtSortByRegisterDate(pageRequest).getContent(),
                     artHashtagRepository.findAllArtHashtag()
             );
         }
