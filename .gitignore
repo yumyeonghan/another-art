@@ -19,6 +19,8 @@ bin/
 
 ### IntelliJ IDEA ###
 application-anotherArt.properties
+**/src/main/resources/images/
+**/src/main/java/com/imagine/another_arts/config/AnotherArtImagePath.java
 
 .idea
 *.iws
