@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.imagine.another_arts.config.AnotherArtImagePath.artImagePath;
-
 @Data
 @NoArgsConstructor
 public class ArtSortDto {
@@ -29,7 +27,7 @@ public class ArtSortDto {
         this.name = art.getName();
         this.description = art.getDescription();
         this.registerDate = art.getRegisterDate();
-        this.artImage = artImagePath + art.getStorageName();
+        this.artImage = art.getStorageName();
         this.artOwner = new UserSortDto(art.getUser());
         for (ArtHashtag artHashtag : artHashtagList) {
             this.artHashList.add(new ArtHashtagDto(artHashtag));
