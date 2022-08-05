@@ -26,7 +26,7 @@ public class ArtController {
         List<Object> auctionArtSortList = artService.getSortedAuctionArtList(sort, pageRequest);
 
         if(auctionArtSortList.size() == 0){
-            throw new ArtNotFoundException("작품을 찾지 못하였습니다");
+            throw new ArtNotFoundException("더이상 작품이 존재하지 않습니다");
         }
 
         return new ResultSortedArt<>(true, auctionArtSortList.size(), auctionArtSortList);
