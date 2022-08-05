@@ -31,30 +31,47 @@ public class ArtService {
     // 기준(sortType)에 따라 정렬된 작품들 return
     public <T> List<T> getSortedAuctionArtList(String sortType, Pageable pageRequest){
 
-        if (sortType.equals("RD")) { // RegisterDate (RD = default)
-            return (List<T>) getResultOrderByRegisterDate(
-                    artRepository.findArtList(),
-                    auctionRepository.findAuctionArtSortByRegisterDate(pageRequest).getContent(),
-                    artHashtagRepository.findAllArtHashtag()
-            );
-        }
-        else if (sortType.equals("BP")) { // BidPrice (BP)
-            return (List<T>) getResultOrderByBidPrice(
-                    artRepository.findArtList(),
-                    auctionRepository.findAuctionArtSortByBidPrice(pageRequest).getContent(),
-                    artHashtagRepository.findAllArtHashtag()
-            );
-        }
-        else { // BidCount (BC)
-            return (List<T>) getResultOrderByBidCount(
-                    artRepository.findArtList(),
-                    auctionRepository.findAuctionArtSortByBidCount(pageRequest).getContent(),
-                    artHashtagRepository.findAllArtHashtag()
-            );
+        switch (sortType) {
+            case "RD":  // RegisterDateDESC (RD = default)
+                return (List<T>) getResultOrderByRegisterDateDESC(
+                        artRepository.findArtList(),
+                        auctionRepository.findAuctionArtSortByRegisterDateDESC(pageRequest).getContent(),
+                        artHashtagRepository.findAllArtHashtag()
+                );
+            case "rRD":  // RegisterDateASC
+                return (List<T>) getResultOrderByRegisterDateASC(
+                        artRepository.findArtList(),
+                        auctionRepository.findAuctionArtSortByRegisterDateASC(pageRequest).getContent(),
+                        artHashtagRepository.findAllArtHashtag()
+                );
+            case "BP":  // BidPriceDESC (BP)
+                return (List<T>) getResultOrderByBidPriceDESC(
+                        artRepository.findArtList(),
+                        auctionRepository.findAuctionArtSortByBidPriceDESC(pageRequest).getContent(),
+                        artHashtagRepository.findAllArtHashtag()
+                );
+            case "rBP":  // BidPriceASC
+                return (List<T>) getResultOrderByBidPriceASC(
+                        artRepository.findArtList(),
+                        auctionRepository.findAuctionArtSortByBidPriceASC(pageRequest).getContent(),
+                        artHashtagRepository.findAllArtHashtag()
+                );
+            case "BC":  // BidCountDESC (BC)
+                return (List<T>) getResultOrderByBidCountDESC(
+                        artRepository.findArtList(),
+                        auctionRepository.findAuctionArtSortByBidCountDESC(pageRequest).getContent(),
+                        artHashtagRepository.findAllArtHashtag()
+                );
+            default:
+                return (List<T>) getResultOrderByBidCountASC( // BidCountASC
+                        artRepository.findArtList(),
+                        auctionRepository.findAuctionArtSortByBidCountASC(pageRequest).getContent(),
+                        artHashtagRepository.findAllArtHashtag()
+                );
         }
     }
 
-    private List<AuctionRegisterDateDto> getResultOrderByRegisterDate(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+    private List<AuctionRegisterDateDto> getResultOrderByRegisterDateDESC(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
         List<AuctionRegisterDateDto> result = new ArrayList<>();
         for (Auction auction : auctionList) {
             result.add(new AuctionRegisterDateDto(
@@ -66,7 +83,19 @@ public class ArtService {
         return result;
     }
 
-    private List<AuctionBidPriceDto> getResultOrderByBidPrice(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+    private List<AuctionRegisterDateDto> getResultOrderByRegisterDateASC(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+        List<AuctionRegisterDateDto> result = new ArrayList<>();
+        for (Auction auction : auctionList) {
+            result.add(new AuctionRegisterDateDto(
+                    auction,
+                    getArtByArtId(artList, auction.getArt().getId()),
+                    getArtHashtagByArtId(artHashtagList, auction.getArt().getId())
+            ));
+        }
+        return result;
+    }
+
+    private List<AuctionBidPriceDto> getResultOrderByBidPriceDESC(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
         List<AuctionBidPriceDto> result = new ArrayList<>();
         for (Auction auction : auctionList) {
             result.add(new AuctionBidPriceDto(
@@ -78,7 +107,31 @@ public class ArtService {
         return result;
     }
 
-    private List<AuctionBidCountDto> getResultOrderByBidCount(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+    private List<AuctionBidPriceDto> getResultOrderByBidPriceASC(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+        List<AuctionBidPriceDto> result = new ArrayList<>();
+        for (Auction auction : auctionList) {
+            result.add(new AuctionBidPriceDto(
+                    auction,
+                    getArtByArtId(artList, auction.getArt().getId()),
+                    getArtHashtagByArtId(artHashtagList, auction.getArt().getId())
+            ));
+        }
+        return result;
+    }
+
+    private List<AuctionBidCountDto> getResultOrderByBidCountDESC(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+        List<AuctionBidCountDto> result = new ArrayList<>();
+        for (Auction auction : auctionList) {
+            result.add(new AuctionBidCountDto(
+                    auction,
+                    getArtByArtId(artList, auction.getArt().getId()),
+                    getArtHashtagByArtId(artHashtagList, auction.getArt().getId())
+            ));
+        }
+        return result;
+    }
+
+    private List<AuctionBidCountDto> getResultOrderByBidCountASC(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
         List<AuctionBidCountDto> result = new ArrayList<>();
         for (Auction auction : auctionList) {
             result.add(new AuctionBidCountDto(

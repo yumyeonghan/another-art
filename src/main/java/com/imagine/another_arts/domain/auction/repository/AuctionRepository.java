@@ -8,27 +8,51 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
-    // RegisterDate 기준 정렬
+    // RegisterDateDESC
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
             " JOIN FETCH ac.art JOIN FETCH ac.user" +
             " WHERE ac.art.saleType = 'AUCTION'" +
             " ORDER BY ac.art.registerDate DESC")
-    Slice<Auction> findAuctionArtSortByRegisterDate(Pageable pageable);
+    Slice<Auction> findAuctionArtSortByRegisterDateDESC(Pageable pageable);
 
-    // BidPrice 기준 정렬
+    // RegisterDateASC
+    @Query("SELECT DISTINCT ac" +
+            " FROM Auction ac" +
+            " JOIN FETCH ac.art JOIN FETCH ac.user" +
+            " WHERE ac.art.saleType = 'AUCTION'" +
+            " ORDER BY ac.art.registerDate")
+    Slice<Auction> findAuctionArtSortByRegisterDateASC(Pageable pageable);
+
+    // BidPriceDESC
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
             " JOIN FETCH ac.art JOIN FETCH ac.user" +
             " WHERE ac.art.saleType = 'AUCTION'" +
             " ORDER BY ac.bidPrice DESC")
-    Slice<Auction> findAuctionArtSortByBidPrice(Pageable pageable);
+    Slice<Auction> findAuctionArtSortByBidPriceDESC(Pageable pageable);
 
-    // BidCount 기준 정렬
+    // BidPriceASC
+    @Query("SELECT DISTINCT ac" +
+            " FROM Auction ac" +
+            " JOIN FETCH ac.art JOIN FETCH ac.user" +
+            " WHERE ac.art.saleType = 'AUCTION'" +
+            " ORDER BY ac.bidPrice")
+    Slice<Auction> findAuctionArtSortByBidPriceASC(Pageable pageable);
+
+    // BidCountDESC
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
             " JOIN FETCH ac.art JOIN FETCH ac.user" +
             " WHERE ac.art.saleType = 'AUCTION'" +
             " ORDER BY size(ac.auctionHistoryList) DESC")
-    Slice<Auction> findAuctionArtSortByBidCount(Pageable pageable);
+    Slice<Auction> findAuctionArtSortByBidCountDESC(Pageable pageable);
+
+    // BidCountASC
+    @Query("SELECT DISTINCT ac" +
+            " FROM Auction ac" +
+            " JOIN FETCH ac.art JOIN FETCH ac.user" +
+            " WHERE ac.art.saleType = 'AUCTION'" +
+            " ORDER BY size(ac.auctionHistoryList)")
+    Slice<Auction> findAuctionArtSortByBidCountASC(Pageable pageable);
 }
