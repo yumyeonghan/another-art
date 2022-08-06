@@ -19,7 +19,7 @@ bin/
 
 ### IntelliJ IDEA ###
 application-anotherArt.properties
-
+**/src/main/resources/images/
 .idea
 *.iws
 *.iml
