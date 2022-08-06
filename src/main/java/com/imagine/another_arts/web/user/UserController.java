@@ -5,9 +5,8 @@ import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.user.Users;
 import com.imagine.another_arts.domain.user.dto.UserEditForm;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
+import com.imagine.another_arts.domain.user.service.UserService;
 import com.imagine.another_arts.web.user.dto.JoinForm;
-import com.imagine.another_arts.web.user.dto.UserEditForm;
-import com.imagine.another_arts.web.user.dto.UsersDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
+    private final UserService userService;
 
     @PostMapping("/join")
     public Success join(@ModelAttribute JoinForm form) {
@@ -31,6 +31,19 @@ public class UserController {
 
         userRepository.save(user);
         pointHistoryRepository.save(pointHistory);
+
+        return new Success(true);
+    }
+
+    @PutMapping("/edit")
+    public Success editUser(@ModelAttribute UserEditForm form) {
+
+        boolean result = userService.editUser(form);
+
+        //TODO 전달 받은 pk가 존재하지 않을 경우 처리인데 Exception을 따로 만들어서 처리할지 상의 필요
+        if (!result) {
+            return new Success(false);
+        }
 
         return new Success(true);
     }
