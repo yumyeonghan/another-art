@@ -7,6 +7,7 @@ import com.imagine.another_arts.domain.user.dto.UserEditForm;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.domain.user.service.UserService;
 import com.imagine.another_arts.web.user.dto.JoinForm;
+import com.imagine.another_arts.web.user.exception.NotExistUserIdException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -40,9 +41,9 @@ public class UserController {
 
         boolean result = userService.editUser(form);
 
-        //TODO 전달 받은 pk가 존재하지 않을 경우 처리인데 Exception을 따로 만들어서 처리할지 상의 필요
+        //TODO 특정 메세지 따로 뺄지 상의 필요
         if (!result) {
-            return new Success(false);
+            throw new NotExistUserIdException("존재하지 않는 아이디 입니다.");
         }
 
         return new Success(true);
