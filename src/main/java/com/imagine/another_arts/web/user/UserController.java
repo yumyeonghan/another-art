@@ -38,12 +38,7 @@ public class UserController {
     @PutMapping("/edit")
     public Success editUser(@ModelAttribute UserEditForm form) {
 
-        boolean result = userService.editUser(form);
-
-        //TODO 전달 받은 pk가 존재하지 않을 경우 처리인데 Exception을 따로 만들어서 처리할지 상의 필요
-        if (!result) {
-            return new Success(false);
-        }
+        userService.editUser(form);
 
         return new Success(true);
     }
