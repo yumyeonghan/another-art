@@ -12,21 +12,23 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class AuctionBidCountDto {
+public class SortedAuctionArtDto {
+    private Long auctionId; // 경매 ID(PK)
     private Integer bidCount; // 비드 횟수
-    private ArtSortDto art; // 경매 중인 작품
+    private SortedArtDto art; // 경매 중인 작품
     private Integer hightesBidPrice; // 경매 최고 비드가
-    private UserSortDto highestBidUser; // 경매 최고 비드한 유저
+    private SortedArtUserDto highestBidUser; // 경매 최고 비드한 유저
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime auctionStartDate;
+    private LocalDateTime auctionStartDate; // 경매 시작날짜
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime auctionEndDate;
+    private LocalDateTime auctionEndDate; // 경매 종료날짜
 
-    public AuctionBidCountDto(Auction auction, Art art, List<ArtHashtag> artHashtagList){
+    public SortedAuctionArtDto(Auction auction, Art art, List<ArtHashtag> artHashtagList){
+        this.auctionId = auction.getId();
         this.bidCount = auction.getAuctionHistoryList().size();
-        this.art = new ArtSortDto(art, artHashtagList);
+        this.art = new SortedArtDto(art, artHashtagList);
         this.hightesBidPrice = auction.getBidPrice();
-        this.highestBidUser = new UserSortDto(auction.getUser());
+        this.highestBidUser = new SortedArtUserDto(auction.getUser());
         this.auctionStartDate = auction.getStartDate();
         this.auctionEndDate = auction.getEndDate();
     }

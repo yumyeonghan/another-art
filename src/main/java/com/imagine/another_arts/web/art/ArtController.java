@@ -1,8 +1,9 @@
 package com.imagine.another_arts.web.art;
 
 import com.imagine.another_arts.domain.art.service.ArtService;
+import com.imagine.another_arts.domain.art.service.dto.SortedAuctionArtDto;
 import com.imagine.another_arts.exception.ArtNotFoundException;
-import com.imagine.another_arts.web.art.dto.ResultSortedArt;
+import com.imagine.another_arts.web.art.dto.SortedArtResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,17 +19,17 @@ public class ArtController {
     private static final int SLICE_PER_PAGE = 20;
 
     @GetMapping("/test")
-    public ResultSortedArt<List<Object>> artList(
+    public SortedArtResponse<List<SortedAuctionArtDto>> artList(
             @RequestParam(value = "sort", defaultValue = "RD") String sort,
             @RequestParam(value = "scroll", defaultValue = "0") Integer scroll
     ){
         PageRequest pageRequest = PageRequest.of(scroll, SLICE_PER_PAGE);
-        List<Object> auctionArtSortList = artService.getSortedAuctionArtList(sort, pageRequest);
+        List<SortedAuctionArtDto> sortedArtListInAuction = artService.getSortedArtListInAuction(sort, pageRequest);
 
-        if(auctionArtSortList.size() == 0){
+        if(sortedArtListInAuction.size() == 0){
             throw new ArtNotFoundException("더이상 작품이 존재하지 않습니다");
         }
 
-        return new ResultSortedArt<>(true, auctionArtSortList.size(), auctionArtSortList);
+        return new SortedArtResponse<>(true, sortedArtListInAuction.size(), sortedArtListInAuction);
     }
 }

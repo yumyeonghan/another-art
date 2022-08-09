@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ResultSortedArt<T> {
+public class SortedArtResponse<T> {
     private boolean successResponse; // 응답 성공 여부
     private int count; // result size
     private T artList; // result

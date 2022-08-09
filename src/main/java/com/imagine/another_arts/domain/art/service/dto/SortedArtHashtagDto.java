@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ArtHashtagDto {
+public class SortedArtHashtagDto {
     private String name;
 
-    public ArtHashtagDto(ArtHashtag artHashtag){
+    public SortedArtHashtagDto(ArtHashtag artHashtag){
         this.name = artHashtag.getHashtag().getName();
     }
 }

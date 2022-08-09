@@ -13,5 +13,5 @@ public interface ArtHashtagRepository extends JpaRepository<ArtHashtag, Long> {
             " JOIN FETCH ah.art" +
             " JOIN FETCH ah.hashtag" +
             " ORDER BY ah.art.name")
-    List<ArtHashtag> findAllArtHashtag();
+    List<ArtHashtag> findArtHashtag();
 }

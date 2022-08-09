@@ -12,25 +12,25 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ArtSortDto {
-    private Long artId;
-    private String name;
-    private String description;
+public class SortedArtDto {
+    private Long artId; // 작품 ID(PK)
+    private String name; // 작품 이름
+    private String description; // 작품 설명
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime registerDate;
-    private String artImage;
-    private UserSortDto artOwner;
-    private List<ArtHashtagDto> artHashList = new ArrayList<>();
+    private LocalDateTime registerDate; // 작품 등록날짜
+    private String artImage; // 서버상에 저장된 작품 이름
+    private SortedArtUserDto artOwner; // 작품 주인
+    private List<SortedArtHashtagDto> artHashList = new ArrayList<>(); // 작품 해시태그 목록
 
-    public ArtSortDto(Art art, List<ArtHashtag> artHashtagList){
+    public SortedArtDto(Art art, List<ArtHashtag> artHashtagList){
         this.artId = art.getId();
         this.name = art.getName();
         this.description = art.getDescription();
         this.registerDate = art.getRegisterDate();
         this.artImage = art.getStorageName();
-        this.artOwner = new UserSortDto(art.getUser());
+        this.artOwner = new SortedArtUserDto(art.getUser());
         for (ArtHashtag artHashtag : artHashtagList) {
-            this.artHashList.add(new ArtHashtagDto(artHashtag));
+            this.artHashList.add(new SortedArtHashtagDto(artHashtag));
         }
     }
 }
