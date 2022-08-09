@@ -13,5 +13,5 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'AUCTION'")
-    List<Art> findArtList();
+    List<Art> findAuctionArtList();
 }
