@@ -20,7 +20,7 @@ bin/
 ### IntelliJ IDEA ###
 application-anotherArt.properties
 **/src/main/resources/images/
-
+**/src/test/
 
 .idea
 *.iws
