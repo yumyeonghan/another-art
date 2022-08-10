@@ -230,5 +230,5 @@ public class ArtService {
         }
         return result;
     }
-
+    // .
 }
