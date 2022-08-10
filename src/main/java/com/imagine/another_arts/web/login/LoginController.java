@@ -7,10 +7,10 @@ import com.imagine.another_arts.web.SessionConst;
 import com.imagine.another_arts.web.login.dto.FindIdForm;
 import com.imagine.another_arts.web.login.dto.FindPwForm;
 import com.imagine.another_arts.web.login.dto.LoginForm;
+import com.imagine.another_arts.web.login.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,31 +28,21 @@ public class LoginController {
     private final UserRepository userRepository;
 
     //로그인 기능
-    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
+    public LoginResponse login(@Valid @ModelAttribute LoginForm loginForm, HttpServletRequest request){
 
-        if (bindingResult.hasErrors()) {
-            return "loginFail";
-        }
 
         Users loginUser = loginService.login(loginForm.getLoginId(), loginForm.getLoginPassword());
-
-        if (loginUser == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "loginFail";
-        }
 
         HttpSession session = request.getSession();
 
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
 
-        return "loginOk";
+        return new LoginResponse(true, loginUser.getName(), loginUser.getLoginId(), loginUser.getLoginPassword());
 
     }
 
     //로그아웃 기능
-    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -60,61 +50,38 @@ public class LoginController {
             session.invalidate();
         }
 
-        return "logoutOk";
+        return "true";
     }
 
     //아이디 찾기
     @PostMapping(value = "/findId")
-    @ResponseStatus(HttpStatus.OK)
-    public String findId(@Valid @ModelAttribute FindIdForm findIdForm,
-                         BindingResult bindingResult) {
+    public LoginResponse findId(@Valid @ModelAttribute FindIdForm findIdForm) {
 
-        if (bindingResult.hasErrors()) {
-            return "findIdFail";
-        }
+        Users findUser = loginService.findId(findIdForm.getName(), findIdForm.getEmail());
 
-        String findId = loginService.findId(findIdForm.getName(), findIdForm.getEmail());
-
-
-        if (findId == null) {
-            bindingResult.reject("findIdFail", "아이디가 존재하지 않습니다.");
-            return "findIdFail";
-        }
-
-        return findId;
+        return new LoginResponse(true, findUser.getName(), findUser.getLoginId(), findUser.getLoginPassword());
     }
 
     //비밀번호 찾기
     @PostMapping(value = "/findPw")
-    @ResponseStatus(HttpStatus.OK)
-    public String findPw(@Valid @ModelAttribute FindPwForm findPwForm,
-                         BindingResult bindingResult) {
+    public LoginResponse findPw(@Valid @ModelAttribute FindPwForm findPwForm) {
 
-        if (bindingResult.hasErrors()) {
-            return "findPwFail";
-        }
+        Users findId = loginService.findId(findPwForm.getName(), findPwForm.getEmail());
 
-        String findId = loginService.findId(findPwForm.getName(), findPwForm.getEmail());
-
-        if (findId != null && !findId.equals(findPwForm.getLoginId())) {
-            bindingResult.reject("findIdFail", "아이디가 존재하지 않습니다.");
-            return "findPwFail";
-        }
-
-        Users findUser = userRepository.findByLoginId(findId);
+        Users findPw = loginService.findPw(findId.getLoginId(), findId.getName(), findId.getEmail());
 
 
-        return findUser.getLoginPassword();
+        return new LoginResponse(true, findPw.getName(), findPw.getLoginId(), findPw.getLoginPassword());
+
     }
 
     //비밀번호 재설정
     @PostMapping("/resetPw")
-    @ResponseStatus(HttpStatus.OK)
     public String resetPw(@RequestParam String loginId,
                           @RequestParam String changeLoginPassword) {
 
         loginService.resetPw(loginId, changeLoginPassword);
 
-        return "resetPwOk";
+        return "true";
     }
 }
