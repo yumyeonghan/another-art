@@ -31,7 +31,6 @@ public class ArtService {
 
     // 기준(sortType)에 따라 정렬된 작품들 return
     public List<SortedAuctionArtDto> getSortedArtList(String sortType, Pageable pageRequest){
-
         switch (sortType) {
             case "RD":  // RegisterDateDESC (RD = default)
                 return getSortedResult(
@@ -46,25 +45,25 @@ public class ArtService {
                         artHashtagRepository.findArtHashtag()
                 );
             case "BP":  // BidPriceDESC (BP)
-                return getSortedResult (
+                return getSortedResult(
                         artRepository.findAuctionArtList(),
                         auctionRepository.findAuctionArtSortByBidPriceDESC(LocalDateTime.now(), pageRequest).getContent(),
                         artHashtagRepository.findArtHashtag()
                 );
             case "rBP":  // BidPriceASC
-                return getSortedResult (
+                return getSortedResult(
                         artRepository.findAuctionArtList(),
                         auctionRepository.findAuctionArtSortByBidPriceASC(LocalDateTime.now(), pageRequest).getContent(),
                         artHashtagRepository.findArtHashtag()
                 );
             case "BC":  // BidCountDESC (BC)
-                return getSortedResult (
+                return getSortedResult(
                         artRepository.findAuctionArtList(),
                         auctionRepository.findAuctionArtSortByBidCountDESC(LocalDateTime.now(), pageRequest).getContent(),
                         artHashtagRepository.findArtHashtag()
                 );
             default:
-                return getSortedResult ( // BidCountASC
+                return getSortedResult( // BidCountASC
                         artRepository.findAuctionArtList(),
                         auctionRepository.findAuctionArtSortByBidCountASC(LocalDateTime.now(), pageRequest).getContent(),
                         artHashtagRepository.findArtHashtag()
@@ -154,7 +153,8 @@ public class ArtService {
         return result;
     }
 
-    private List<SortedAuctionArtDto> getSearchedResultOrderByBidPrice(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+
+    private List<SortedAuctionArtDto> getSortedResult(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
         List<SortedAuctionArtDto> result = new ArrayList<>();
         for (Auction auction : auctionList) {
             if(!Optional.ofNullable(getArtHashtagByArtId(artHashtagList, auction.getArt().getId())).isEmpty()) {
@@ -230,5 +230,4 @@ public class ArtService {
         }
         return result;
     }
-    // .
 }
