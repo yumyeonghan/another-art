@@ -25,7 +25,7 @@ public class ArtController {
     ){
         PageRequest pageRequest = PageRequest.of(scroll, SLICE_PER_PAGE);
         List<SortedAuctionArtDto> sortedAuctionArtList = artService.getSortedAuctionArtList(sort, pageRequest);
-
+        
         if(sortedAuctionArtList.size() == 0){
             throw new ArtNotFoundException("더이상 작품이 존재하지 않습니다");
         }
