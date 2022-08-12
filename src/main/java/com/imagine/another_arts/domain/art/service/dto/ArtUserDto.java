@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SortedArtUserDto {
+public class ArtUserDto {
     private Long userId; // 유저 ID(PK)
     private String nickname; // 유저 닉네임
     private String schoolName; // 유저 재학중인 학교명
 
-    public SortedArtUserDto(Users user){
+    public ArtUserDto(Users user){
         this.userId = user.getId();
         this.nickname = user.getNickname();
         this.schoolName = user.getSchoolName();

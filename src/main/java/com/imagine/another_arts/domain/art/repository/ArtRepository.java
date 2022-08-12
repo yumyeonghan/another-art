@@ -1,14 +1,12 @@
 package com.imagine.another_arts.domain.art.repository;
 
 import com.imagine.another_arts.domain.art.Art;
-import com.imagine.another_arts.domain.auction.Auction;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ArtRepository extends JpaRepository<Art, Long> {
@@ -18,60 +16,59 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'AUCTION'")
-    List<Art> findAuctionArtList();
-
-    // 일반 판매 작품 리스트 반환
-    @Query("SELECT a" +
-            " FROM Art a" +
-            " JOIN FETCH a.user" +
-            " WHERE a.saleType = 'GENERAL'")
-    List<Art> findGeneralArtList();
+    List<Art> findAuctionArt();
 
     // RegisterDateDESC
     @Query("SELECT a" +
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'GENERAL'" +
+            "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.registerDate DESC")
-    Slice<Art> findGeneralArtSortByRegisterDateDESC(Pageable pageable);
+    Slice<Art> findGeneralArtSortByRegisterDateDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
 
     // RegisterDateASC
     @Query("SELECT a" +
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'GENERAL'" +
+            "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.registerDate")
-    Slice<Art> findGeneralArtSortByRegisterDateASC(Pageable pageable);
+    Slice<Art> findGeneralArtSortByRegisterDateASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
 
     // InitPriceDESC
     @Query("SELECT a" +
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'GENERAL'" +
+            "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.initPrice DESC")
-    Slice<Art> findGeneralArtSortByInitPriceDESC(Pageable pageable);
+    Slice<Art> findGeneralArtSortByInitPriceDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
 
     // InitPriceASC
     @Query("SELECT a" +
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'GENERAL'" +
+            "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.initPrice")
-    Slice<Art> findGeneralArtSortByInitPriceASC(Pageable pageable);
+    Slice<Art> findGeneralArtSortByInitPriceASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
 
     // LikeArtDESC
     @Query("SELECT a" +
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'GENERAL'" +
+            "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY size(a.likeArtList) DESC")
-    Slice<Art> findGeneralArtSortByLikeArtDESC(Pageable pageable);
+    Slice<Art> findGeneralArtSortByLikeArtDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
 
     // LikeArtASC
     @Query("SELECT a" +
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'GENERAL'" +
+            "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY size(a.likeArtList)")
-    Slice<Art> findGeneralArtSortByLikeArtASC(Pageable pageable);
+    Slice<Art> findGeneralArtSortByLikeArtASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
 }

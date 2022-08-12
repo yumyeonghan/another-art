@@ -1,6 +1,5 @@
 package com.imagine.another_arts.domain.user;
 
-import com.imagine.another_arts.domain.auctionhistory.AuctionHistory;
 import com.imagine.another_arts.domain.likeart.LikeArt;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,7 +1,6 @@
 package com.imagine.another_arts.domain.art;
 
 import com.imagine.another_arts.domain.art.enums.SaleType;
-import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
 import com.imagine.another_arts.domain.likeart.LikeArt;
 import com.imagine.another_arts.domain.user.Users;
 import lombok.AccessLevel;
@@ -54,7 +53,13 @@ public class Art {
     @OneToMany(mappedBy = "art")
     private List<LikeArt> likeArtList = new ArrayList<>();
 
-
+    @ElementCollection
+    @CollectionTable(
+            name = "hashtag_list",
+            joinColumns = @JoinColumn(name = "art_id")
+    )
+    @Column(name = "hashtag", length = 100)
+    private List<String> hashtagList = new ArrayList<>();
 
     //==생성 메소드==//
     public static Art createArt(Users user, String name, String description, Integer initPrice, SaleType saleType,

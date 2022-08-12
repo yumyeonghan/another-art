@@ -2,8 +2,8 @@ package com.imagine.another_arts.domain.art.service;
 
 import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.art.repository.ArtRepository;
-import com.imagine.another_arts.domain.art.service.dto.SortedArtDto;
-import com.imagine.another_arts.domain.art.service.dto.SortedAuctionArtDto;
+import com.imagine.another_arts.domain.art.service.dto.AuctionArtResponseDto;
+import com.imagine.another_arts.domain.art.service.dto.GeneralArtResponseDto;
 import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
 import com.imagine.another_arts.domain.arthashtag.repository.ArtHashtagRepository;
 import com.imagine.another_arts.domain.auction.Auction;
@@ -14,12 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,55 +26,60 @@ public class ArtService {
     private final ArtHashtagRepository artHashtagRepository;
     private final AuctionRepository auctionRepository;
 
-    // 기준(sortType)에 따라 정렬된 작품들 return
-    public List<SortedAuctionArtDto> getSortedArtList(String sortType, Pageable pageRequest){
+    // 메인페이지 정렬 기준에 따른 "경매 작품" 정렬
+    public List<AuctionArtResponseDto> getSortedAuctionArtList(String sortType, Pageable pageRequest){
+        List<Art> auctionArtList = artRepository.findAuctionArt();
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtag();
+
         switch (sortType) {
-            case "RD":  // RegisterDateDESC (RD = default)
-                return getSortedResult(
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByRegisterDateDESC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtag()
+            case "date":  // RegisterDateDESC (RD = default)
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByRegisterDateDESC(pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "rRD":  // RegisterDateASC
-                return getSortedResult (
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByRegisterDateASC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtag()
+            case "rdate":  // RegisterDateASC
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByRegisterDateASC(pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "BP":  // BidPriceDESC (BP)
-                return getSortedResult(
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidPriceDESC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtag()
+            case "price":  // BidPriceDESC (BP)
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidPriceDESC(pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "rBP":  // BidPriceASC
-                return getSortedResult(
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidPriceASC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtag()
+            case "rprice":  // BidPriceASC
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidPriceASC(pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "BC":  // BidCountDESC (BC)
-                return getSortedResult(
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidCountDESC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtag()
+            case "count":  // BidCountDESC (BC)
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidCountDESC(pageRequest).getContent(),
+                        artHashtagList
                 );
-            default:
-                return getSortedResult( // BidCountASC
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidCountASC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtag()
+            default: // BidCountASC
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidCountASC(pageRequest).getContent(),
+                        artHashtagList
                 );
         }
     }
 
-    private List<SortedAuctionArtDto> getSortedResult (List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
-        List<SortedAuctionArtDto> result = new ArrayList<>();
+    private List<AuctionArtResponseDto> getAuctionArtSortedResult(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
+        List<AuctionArtResponseDto> result = new ArrayList<>();
         for (Auction auction : auctionList) {
-            result.add(new SortedAuctionArtDto(
+            Art auctionArt = getArtByArtId(artList, auction.getArt().getId());
+            List<String> hashtagList = getHashtagListFromArt(artHashtagList, auctionArt.getId());
+            result.add(new AuctionArtResponseDto(
                     auction,
-                    getArtByArtId(artList, auction.getArt().getId()),
-                    getArtHashtagByArtId(artHashtagList, auction.getArt().getId())
+                    auctionArt,
+                    hashtagList
             ));
         }
         return result;
@@ -86,147 +88,102 @@ public class ArtService {
     private Art getArtByArtId(List<Art> artList, Long artId){
         return artList.stream()
                 .filter(art -> Objects.equals(art.getId(), artId))
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new ArtNotFoundException("작품을 찾지 못했습니다"));
     }
 
-    private List<ArtHashtag> getArtHashtagByArtId(List<ArtHashtag> artHashtagList, Long artId){
-        return artHashtagList.stream()
-                .filter(artHashtag -> artHashtag.getArt().getId().equals(artId))
-                .collect(Collectors.toList());
+    private List<String> getHashtagListFromArt(List<ArtHashtag> artHashtagList, Long artId) {
+        List<String> result = new ArrayList<>();
+        for (ArtHashtag artHashtag : artHashtagList) {
+            if (Objects.equals(artHashtag.getArt().getId(), artId)) {
+                result.add(artHashtag.getHashtag().getName());
+            }
+        }
+        return result;
     }
 
-
-    public List<SortedAuctionArtDto> getSearchedAuctionArtList(String hashtag, String sortType, Pageable pageRequest){
+    // 해시태그 기반 "경매 작품" 검색
+    public List<AuctionArtResponseDto> getSearchedAuctionArtList(String hashtag, String sortType, Pageable pageRequest){
+        List<Art> auctionArtList = artRepository.findAuctionArt();
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtag();
 
         switch (sortType) {
-            case "RD":  // RegisterDateDESC (RD = default)
-                return getSortedResult (
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByRegisterDateDESC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "date":  // RegisterDateDESC (RD = default)
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByRegisterDateDESCWithHashtag(hashtag, pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "rRD":  // RegisterDateASC
-                return getSortedResult (
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByRegisterDateASC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "rdate":  // RegisterDateASC
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByRegisterDateASCWithHashtag(hashtag, pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "BP":  // BidPriceDESC (BP)
-                return getSortedResult (
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidPriceDESC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "price":  // BidPriceDESC (BP)
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidPriceDESCWithHashtag(hashtag, pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "rBP":  // BidPriceASC
-                return getSortedResult (
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidPriceASC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "rprice":  // BidPriceASC
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidPriceASCWithHashtag(hashtag, pageRequest).getContent(),
+                        artHashtagList
                 );
-            case "BC":  // BidCountDESC (BC)
-                return getSortedResult (
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidCountDESC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "count":  // BidCountDESC (BC)
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidCountDESCWithHashtag(hashtag, pageRequest).getContent(),
+                        artHashtagList
                 );
-            default:
-                return getSortedResult ( // BidCountASC
-                        artRepository.findAuctionArtList(),
-                        auctionRepository.findAuctionArtSortByBidCountASC(LocalDateTime.now(), pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            default: // BidCountASC
+                return getAuctionArtSortedResult(
+                        auctionArtList,
+                        auctionRepository.findAuctionArtSortByBidCountASCWithHashtag(hashtag, pageRequest).getContent(),
+                        artHashtagList
                 );
         }
     }
 
-    private List<SortedAuctionArtDto> getSearchedResultOrderByRegisterDate(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
-        List<SortedAuctionArtDto> result = new ArrayList<>();
-        for (Auction auction : auctionList) {
-            if(!Optional.ofNullable(getArtHashtagByArtId(artHashtagList, auction.getArt().getId())).isEmpty()) {
-                result.add(new SortedAuctionArtDto(
-                        auction,
-                        getArtByArtId(artList, auction.getArt().getId()),
-                        getArtHashtagByArtId(artHashtagList, auction.getArt().getId())
-                ));
-            }
-        }
-        return result;
-    }
-
-
-    private List<SortedAuctionArtDto> getSortedResult(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
-        List<SortedAuctionArtDto> result = new ArrayList<>();
-        for (Auction auction : auctionList) {
-            if(!Optional.ofNullable(getArtHashtagByArtId(artHashtagList, auction.getArt().getId())).isEmpty()) {
-                result.add(new SortedAuctionArtDto(
-                        auction,
-                        getArtByArtId(artList, auction.getArt().getId()),
-                        getArtHashtagByArtId(artHashtagList, auction.getArt().getId())
-                ));
-            }
-        }
-        return result;
-    }
-
-    private List<SortedAuctionArtDto> getSearchedResultOrderByBidCount(List<Art> artList, List<Auction> auctionList, List<ArtHashtag> artHashtagList){
-        List<SortedAuctionArtDto> result = new ArrayList<>();
-        for (Auction auction : auctionList) {
-            if(!Optional.ofNullable(getArtHashtagByArtId(artHashtagList, auction.getArt().getId())).isEmpty()) {
-                result.add(new SortedAuctionArtDto(
-                        auction,
-                        getArtByArtId(artList, auction.getArt().getId()),
-                        getArtHashtagByArtId(artHashtagList, auction.getArt().getId())
-                ));
-            }
-        }
-        return result;
-    }
-
-
-    public List<SortedArtDto> getSearchedGeneralArtList(String hashtag, String sortType, Pageable pageRequest){
-
+    // 해시태그 기반 "일반 작품" 검색
+    public List<GeneralArtResponseDto> getSearchedGeneralArtList(String hashtag, String sortType, Pageable pageRequest){
         switch (sortType) {
-            case "RD":  // RegisterDateDESC (RD = default)
-                return getGeneralResultOrder(
-                        artRepository.findGeneralArtSortByRegisterDateDESC(pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "date":  // RegisterDateDESC (RD = default)
+                return getGeneralArtSortedResult(
+                        artRepository.findGeneralArtSortByRegisterDateDESCWithHashtag(hashtag, pageRequest).getContent()
                 );
-            case "rRD":  // RegisterDateASC
-                return getGeneralResultOrder(
-                        artRepository.findGeneralArtSortByRegisterDateASC(pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "rdate":  // RegisterDateASC
+                return getGeneralArtSortedResult(
+                        artRepository.findGeneralArtSortByRegisterDateASCWithHashtag(hashtag, pageRequest).getContent()
                 );
-            case "IP":  // InitPriceDESC (IP)
-                return getGeneralResultOrder(
-                        artRepository.findGeneralArtSortByInitPriceDESC(pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "price":  // InitPriceDESC (IP)
+                return getGeneralArtSortedResult(
+                        artRepository.findGeneralArtSortByInitPriceDESCWithHashtag(hashtag, pageRequest).getContent()
                 );
-            case "rIP":  // InitPriceASC
-                return getGeneralResultOrder(
-                        artRepository.findGeneralArtSortByInitPriceASC(pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "rprice":  // InitPriceASC
+                return getGeneralArtSortedResult(
+                        artRepository.findGeneralArtSortByInitPriceASCWithHashtag(hashtag, pageRequest).getContent()
                 );
-            case "LA":  // LikeArtDESC (LA)
-                return getGeneralResultOrder(
-                        artRepository.findGeneralArtSortByLikeArtDESC(pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            case "like":  // LikeArtDESC (LA)
+                return getGeneralArtSortedResult(
+                        artRepository.findGeneralArtSortByLikeArtDESCWithHashtag(hashtag, pageRequest).getContent()
                 );
-            default:
-                return getGeneralResultOrder( // LikeArtASC
-                        artRepository.findGeneralArtSortByLikeArtASC(pageRequest).getContent(),
-                        artHashtagRepository.findArtHashtagListByHashtag(hashtag)
+            default: // LikeArtASC
+                return getGeneralArtSortedResult(
+                        artRepository.findGeneralArtSortByLikeArtASCWithHashtag(hashtag, pageRequest).getContent()
                 );
         }
     }
 
-    private List<SortedArtDto> getGeneralResultOrder(List<Art> artList, List<ArtHashtag> artHashtagList){
-        List<SortedArtDto> result = new ArrayList<>();
+    private List<GeneralArtResponseDto> getGeneralArtSortedResult(List<Art> artList){
+        List<GeneralArtResponseDto> result = new ArrayList<>();
         for (Art art : artList) {
-            if(!Optional.ofNullable(getArtHashtagByArtId(artHashtagList, art.getId())).isEmpty()) {
-                result.add(new SortedArtDto(
-                        art, getArtHashtagByArtId(artHashtagList, art.getId())
-                ));
-            }
+            result.add(new GeneralArtResponseDto(
+                    art,
+                    art.getHashtagList()
+            ));
         }
         return result;
     }
