@@ -24,3 +24,4 @@ pnpm-debug.log*
 
 ### IntelliJ IDEA ###
 application-anotherArt.properties
+**/src/main/resources/images/

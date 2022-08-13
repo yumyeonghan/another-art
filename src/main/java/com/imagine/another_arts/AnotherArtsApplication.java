@@ -19,3 +19,4 @@ public class AnotherArtsApplication extends SpringBootServletInitializer {
     }
 
 }
+
