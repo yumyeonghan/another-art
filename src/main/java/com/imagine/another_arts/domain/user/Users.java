@@ -1,11 +1,14 @@
 package com.imagine.another_arts.domain.user;
 
+import com.imagine.another_arts.domain.likeart.LikeArt;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -44,6 +47,9 @@ public class Users {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
+    @OneToMany(mappedBy = "art")
+    private List<LikeArt> likeArtList = new ArrayList<>();
+
     //==생성 메소드==//
     public static Users createUser(String name, String nickname, String loginId, String loginPassword,
                  String email, String schoolName, String phoneNumber, String address, LocalDate birth) {
@@ -64,7 +70,7 @@ public class Users {
 
     //이름 변경
     public void changeName(String name){ this.name = name; }
-    
+
     // 닉네임 변경
     public void changeNickname(String nickname){
         this.nickname = nickname;

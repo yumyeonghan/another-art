@@ -26,10 +26,11 @@ public class ArtHashtag {
     private Hashtag hashtag;
 
     //==Art에 Hashtag 등록할 때 사용할 생성 메소드==//
-    public static ArtHashtag insertArtHashtag(Art art, Hashtag hashtag){
+    public static ArtHashtag insertArtHashtag(Art art, Hashtag hashtag) {
         ArtHashtag artHashtag = new ArtHashtag();
         artHashtag.art = art;
         artHashtag.hashtag = hashtag;
+        art.getHashtagList().add(hashtag.getName()); // 값 컬렉션 해시태그 넣기
         return artHashtag;
     }
 

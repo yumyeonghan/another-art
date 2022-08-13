@@ -21,7 +21,6 @@ bin/
 application-anotherArt.properties
 **/src/main/resources/images/
 **/src/test/
-
 .idea
 *.iws
 *.iml

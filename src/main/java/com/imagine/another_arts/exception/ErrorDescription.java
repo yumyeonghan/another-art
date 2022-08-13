@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ErrorDescription {
-    private boolean successResponse;
-    private String statusCode;
-    private String description;
+    private boolean successResponse; // 응답 성공 여부
+    private String statusCode; // Status Code
+    private String description; // 예외에 대한 설명
 }
