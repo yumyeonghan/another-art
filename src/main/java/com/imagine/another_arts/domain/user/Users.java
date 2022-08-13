@@ -29,6 +29,9 @@ public class Users {
     @Column(name = "login_password", nullable = false, length = 100) // 길이 100은 나중에 암호화 사용할 수 있으므로
     private String loginPassword;
 
+    @Column(name = "email", nullable = false, unique = true, updatable = false)
+    private String email;
+
     @Column(name = "school_name", nullable = false, length = 35)
     private String schoolName;
 
@@ -43,12 +46,13 @@ public class Users {
 
     //==생성 메소드==//
     public static Users createUser(String name, String nickname, String loginId, String loginPassword,
-                 String schoolName, String phoneNumber, String address, LocalDate birth) {
+                 String email, String schoolName, String phoneNumber, String address, LocalDate birth) {
         Users user = new Users();
         user.name = name;
         user.nickname = nickname;
         user.loginId = loginId;
         user.loginPassword = loginPassword;
+        user.email=email;
         user.schoolName = schoolName;
         user.phoneNumber = phoneNumber;
         user.address = address;
@@ -57,11 +61,17 @@ public class Users {
     }
 
     //==관련 비즈니스 로직 작성 공간==//
+
+    //이름 변경
+    public void changeName(String name){ this.name = name; }
     
     // 닉네임 변경
     public void changeNickname(String nickname){
         this.nickname = nickname;
     }
+
+    //학교 이름 변경
+    public void changeSchoolName(String schoolName) { this.schoolName = schoolName; }
 
     // 전화번호 변경
     public void changePhoneNumber(String phoneNumber){
@@ -78,19 +88,24 @@ public class Users {
         this.loginPassword = loginPassword;
     }
 
+    //생일 변경
+    public void changeBirth(LocalDate birth) { this.birth = birth; }
+
     //==테스트를 위한 toString()==//
+
     @Override
     public String toString() {
-        return "\nUsers{" +
-                "\n\tid=" + id +
-                ", \n\tname='" + name + '\'' +
-                ", \n\tnickname='" + nickname + '\'' +
-                ", \n\tloginId='" + loginId + '\'' +
-                ", \n\tloginPassword='" + loginPassword + '\'' +
-                ", \n\tschoolName='" + schoolName + '\'' +
-                ", \n\tphoneNumber='" + phoneNumber + '\'' +
-                ", \n\taddress='" + address + '\'' +
-                ", \n\tbirth=" + birth +
-                "\n}";
+        return "Users{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", loginId='" + loginId + '\'' +
+                ", loginPassword='" + loginPassword + '\'' +
+                ", email='" + email + '\'' +
+                ", schoolName='" + schoolName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", birth=" + birth +
+                '}';
     }
 }
