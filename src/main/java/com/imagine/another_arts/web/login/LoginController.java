@@ -2,7 +2,6 @@ package com.imagine.another_arts.web.login;
 
 import com.imagine.another_arts.domain.login.LoginService;
 import com.imagine.another_arts.domain.user.Users;
-import com.imagine.another_arts.web.SessionConst;
 import com.imagine.another_arts.web.login.dto.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

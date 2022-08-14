@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/user/join")
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입 API", notes = "Form 데이터 정보들을 서버로 전달함에 따라 회원가입 진행")
     public Success joinUser(@Valid @ModelAttribute UserJoinForm userJoinForm) {
         Users user = Users.createUser(

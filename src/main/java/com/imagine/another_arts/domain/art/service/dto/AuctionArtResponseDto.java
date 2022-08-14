@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +28,11 @@ public class AuctionArtResponseDto {
         this.bidCount = auction.getAuctionHistoryList().size();
         this.art = new ArtInfoDto(art, hashtag);
         this.hightesBidPrice = auction.getBidPrice();
-        this.highestBidUser = new ArtUserDto(auction.getUser());
+        if (Optional.ofNullable(auction.getUser()).isEmpty()) { // 아직 비드하지 않은 경매 작품
+            this.highestBidUser = null;
+        } else {
+            this.highestBidUser = new ArtUserDto(auction.getUser());
+        }
         this.auctionStartDate = auction.getStartDate();
         this.auctionEndDate = auction.getEndDate();
     }
