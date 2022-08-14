@@ -7,66 +7,46 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LoginService {
+
     private final UserRepository userRepository;
 
-    //로그인
+    // 로그인
     public Users login(String loginId, String loginPassword) {
+        Users findUser = userRepository.findFirstByLoginId(loginId)
+                .orElseThrow(() -> new UserNotFoundException("아이디에 대한 회원정보가 존재하지 않습니다"));
 
-        Optional<Users> findById = userRepository.findByLoginId(loginId);
-
-        if (findById.isEmpty()){
-            throw new UserNotFoundException("아이디가 존재하지 않습니다.");
-        }
-
-        return findById
-                .filter(u->u.getLoginPassword().equals(loginPassword))
-                .orElseThrow(()->new UserNotFoundException("아이디 또는 비밀번호가 올바르지 않습니다."));
-
+        validationUserLogin(findUser, loginPassword);
+        return findUser;
     }
 
-    //아이디 찾기
+    private void validationUserLogin(Users findUser, String loginPassword) {
+        if (!findUser.getLoginPassword().equals(loginPassword)) {
+            throw new UserNotFoundException("아이디 또는 비밀번호가 일치하지 않습니다");
+        }
+    }
+
+    // [이름, 이메일]로 아이디 찾기
     public Users findId(String name, String email){
-
-        Optional<Users> findByEmail = userRepository.findByEmail(email);
-
-        if(findByEmail.isEmpty()){
-            throw  new UserNotFoundException("이메일이 존재하지 않습니다.");
-        }
-
-        return findByEmail
-                .filter(u->u.getName().equals(name))
-                .orElseThrow(()->new UserNotFoundException("이메일 또는 이름이 올바르지 않습니다."));
+        return userRepository.findFirstByEmailAndName(email, name)
+                .orElseThrow(() -> new UserNotFoundException("이름, 이메일로 아이디를 찾을 수 없습니다"));
     }
 
-    //비밀번호 찾기
-    public Users findPw(String loginId, String name, String email){
-
-        Optional<Users> findById = userRepository.findByLoginId(loginId);
-
-        if (findById.isEmpty()){
-            throw new UserNotFoundException("아이디가 존재하지 않습니다.");
-        }
-
-        return findById
-                .filter(u->u.getEmail().equals(email) && u.getName().equals(name))
-                .orElseThrow(()->new UserNotFoundException("이메일 또는 이름이 올바르지 않습니다."));
+    // [로그인 아이디, 이름, 이메일]로 비밀번호 찾기
+    public Users findPassword(String loginId, String name, String email){
+        return userRepository.findFirstByLoginIdAndNameAndEmail(loginId, name, email)
+                .orElseThrow(() -> new UserNotFoundException("아이디, 이름, 이메일로 비밀번호를 찾을 수 없습니다"));
     }
 
 
-    //비밀번호 재설정
-    @Transactional(readOnly = false)
-    public void resetPw(String loginId, String changeLoginPassword){
-
-        Optional<Users> findUser = userRepository.findByLoginId(loginId);
-        Users user = findUser.get();
-        user.changePassword(changeLoginPassword);
-
-
+    // 비밀번호 재설정
+    @Transactional
+    public void resetPassword(String loginId, String changeLoginPassword){
+        Users findUser = userRepository.findFirstByLoginId(loginId)
+                .orElseThrow(() -> new UserNotFoundException("아이디에 대한 회원정보가 존재하지 않습니다"));
+        findUser.changePassword(changeLoginPassword);
     }
 }

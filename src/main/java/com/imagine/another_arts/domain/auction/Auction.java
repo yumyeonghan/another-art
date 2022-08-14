@@ -53,21 +53,8 @@ public class Auction {
     }
 
     //==관련 비즈니스 로직 작성 공간==//
-
     public void applyNewBid(Users user, Integer bidPrice){ // user의 새로운 비드 : bid 들어올 때 이 메소드 통해서 정보 변경
         this.user = user;
         this.bidPrice = bidPrice;
-    }
-
-    //==테스트를 위한 toString()==//
-    @Override
-    public String toString() {
-        return "\nAuction{" +
-                "\n\tid=" + id +
-                ", \n\tbidPrice=" + bidPrice +
-                ", \n\tstartDate=" + startDate +
-                ", \n\tendDate=" + endDate +
-                ", \n\tuser=" + user +
-                "\n}";
     }
 }

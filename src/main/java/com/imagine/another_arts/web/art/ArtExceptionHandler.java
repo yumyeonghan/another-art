@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice("com.imagine.another_arts.web.art")
 public class ArtExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
+    @ExceptionHandler(ArtNotFoundException.class)
     public ErrorDescription artNotFoundException(ArtNotFoundException e){
         return new ErrorDescription(
                 false,

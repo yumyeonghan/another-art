@@ -19,8 +19,9 @@ bin/
 
 ### IntelliJ IDEA ###
 application-anotherArt.properties
+application-dev.properties
 **/src/main/resources/images/
-**/src/test/
+**/src/main/resources/sql/
 .idea
 *.iws
 *.iml

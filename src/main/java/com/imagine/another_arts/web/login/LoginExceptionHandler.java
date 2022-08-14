@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice("com.imagine.another_arts.web.login")
 public class LoginExceptionHandler {
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
+    @ExceptionHandler(UserNotFoundException.class)
     public ErrorDescription userNotFoundException(UserNotFoundException e){
         return new ErrorDescription(
                 false,

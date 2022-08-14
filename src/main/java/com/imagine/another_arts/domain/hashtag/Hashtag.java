@@ -25,18 +25,4 @@ public class Hashtag {
         hashtag.name = name;
         return hashtag;
     }
-
-    //==관련 비즈니스 로직 작성 공간==//
-    public void changeHashtagName(String name){
-        this.name = name;
-    }
-
-    //==테스트를 위한 toString()==//
-    @Override
-    public String toString() {
-        return "\nHashtag{" +
-                "\n\tid=" + id +
-                ", \n\tname='" + name + '\'' +
-                "\n}";
-    }
 }

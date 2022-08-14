@@ -33,14 +33,4 @@ public class ArtHashtag {
         art.getHashtagList().add(hashtag.getName()); // 값 컬렉션 해시태그 넣기
         return artHashtag;
     }
-
-    //==테스트를 위한 toString()==//
-    @Override
-    public String toString() {
-        return "ArtHashtag{" +
-                "id=" + id +
-                ", art=" + art +
-                ", hashtag=" + hashtag +
-                '}';
-    }
 }

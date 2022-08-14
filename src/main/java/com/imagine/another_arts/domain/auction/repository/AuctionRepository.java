@@ -17,7 +17,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.startDate <= CURRENT_TIMESTAMP" +
             "       AND ac.endDate >= CURRENT_TIMESTAMP"+
             " ORDER BY ac.art.registerDate DESC")
-    Slice<Auction> findAuctionArtSortByRegisterDateDESC(Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionOrderByRegisterDateDesc(Pageable pageable);
 
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
@@ -27,7 +27,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.endDate >= CURRENT_TIMESTAMP"+
             "       AND :hashtag MEMBER OF ac.art.hashtagList"+
             " ORDER BY ac.art.registerDate DESC")
-    Slice<Auction> findAuctionArtSortByRegisterDateDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByRegisterDateDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // RegisterDateASC
     @Query("SELECT DISTINCT ac" +
@@ -37,7 +37,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.startDate <= CURRENT_TIMESTAMP" +
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             " ORDER BY ac.art.registerDate")
-    Slice<Auction> findAuctionArtSortByRegisterDateASC(Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionOrderByRegisterDateAsc(Pageable pageable);
 
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
@@ -47,7 +47,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             "       AND :hashtag MEMBER OF ac.art.hashtagList"+
             " ORDER BY ac.art.registerDate")
-    Slice<Auction> findAuctionArtSortByRegisterDateASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByRegisterDateAsc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidPriceDESC
     @Query("SELECT DISTINCT ac" +
@@ -57,7 +57,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.startDate <= CURRENT_TIMESTAMP" +
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             " ORDER BY ac.bidPrice DESC")
-    Slice<Auction> findAuctionArtSortByBidPriceDESC(Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionOrderByBidPriceDesc(Pageable pageable);
 
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
@@ -67,7 +67,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             "       AND :hashtag MEMBER OF ac.art.hashtagList"+
             " ORDER BY ac.bidPrice DESC")
-    Slice<Auction> findAuctionArtSortByBidPriceDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByBidPriceDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidPriceASC
     @Query("SELECT DISTINCT ac" +
@@ -77,7 +77,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.startDate <= CURRENT_TIMESTAMP" +
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             " ORDER BY ac.bidPrice")
-    Slice<Auction> findAuctionArtSortByBidPriceASC(Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionOrderByBidPriceAsc(Pageable pageable);
 
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
@@ -87,7 +87,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             "       AND :hashtag MEMBER OF ac.art.hashtagList"+
             " ORDER BY ac.bidPrice")
-    Slice<Auction> findAuctionArtSortByBidPriceASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByBidPriceAsc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidCountDESC
     @Query("SELECT DISTINCT ac" +
@@ -97,7 +97,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.startDate <= CURRENT_TIMESTAMP" +
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             " ORDER BY size(ac.auctionHistoryList) DESC")
-    Slice<Auction> findAuctionArtSortByBidCountDESC(Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionOrderByAuctionHistoryCountDesc(Pageable pageable);
 
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
@@ -107,7 +107,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             "       AND :hashtag MEMBER OF ac.art.hashtagList"+
             " ORDER BY size(ac.auctionHistoryList) DESC")
-    Slice<Auction> findAuctionArtSortByBidCountDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByAuctionHistoryCountDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidCountASC
     @Query("SELECT DISTINCT ac" +
@@ -117,7 +117,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.startDate <= CURRENT_TIMESTAMP" +
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             " ORDER BY size(ac.auctionHistoryList)")
-    Slice<Auction> findAuctionArtSortByBidCountASC(Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionOrderByAuctionHistoryCountAsc(Pageable pageable);
 
     @Query("SELECT DISTINCT ac" +
             " FROM Auction ac" +
@@ -127,5 +127,5 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "       AND ac.endDate >= CURRENT_TIMESTAMP" +
             "       AND :hashtag MEMBER OF ac.art.hashtagList"+
             " ORDER BY size(ac.auctionHistoryList)")
-    Slice<Auction> findAuctionArtSortByBidCountASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByAuctionHistoryCountAsc(@Param("hashtag") String hashtag, Pageable pageable);
 }

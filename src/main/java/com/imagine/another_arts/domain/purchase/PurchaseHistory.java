@@ -7,7 +7,8 @@ import com.imagine.another_arts.domain.user.Users;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,21 +17,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "purchase_history")
+@EntityListeners(AuditingEntityListener.class)
 public class PurchaseHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "purchase_history_id")
+    @Column(name = "purchase_id")
     private Long id;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price", nullable = false, updatable = false)
     private Integer price;
 
-    @CreationTimestamp
+    @CreatedDate
     @Column(name = "purchase_date")
     private LocalDateTime purchaseDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "purchase_category", nullable = false, length = 8)
+    @Column(name = "purchase_category", nullable = false, updatable = false, length = 10)
     private PurchaseCategory purchaseCategory; // GENERAL(일반 판매를 통한 구매), AUCTION(경매를 통한 낙찰) -> 이 값 그대로 insert
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,11 +40,11 @@ public class PurchaseHistory {
     private Users user;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "art_id", nullable = false, unique = true)
+    @JoinColumn(name = "art_id", nullable = false, updatable = false, unique = true)
     private Art art;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auction_id", unique = true) // 경매를 통한 구매일 경우 체크
+    @JoinColumn(name = "auction_id", unique = true) // 경매를 통한 구매일 경우 포함
     private Auction auction;
 
 
@@ -65,17 +67,6 @@ public class PurchaseHistory {
         purchaseHistory.price = price;
         purchaseHistory.purchaseCategory = PurchaseCategory.AUCTION;
         return purchaseHistory;
-    }
-
-    @Override
-    public String toString() {
-        return "\nPurchaseHistory{" +
-                "\n\tid=" + id +
-                ", \n\tprice=" + price +
-                ", \n\tpurchaseDate=" + purchaseDate +
-                ", \n\tpurchaseCategory=" + purchaseCategory +
-                ", \n\tuser=" + user +
-                "\n}";
     }
 }
 

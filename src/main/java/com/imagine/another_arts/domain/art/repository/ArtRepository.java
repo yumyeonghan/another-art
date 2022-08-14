@@ -16,7 +16,7 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.saleType = 'AUCTION'")
-    List<Art> findAuctionArt();
+    List<Art> findBySaleTypeAuction();
 
     // RegisterDateDESC
     @Query("SELECT a" +
@@ -25,7 +25,7 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " WHERE a.saleType = 'GENERAL'" +
             "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.registerDate DESC")
-    Slice<Art> findGeneralArtSortByRegisterDateDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Art> findBySaleTypeGeneralAndHashtagOrderByRegisterDateDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // RegisterDateASC
     @Query("SELECT a" +
@@ -34,7 +34,7 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " WHERE a.saleType = 'GENERAL'" +
             "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.registerDate")
-    Slice<Art> findGeneralArtSortByRegisterDateASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Art> findBySaleTypeGeneralAndHashtagOrderByRegisterDateAsc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // InitPriceDESC
     @Query("SELECT a" +
@@ -43,7 +43,7 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " WHERE a.saleType = 'GENERAL'" +
             "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.initPrice DESC")
-    Slice<Art> findGeneralArtSortByInitPriceDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Art> findBySaleTypeGeneralAndHashtagOrderByInitPriceDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // InitPriceASC
     @Query("SELECT a" +
@@ -52,7 +52,7 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " WHERE a.saleType = 'GENERAL'" +
             "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY a.initPrice")
-    Slice<Art> findGeneralArtSortByInitPriceASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Art> findBySaleTypeGeneralAndHashtagOrderByInitPriceAsc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // LikeArtDESC
     @Query("SELECT a" +
@@ -61,7 +61,7 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " WHERE a.saleType = 'GENERAL'" +
             "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY size(a.likeArtList) DESC")
-    Slice<Art> findGeneralArtSortByLikeArtDESCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Art> findBySaleTypeGeneralAndHashtagOrderByLikeArtCountDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // LikeArtASC
     @Query("SELECT a" +
@@ -70,5 +70,5 @@ public interface ArtRepository extends JpaRepository<Art, Long> {
             " WHERE a.saleType = 'GENERAL'" +
             "       AND :hashtag MEMBER OF a.hashtagList"+
             " ORDER BY size(a.likeArtList)")
-    Slice<Art> findGeneralArtSortByLikeArtASCWithHashtag(@Param("hashtag") String hashtag, Pageable pageable);
+    Slice<Art> findBySaleTypeGeneralAndHashtagOrderByLikeArtCountAsc(@Param("hashtag") String hashtag, Pageable pageable);
 }

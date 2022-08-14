@@ -18,7 +18,7 @@ public class P6SpyFormatter extends JdbcEventListener implements MessageFormatti
                 .append(" -> ")
                 .append("[쿼리 수행시간 = ")
                 .append(elapsed).append("ms")
-                .append(" | 커넥션 정보(Connection ID) = ")
+                .append(" | DB 커넥션 정보(Connection ID) = ")
                 .append(connectionId)
                 .append("]")
                 .append(sql);

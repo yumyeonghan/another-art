@@ -24,12 +24,12 @@ war.enabled = true
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'junit:junit:4.13.1'
     runtimeOnly 'mysql:mysql-connector-java'
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -40,6 +40,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     providedCompile 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation 'javax.servlet:jstl:1.2'
+
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    // 접근 URL = localhost:8080/swagger-ui/index.html
 
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 }

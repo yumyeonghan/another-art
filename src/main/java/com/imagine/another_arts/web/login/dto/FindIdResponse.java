@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class LoginResponse {
+public class FindIdResponse {
     private boolean successResponse;
     private Long userId;
     private String userName;

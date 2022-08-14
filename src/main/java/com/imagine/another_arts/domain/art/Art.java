@@ -44,7 +44,7 @@ public class Art {
     private String uploadName; // user가 upload하는 파일명
 
     @Column(name = "storage_name", nullable = false, unique = true, length = 40) // 업로드 파일명 UUID로 변환 후 저장
-    private String storageName; // 무조건 UUID 생성하고 replaceAll("-", "") 후 저장
+    private String storageName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false) // 작품 등록하면 등록작가 변경 불가능 (FE에서 경고 알람 생성)
@@ -85,21 +85,5 @@ public class Art {
     // 작품 설명 수정
     public void changeDescription(String description){
         this.description = description;
-    }
-
-    //==테스트를 위한 toString()==//
-    @Override
-    public String toString() {
-        return "\nArt{" +
-                "\n\tid=" + id +
-                ", \n\tname='" + name + '\'' +
-                ", \n\tdescription='" + description + '\'' +
-                ", \n\tinitPrice=" + initPrice +
-                ", \n\tsaleType=" + saleType +
-                ", \n\tregisterDate=" + registerDate +
-                ", \n\tuploadName='" + uploadName + '\'' +
-                ", \n\tstorageName='" + storageName + '\'' +
-                ", \n\tuser=" + user +
-                "\n}";
     }
 }

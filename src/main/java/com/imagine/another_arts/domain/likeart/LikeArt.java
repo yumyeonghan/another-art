@@ -33,13 +33,4 @@ public class LikeArt {
         art.getLikeArtList().add(likeArt); // 양방향 매핑
         return likeArt;
     }
-
-    //==테스트를 위한 toString()==//
-    @Override
-    public String toString() {
-        return "LikeArt{" +
-                "user=" + user +
-                ", art=" + art +
-                '}';
-    }
 }

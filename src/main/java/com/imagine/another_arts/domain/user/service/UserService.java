@@ -1,9 +1,9 @@
 package com.imagine.another_arts.domain.user.service;
 
 import com.imagine.another_arts.domain.user.Users;
-import com.imagine.another_arts.domain.user.dto.UserEditForm;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
-import com.imagine.another_arts.exception.NotExistUserIdException;
+import com.imagine.another_arts.exception.UserNotFoundException;
+import com.imagine.another_arts.web.user.dto.UserEditForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +17,8 @@ public class UserService {
 
     @Transactional
     public void editUser(UserEditForm editForm) {
-
-        Users user = userRepository.findById(editForm.getId()).orElseThrow(() -> new NotExistUserIdException("존재하지 않는 pk값 입니다."));
+        Users user = userRepository.findById(editForm.getId())
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저입니다"));
 
         user.changeName(editForm.getName());
         user.changeNickname(editForm.getNickname());
