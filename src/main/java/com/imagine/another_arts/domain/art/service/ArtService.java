@@ -224,12 +224,12 @@ public class ArtService {
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
 
         if (findArt.getSaleType().equals(SaleType.AUCTION)) {
-            throw new IllegalArtModifyException("경매로 등록된 작품은 삭제할 수 없습니다");
+            throw new IllegalArtDeleteException("경매로 등록된 작품은 삭제할 수 없습니다");
         } else {
             List<ArtHashtag> artHashtagList = artHashtagRepository.findByArtId(artId);
             Optional<PurchaseHistory> findPurchaseHistory = purchaseHistoryRepository.findFirstByArtId(artId);
             if (findPurchaseHistory.isPresent()) {
-                throw new IllegalArtModifyException("이미 거래된 작품은 삭제할 수 없습니다");
+                throw new IllegalArtDeleteException("이미 거래된 작품은 삭제할 수 없습니다");
             }
 
             artHashtagRepository.deleteAll(artHashtagList);
@@ -267,7 +267,7 @@ public class ArtService {
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
 
         artHashtagRepository.delete(artHashtagRepository.findByArtIdAndHashtagName(findArt.getId(), name)
-                .orElseThrow(() -> new IllegalHashtagDeleteException("해시태그가 이미 존재하지 않습니다")));
+                .orElseThrow(() -> new IllegalHashtagDeleteException("해시태그가 이미 삭제되거나 없습니다")));
     }
 
     // 메인페이지 정렬 기준에 따른 "경매 작품" 정렬

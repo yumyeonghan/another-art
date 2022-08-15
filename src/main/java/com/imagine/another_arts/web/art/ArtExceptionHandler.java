@@ -77,4 +77,14 @@ public class ArtExceptionHandler {
                 e.getMessage()
         );
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArtDeleteException.class)
+    public ErrorDescription illegalArtDeleteException(IllegalArtDeleteException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
+                e.getMessage()
+        );
+    }
 }
