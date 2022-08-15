@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class GeneralArtRegisterForm {
+public class GeneralArtRegisterRequest {
     private Long userId;
 
     private String name;

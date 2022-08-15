@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
-public class FindIdForm {
+public class FindIdRequest {
     @NotEmpty(message = "이름은 필수입니다")
     @ApiParam(value = "사용자 이름", required = true)
     private String name;

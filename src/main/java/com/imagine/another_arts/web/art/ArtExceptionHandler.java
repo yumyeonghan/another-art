@@ -8,22 +8,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice("com.imagine.another_arts.web.art")
 public class ArtExceptionHandler {
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ArtNotFoundException.class)
     public ErrorDescription artNotFoundException(ArtNotFoundException e){
         return new ErrorDescription(
                 false,
-                "BAD-REQUEST",
+                "NOT_FOUND",
                 e.getMessage()
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ErrorDescription userNotFoundException(UserNotFoundException e) {
         return new ErrorDescription(
                 false,
-                "BAD-REQUEST",
+                "NOT_FOUND",
                 e.getMessage()
         );
     }
@@ -33,7 +33,7 @@ public class ArtExceptionHandler {
     public ErrorDescription illegalArtFileUploadException(IllegalArtFileUploadException e) {
         return new ErrorDescription(
                 false,
-                "BAD-REQUEST",
+                "BAD_REQUEST",
                 e.getMessage()
         );
     }
@@ -43,7 +43,37 @@ public class ArtExceptionHandler {
     public ErrorDescription runTimeArtRegisterException(RunTimeArtRegisterException e) {
         return new ErrorDescription(
                 false,
-                "INTERNAL-SERVER-ERROR",
+                "INTERNAL_SERVER_ERROR",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(AuctionNotFoundException.class)
+    public ErrorDescription auctionNotFoundException(AuctionNotFoundException e) {
+        return new ErrorDescription(
+                false,
+                "NOT_FOUND",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalHashtagDeleteException.class)
+    public ErrorDescription illegalHashtagDeleteException(IllegalHashtagDeleteException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArtModifyException.class)
+    public ErrorDescription illegalArtEditException(IllegalArtModifyException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
                 e.getMessage()
         );
     }

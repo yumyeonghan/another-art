@@ -1,7 +1,6 @@
 package com.imagine.another_arts.domain.auction;
 
 import com.imagine.another_arts.domain.art.Art;
-import com.imagine.another_arts.domain.auctionhistory.AuctionHistory;
 import com.imagine.another_arts.domain.user.Users;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,9 +35,6 @@ public class Auction {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "art_id", nullable = false, unique = true, updatable = false)
     private Art art;
-
-    @OneToMany(mappedBy = "auction")
-    private List<AuctionHistory> auctionHistoryList = new ArrayList<>();
 
     //==생성 메소드==//
     public static Auction createAuction(Integer bidPrice, LocalDateTime startDate, LocalDateTime endDate, Art art) { // 경매 처음 등록할 때 사용

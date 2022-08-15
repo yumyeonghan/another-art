@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class UserJoinForm {
+public class UserJoinRequest {
     @NotBlank(message = "이름은 필수입니다")
     @ApiParam(value = "사용자 이름", required = true)
     private String name;

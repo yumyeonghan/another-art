@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class FindPasswordForm {
+public class FindPasswordRequest {
     @NotEmpty(message = "아이디는 필수입니다")
     @ApiParam(value = "로그인 아이디", required = true)
     private String loginId;

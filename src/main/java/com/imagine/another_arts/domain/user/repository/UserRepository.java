@@ -15,4 +15,10 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     // [로그인 아이디, 이름, 이메일]로 User 찾기
     Optional<Users> findFirstByLoginIdAndNameAndEmail(String loginId, String name, String email);
+
+    // 동일 닉네임 여부 확인 (서버에서 1번 더 확인)
+    Optional<Users> findByIdNotAndNickname(Long userId, String nickName);
+
+    // 동일 전화번호 여부 확인 (서버에서 1번 더 확인)
+    Optional<Users> findByIdNotAndPhoneNumber(Long userId, String phoneNumber);
 }

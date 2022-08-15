@@ -7,13 +7,26 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
-    // RegisterDateDESC
     @Query(value = "SELECT *" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " WHERE a.sale_type = 'AUCTION' AND a.art_id = :artId",
+            nativeQuery = true)
+    Optional<Auction> findFirstAuctionBy(@Param("artId") Long artId);
+
+    // RegisterDateDESC
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
+                    " FROM auction ac" +
+                    " INNER JOIN art a on ac.art_id = a.art_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
@@ -21,24 +34,29 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionOrderByRegisterDateDesc(Pageable pageable);
 
-    @Query(value = "SELECT *" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id " +
-                    " INNER JOIN hashtag_list hl on a.art_id = hl.art_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " INNER JOIN art_hashtag ah on a.art_id = ah.art_id" +
+                    " INNER JOIN hashtag h on ah.hashtag_id = h.hashtag_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    "       AND :hashtag IN(hl.hashtag)" +
+                    "       AND :hashtag IN(h.name)" +
                     " ORDER BY a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByRegisterDateDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // RegisterDateASC
-    @Query(value = "SELECT *" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
@@ -46,132 +64,155 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionOrderByRegisterDateAsc(Pageable pageable);
 
-    @Query(value = "SELECT *" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id " +
-                    " INNER JOIN hashtag_list hl on a.art_id = hl.art_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " INNER JOIN art_hashtag ah on a.art_id = ah.art_id" +
+                    " INNER JOIN hashtag h on ah.hashtag_id = h.hashtag_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    "       AND :hashtag IN(hl.hashtag)" +
+                    "       AND :hashtag IN(h.name)" +
                     " ORDER BY a.register_date",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByRegisterDateAsc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidPriceDESC
-    @Query(value = "SELECT *" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    " ORDER BY ac.bid_price DESC",
+                    " ORDER BY ac.bid_price DESC, a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionOrderByBidPriceDesc(Pageable pageable);
 
-    @Query(value = "SELECT *" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id " +
-                    " INNER JOIN hashtag_list hl on a.art_id = hl.art_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " INNER JOIN art_hashtag ah on a.art_id = ah.art_id" +
+                    " INNER JOIN hashtag h on ah.hashtag_id = h.hashtag_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    "       AND :hashtag IN(hl.hashtag)" +
-                    " ORDER BY ac.bid_price DESC",
+                    "       AND :hashtag IN(h.name)" +
+                    " ORDER BY ac.bid_price DESC, a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByBidPriceDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidPriceASC
-    @Query(value = "SELECT *" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    " ORDER BY ac.bid_price",
+                    " ORDER BY ac.bid_price, a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionOrderByBidPriceAsc(Pageable pageable);
 
-    @Query(value = "SELECT *" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id " +
-                    " INNER JOIN hashtag_list hl on a.art_id = hl.art_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " INNER JOIN art_hashtag ah on a.art_id = ah.art_id" +
+                    " INNER JOIN hashtag h on ah.hashtag_id = h.hashtag_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    "       AND :hashtag IN(hl.hashtag)" +
-                    " ORDER BY ac.bid_price",
+                    "       AND :hashtag IN(h.name)" +
+                    " ORDER BY ac.bid_price, a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByBidPriceAsc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidCountDESC
-    @Query(value = "SELECT ac.*, a.*, u.*, COUNT(ah.id)" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name, count(ach.id)" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
-                    " LEFT OUTER JOIN auction_history ah on ac.auction_id = ah.auction_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " LEFT OUTER JOIN auction_history ach on ac.auction_id = ach.auction_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
                     " GROUP BY ac.bid_price, ac.end_date, ac.start_date, ac.art_id, ac.auction_id, ac.user_id," +
-                    "          a.register_date, a.user_id, a.sale_type, a.name, a.description, a.init_price, a.storage_name, a.upload_name," +
-                    "          u.name, u.login_id, u.email, u.phone_number, u.address, u.birth, u.login_password, u.nickname, u.school_name" +
-                    " ORDER BY count(ah.id) DESC",
+                    "          u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    "          a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
+                    " ORDER BY count(ach.id) DESC, a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionOrderByAuctionHistoryCountDesc(Pageable pageable);
 
-    @Query(value = "SELECT ac.*, a.*, u.*, COUNT(ah.id)" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name, count(ach.id)" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
-                    " LEFT OUTER JOIN auction_history ah on ac.auction_id = ah.auction_id" +
-                    " INNER JOIN hashtag_list hl on a.art_id = hl.art_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " LEFT OUTER JOIN auction_history ach on ac.auction_id = ach.auction_id" +
+                    " INNER JOIN art_hashtag ah on a.art_id = ah.art_id" +
+                    " INNER JOIN hashtag h on ah.hashtag_id = h.hashtag_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    "       AND :hashtag IN(hl.hashtag)" +
+                    "       AND :hashtag IN(h.name)" +
                     " GROUP BY ac.bid_price, ac.end_date, ac.start_date, ac.art_id, ac.auction_id, ac.user_id," +
-                    "          a.register_date, a.user_id, a.sale_type, a.name, a.description, a.init_price, a.storage_name, a.upload_name," +
-                    "          u.name, u.login_id, u.email, u.phone_number, u.address, u.birth, u.login_password, u.nickname, u.school_name" +
-                    " ORDER BY count(ah.id) DESC",
+                    "          u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    "          a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
+                    " ORDER BY count(ach.id) DESC, a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByAuctionHistoryCountDesc(@Param("hashtag") String hashtag, Pageable pageable);
 
     // BidCountASC
-    @Query(value = "SELECT ac.*, a.*, u.*, COUNT(ah.id)" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name, count(ach.id)" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
-                    " LEFT OUTER JOIN auction_history ah on ac.auction_id = ah.auction_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " LEFT OUTER JOIN auction_history ach on ac.auction_id = ach.auction_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
                     " GROUP BY ac.bid_price, ac.end_date, ac.start_date, ac.art_id, ac.auction_id, ac.user_id," +
-                    "          a.register_date, a.user_id, a.sale_type, a.name, a.description, a.init_price, a.storage_name, a.upload_name," +
-                    "          u.name, u.login_id, u.email, u.phone_number, u.address, u.birth, u.login_password, u.nickname, u.school_name" +
-                    " ORDER BY count(ah.id)",
+                    "          u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    "          a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
+                    " ORDER BY count(ach.id), a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionOrderByAuctionHistoryCountAsc(Pageable pageable);
 
-    @Query(value = "SELECT ac.*, a.*, u.*, COUNT(ah.id)" +
+    @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    " a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name, count(ach.id)" +
                     " FROM auction ac" +
                     " INNER JOIN art a on ac.art_id = a.art_id" +
-                    " RIGHT OUTER JOIN users u on a.user_id = u.user_id" +
-                    " LEFT OUTER JOIN auction_history ah on ac.auction_id = ah.auction_id" +
-                    " INNER JOIN hashtag_list hl on a.art_id = hl.art_id" +
+                    " INNER JOIN users u1 on a.user_id = u1.user_id" +
+                    " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
+                    " LEFT OUTER JOIN auction_history ach on ac.auction_id = ach.auction_id" +
+                    " INNER JOIN art_hashtag ah on a.art_id = ah.art_id" +
+                    " INNER JOIN hashtag h on ah.hashtag_id = h.hashtag_id" +
                     " WHERE a.sale_type = 'AUCTION'" +
                     "       AND ac.start_date <= CURRENT_TIMESTAMP" +
                     "       AND ac.end_date >= CURRENT_TIMESTAMP" +
-                    "       AND :hashtag IN(hl.hashtag)" +
+                    "       AND :hashtag IN(h.name)" +
                     " GROUP BY ac.bid_price, ac.end_date, ac.start_date, ac.art_id, ac.auction_id, ac.user_id," +
-                    "          a.register_date, a.user_id, a.sale_type, a.name, a.description, a.init_price, a.storage_name, a.upload_name," +
-                    "          u.name, u.login_id, u.email, u.phone_number, u.address, u.birth, u.login_password, u.nickname, u.school_name" +
-                    " ORDER BY count(ah.id)",
+                    "          u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +
+                    "          a.register_date, a.storage_name, u2.user_id, u2.nickname, u2.school_name" +
+                    " ORDER BY count(ach.id), a.register_date DESC",
             nativeQuery = true)
     Slice<Auction> findBySaleTypeAuctionAndHashtagOrderByAuctionHistoryCountAsc(@Param("hashtag") String hashtag, Pageable pageable);
 }

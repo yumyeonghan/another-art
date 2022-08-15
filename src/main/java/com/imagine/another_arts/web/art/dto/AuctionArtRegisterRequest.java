@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class AuctionArtRegisterForm {
+public class AuctionArtRegisterRequest {
     private Long userId;
 
     private String name;

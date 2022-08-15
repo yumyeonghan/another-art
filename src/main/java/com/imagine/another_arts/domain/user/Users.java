@@ -1,14 +1,11 @@
 package com.imagine.another_arts.domain.user;
 
-import com.imagine.another_arts.domain.likeart.LikeArt;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +20,7 @@ public class Users {
     @Column(name = "name", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "nickname", nullable = false, length = 30)
+    @Column(name = "nickname", nullable = false, unique = true, length = 30)
     private String nickname;
 
     @Column(name = "login_id", nullable = false, unique = true, updatable = false, length = 30)
@@ -47,9 +44,6 @@ public class Users {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
-    @OneToMany(mappedBy = "art")
-    private List<LikeArt> likeArtList = new ArrayList<>();
-
     //==생성 메소드==//
     public static Users createUser(String name, String nickname, String loginId, String loginPassword,
                  String email, String schoolName, String phoneNumber, String address, LocalDate birth) {
@@ -58,7 +52,7 @@ public class Users {
         user.nickname = nickname;
         user.loginId = loginId;
         user.loginPassword = loginPassword;
-        user.email=email;
+        user.email = email;
         user.schoolName = schoolName;
         user.phoneNumber = phoneNumber;
         user.address = address;
@@ -67,7 +61,7 @@ public class Users {
     }
 
     //==관련 비즈니스 로직 작성 공간==//
-    //이름 변경
+    // 이름 변경
     public void changeName(String name){
         this.name = name;
     }
@@ -77,7 +71,7 @@ public class Users {
         this.nickname = nickname;
     }
 
-    //학교 이름 변경
+    // 학교 이름 변경
     public void changeSchoolName(String schoolName) {
         this.schoolName = schoolName;
     }
@@ -95,10 +89,5 @@ public class Users {
     // 비밀번호 변경
     public void changePassword(String loginPassword){
         this.loginPassword = loginPassword;
-    }
-
-    //생일 변경
-    public void changeBirth(LocalDate birth) {
-        this.birth = birth;
     }
 }
