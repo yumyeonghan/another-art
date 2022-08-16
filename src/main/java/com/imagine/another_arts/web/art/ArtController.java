@@ -28,7 +28,7 @@ public class ArtController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "경매 작품 등록 API", notes = "경매 전용 작품 등록 (multipart/form-data) -> 폼 데이터 전부 작성 (NOT NULL)")
     public SimpleSucessResponse registerAuctionArt(AuctionArtRegisterRequest auctionArtRegisterRequest) {
-        artService.registerAuctionArt(auctionArtRegisterRequest);
+        artService.registerAuctionArt(auctionArtRegisterRequest.toServiceDto());
         return new SimpleSucessResponse(true);
     }
 
@@ -36,7 +36,7 @@ public class ArtController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "일반 작품 등록 API", notes = "일반 판매용 작품 등록 (multipart/form-data) -> 폼 데이터 전부 작성 (NOT NULL)")
     public SimpleSucessResponse registerGeneralArt(GeneralArtRegisterRequest generalArtRegisterRequest) {
-        artService.registerGeneralArt(generalArtRegisterRequest);
+        artService.registerGeneralArt(generalArtRegisterRequest.toServiceDto());
         return new SimpleSucessResponse(true);
     }
 
@@ -52,7 +52,7 @@ public class ArtController {
             @PathVariable Long artId,
             @ModelAttribute ArtEditRequest artEditRequest
     ) {
-        artService.editArt(artId, artEditRequest);
+        artService.editArt(artId, artEditRequest.toServiceDto());
         return new SimpleSucessResponse(true);
     }
 
@@ -67,9 +67,9 @@ public class ArtController {
     @ApiOperation(value = "작품 해시태그 추가 API", notes = "일반 판매용 작품 등록 (multipart/form-data)")
     public SimpleSucessResponse addHashtag(
             @PathVariable Long artId,
-            @Valid @ModelAttribute HashtagListDto hashtagList
+            @Valid @ModelAttribute HashtagListRequest hashtagListRequest
     ) {
-        artService.addHashtag(artId, hashtagList.getHashtagList());
+        artService.addHashtag(artId, hashtagListRequest.getHashtagList());
         return new SimpleSucessResponse(true);
     }
 

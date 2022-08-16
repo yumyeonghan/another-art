@@ -1,7 +1,7 @@
 package com.imagine.another_arts.web.login;
 
 import com.imagine.another_arts.domain.login.LoginService;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.login.dto.UserDto;
 import com.imagine.another_arts.web.SimpleSucessResponse;
 import com.imagine.another_arts.web.login.dto.*;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class LoginController {
             @Valid @ModelAttribute LoginRequest loginRequest,
             HttpServletRequest request
     ){
-        Users loginUser = loginService.login(loginRequest.getLoginId(), loginRequest.getLoginPassword());
+        UserDto loginUser = loginService.login(loginRequest.getLoginId(), loginRequest.getLoginPassword());
         HttpSession session = request.getSession();
         session.setAttribute(LOGIN_USER, loginUser);
 
@@ -56,7 +56,7 @@ public class LoginController {
     @PostMapping(value = "/find/id")
     @ApiOperation(value = "아이디 찾기 API", notes = "이름, 이메일을 통해서 사용자의 아이디 찾기")
     public FindIdResponse findId(@Valid @ModelAttribute FindIdRequest findIdRequest) {
-        Users findUser = loginService.findId(findIdRequest.getName(), findIdRequest.getEmail());
+        UserDto findUser = loginService.findId(findIdRequest.getName(), findIdRequest.getEmail());
 
         return new FindIdResponse(
                 true,
@@ -70,7 +70,7 @@ public class LoginController {
     @PostMapping(value = "/find/password")
     @ApiOperation(value = "비밀번호 찾기 API", notes = "로그인 아이디, 이름, 이메일을 통해서 사용자의 비밀번호 찾기")
     public FindPasswordResponse findPassword(@Valid @ModelAttribute FindPasswordRequest findPasswordRequest) {
-        Users findUser = loginService.findPassword(
+        UserDto findUser = loginService.findPassword(
                 findPasswordRequest.getLoginId(),
                 findPasswordRequest.getName(),
                 findPasswordRequest.getEmail()

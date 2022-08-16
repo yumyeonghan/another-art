@@ -1,6 +1,5 @@
-package com.imagine.another_arts.web.art.dto;
+package com.imagine.another_arts.domain.art.service.dto;
 
-import com.imagine.another_arts.domain.art.service.dto.AuctionArtRegisterRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class AuctionArtRegisterRequest {
+public class AuctionArtRegisterRequestDto {
     private Long userId;
     private String name;
     private String description;
@@ -22,17 +21,4 @@ public class AuctionArtRegisterRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
     private List<String> hashtagList;
-
-    public AuctionArtRegisterRequestDto toServiceDto() {
-        return new AuctionArtRegisterRequestDto(
-                this.userId,
-                this.name,
-                this.description,
-                this.initPrice,
-                this.file,
-                this.startDate,
-                this.endDate,
-                this.hashtagList
-        );
-    }
 }

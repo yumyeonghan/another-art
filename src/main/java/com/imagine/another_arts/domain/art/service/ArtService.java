@@ -3,9 +3,7 @@ package com.imagine.another_arts.domain.art.service;
 import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.art.enums.SaleType;
 import com.imagine.another_arts.domain.art.repository.ArtRepository;
-import com.imagine.another_arts.domain.art.service.dto.ArtFileUploadDto;
-import com.imagine.another_arts.domain.art.service.dto.AuctionArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.GeneralArtResponse;
+import com.imagine.another_arts.domain.art.service.dto.*;
 import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
 import com.imagine.another_arts.domain.arthashtag.repository.ArtHashtagRepository;
 import com.imagine.another_arts.domain.auction.Auction;
@@ -21,9 +19,6 @@ import com.imagine.another_arts.domain.purchase.repository.PurchaseHistoryReposi
 import com.imagine.another_arts.domain.user.Users;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.exception.*;
-import com.imagine.another_arts.web.art.dto.ArtEditRequest;
-import com.imagine.another_arts.web.art.dto.AuctionArtRegisterRequest;
-import com.imagine.another_arts.web.art.dto.GeneralArtRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -55,31 +50,31 @@ public class ArtService {
 
     // 경매 작품 등록
     @Transactional
-    public void registerAuctionArt(AuctionArtRegisterRequest auctionArtRegisterRequest) {
+    public void registerAuctionArt(AuctionArtRegisterRequestDto auctionArtRegisterRequestDto) {
         try {
-            Users findArtOwner = userRepository.findById(auctionArtRegisterRequest.getUserId())
+            Users findArtOwner = userRepository.findById(auctionArtRegisterRequestDto.getUserId())
                     .orElseThrow(() -> new UserNotFoundException("회원 정보가 존재하지 않습니다"));
-            MultipartFile file = auctionArtRegisterRequest.getFile();
+            MultipartFile file = auctionArtRegisterRequestDto.getFile();
             ArtFileUploadDto fileInfo = getMultipartFileInfo(file);
 
             Art saveArt = Art.createArt(
                     findArtOwner,
-                    auctionArtRegisterRequest.getName(),
-                    auctionArtRegisterRequest.getDescription(),
-                    auctionArtRegisterRequest.getInitPrice(),
+                    auctionArtRegisterRequestDto.getName(),
+                    auctionArtRegisterRequestDto.getDescription(),
+                    auctionArtRegisterRequestDto.getInitPrice(),
                     SaleType.AUCTION,
                     fileInfo.getUploadName(),
                     fileInfo.getStoregeName()
             );
             artRepository.save(saveArt);
 
-            List<String> hashtagList = auctionArtRegisterRequest.getHashtagList(); // 해시태그 리스트
+            List<String> hashtagList = auctionArtRegisterRequestDto.getHashtagList(); // 해시태그 리스트
             insertHashtagList(hashtagList, saveArt); // [ArtHashtag, Hashtag] 테이블에 값 넣어주기
 
             Auction saveAuction = Auction.createAuction(
-                    auctionArtRegisterRequest.getInitPrice(), // 처음에는 InitPrice로 INSERT
-                    auctionArtRegisterRequest.getStartDate(),
-                    auctionArtRegisterRequest.getEndDate(),
+                    auctionArtRegisterRequestDto.getInitPrice(), // 처음에는 InitPrice로 INSERT
+                    auctionArtRegisterRequestDto.getStartDate(),
+                    auctionArtRegisterRequestDto.getEndDate(),
                     saveArt
             );
             auctionRepository.save(saveAuction);
@@ -92,25 +87,25 @@ public class ArtService {
 
     // 일반 작품 등록
     @Transactional
-    public void registerGeneralArt(GeneralArtRegisterRequest generalArtRegisterRequest) {
+    public void registerGeneralArt(GeneralArtRegisterRequestDto generalArtRegisterRequestDto) {
         try {
-            Users findArtOwner = userRepository.findById(generalArtRegisterRequest.getUserId())
+            Users findArtOwner = userRepository.findById(generalArtRegisterRequestDto.getUserId())
                     .orElseThrow(() -> new UserNotFoundException("회원 정보가 존재하지 않습니다"));
-            MultipartFile file = generalArtRegisterRequest.getFile();
+            MultipartFile file = generalArtRegisterRequestDto.getFile();
             ArtFileUploadDto fileInfo = getMultipartFileInfo(file);
 
             Art saveArt = Art.createArt(
                     findArtOwner,
-                    generalArtRegisterRequest.getName(),
-                    generalArtRegisterRequest.getDescription(),
-                    generalArtRegisterRequest.getInitPrice(),
+                    generalArtRegisterRequestDto.getName(),
+                    generalArtRegisterRequestDto.getDescription(),
+                    generalArtRegisterRequestDto.getInitPrice(),
                     SaleType.GENERAL,
                     fileInfo.getUploadName(),
                     fileInfo.getStoregeName()
             );
             artRepository.save(saveArt);
 
-            List<String> hashtagList = generalArtRegisterRequest.getHashtagList(); // 해시태그 리스트
+            List<String> hashtagList = generalArtRegisterRequestDto.getHashtagList(); // 해시태그 리스트
             insertHashtagList(hashtagList, saveArt); // [ArtHashtag, Hashtag] 테이블에 값 넣어주기
 
             file.transferTo(new File(fileDir + fileInfo.getStoregeName())); // 파일 저장
@@ -198,22 +193,22 @@ public class ArtService {
 
     // 작품 정보 변경
     @Transactional
-    public void editArt(Long artId, ArtEditRequest artEditRequest) {
+    public void editArt(Long artId, ArtEditRequestDto artEditRequestDto) {
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
 
-        if (StringUtils.hasText(artEditRequest.getName())) {
-            Optional<Art> findArtByName = artRepository.findFirstByIdNotAndName(findArt.getId(), artEditRequest.getName());
+        if (StringUtils.hasText(artEditRequestDto.getName())) {
+            Optional<Art> findArtByName = artRepository.findFirstByIdNotAndName(findArt.getId(), artEditRequestDto.getName());
 
             if (findArtByName.isEmpty()) {
-                findArt.changeArtName(artEditRequest.getName());
+                findArt.changeArtName(artEditRequestDto.getName());
             } else {
                 throw new IllegalArtModifyException("변경하려는 작품 이름이 이미 존재합니다");
             }
         }
 
-        if (StringUtils.hasText(artEditRequest.getDescription())) {
-            findArt.changeDescription(artEditRequest.getDescription());
+        if (StringUtils.hasText(artEditRequestDto.getDescription())) {
+            findArt.changeDescription(artEditRequestDto.getDescription());
         }
     }
 
