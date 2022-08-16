@@ -3,16 +3,10 @@ package com.imagine.another_arts.web.user.dto;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class UserEditForm {
-    @ApiParam(value = "사용자 DB상의 PK", required = true, example = "1")
-    private Long id;
-    
+public class UserEditRequest {
     @ApiParam(value = "사용자 이름")
     private String name;
 
@@ -27,8 +21,4 @@ public class UserEditForm {
 
     @ApiParam(value = "사용자 주소")
     private String address;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @ApiParam(value = "사용자 생년월일", example = "2022-08-22")
-    private LocalDate birth;
 }

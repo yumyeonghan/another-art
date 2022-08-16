@@ -30,7 +30,6 @@ public class ArtHashtag {
         ArtHashtag artHashtag = new ArtHashtag();
         artHashtag.art = art;
         artHashtag.hashtag = hashtag;
-        art.getHashtagList().add(hashtag.getName()); // 값 컬렉션 해시태그 넣기
         return artHashtag;
     }
 }

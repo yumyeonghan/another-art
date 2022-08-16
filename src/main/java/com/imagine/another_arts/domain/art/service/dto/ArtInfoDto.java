@@ -19,7 +19,7 @@ public class ArtInfoDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registerDate; // 작품 등록날짜
     private String artImage; // 서버상에 저장된 작품 이름
-    private ArtUserDto artOwner; // 작품 주인
+    private ArtOwnerDto artOwner; // 작품 주인
     private List<String> hashtagList = new ArrayList<>(); // 작품 해시태그 목록
 
     public ArtInfoDto(Art art, List<String> hashtag){
@@ -29,7 +29,7 @@ public class ArtInfoDto {
         this.initPrice = art.getInitPrice();
         this.registerDate = art.getRegisterDate();
         this.artImage = art.getStorageName();
-        this.artOwner = new ArtUserDto(art.getUser());
+        this.artOwner = new ArtOwnerDto(art.getUser());
         this.hashtagList.addAll(hashtag);
     }
 }

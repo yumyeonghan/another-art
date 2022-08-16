@@ -48,7 +48,6 @@ public class AuctionHistory {
         auctionHistory.art = art;
         auctionHistory.user = user;
         auctionHistory.bidPrice = bidPrice;
-        auction.getAuctionHistoryList().add(auctionHistory); // 양방향 매핑
         return auctionHistory;
     }
 }
