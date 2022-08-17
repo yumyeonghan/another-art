@@ -63,6 +63,8 @@ public class UserController {
     public SimpleSucessResponse loginIdDuplicationCheck(@PathVariable String type, @PathVariable String target) {
         if (type.equals("loginId")) {
             userRepository.findFirstByLoginId(target).orElseThrow(() -> new UserDuplicationException("이미 존재하는 로그인 아이디 입니다."));
+        } else if (type.equals("nickname")) {
+            userRepository.findFirstByNickname(target).orElseThrow(() -> new UserDuplicationException("이미 존재하는 닉네임 입니다."));
         } else {
             throw new IllegalUrlException("올바르지 않은 url 입니다.");
         }
