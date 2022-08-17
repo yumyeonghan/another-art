@@ -1,8 +1,6 @@
 package com.imagine.another_arts.web.user;
 
-import com.imagine.another_arts.exception.ErrorDescription;
-import com.imagine.another_arts.exception.IllegalUserModifyException;
-import com.imagine.another_arts.exception.UserNotFoundException;
+import com.imagine.another_arts.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -23,6 +21,26 @@ public class UserExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalUserModifyException.class)
     public ErrorDescription illegalUserModifyException(IllegalUserModifyException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ExceptionHandler(UserDuplicationException.class)
+    public ErrorDescription userDuplicationException(UserDuplicationException e) {
+        return new ErrorDescription(
+                false,
+                "NOT_ACCEPTABLE",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalUrlException.class)
+    public ErrorDescription illegalUrlException(IllegalUrlException e) {
         return new ErrorDescription(
                 false,
                 "BAD_REQUEST",
