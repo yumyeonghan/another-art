@@ -59,16 +59,31 @@ public class UserController {
     }
 
     @GetMapping("/user/duplication/{type}/{target}")
-    @ApiOperation(value = "중복체크 API", notes = "중복체크 할 데이터를 서버에 전달함에 따라 중복여부 반환")
+    @ApiOperation(value = "중복체크 API", notes = "중복체크 할 데이터를 서버에 전달함에 따라 사용 가능한 데이터인지 여부를 반환")
     public SimpleSucessResponse loginIdDuplicationCheck(@PathVariable String type, @PathVariable String target) {
-        if (type.equals("loginId")) {
-            userRepository.findFirstByLoginId(target).orElseThrow(() -> new UserDuplicationException("이미 존재하는 로그인 아이디 입니다."));
-        } else if (type.equals("nickname")) {
-            userRepository.findFirstByNickname(target).orElseThrow(() -> new UserDuplicationException("이미 존재하는 닉네임 입니다."));
-        } else {
-            throw new IllegalUrlException("올바르지 않은 url 입니다.");
+        boolean present;
+        switch (type) {
+            case "loginId":
+                present = userRepository.findFirstByLoginId(target).isPresent();
+                throwError(present, "이미 존재하는 로그인 아이디 입니다.");
+                break;
+            case "nickname":
+                present = userRepository.findFirstByNickname(target).isPresent();
+                throwError(present, "이미 존재하는 닉네임 입니다.");
+                break;
+            case "phoneNumber":
+                present = userRepository.findFirstByPhoneNumber(target).isPresent();
+                throwError(present, "이미 존재하는 전화번호 입니다.");
+                break;
+            default:
+                throw new IllegalUrlException("올바르지 않은 url 입니다.");
         }
 
         return new SimpleSucessResponse(true);
+    }
+
+    // 중복 여부에 따라 중복에러를 던짐
+    private void throwError(boolean present, String message) {
+        if (present) throw new UserDuplicationException(message);
     }
 }
