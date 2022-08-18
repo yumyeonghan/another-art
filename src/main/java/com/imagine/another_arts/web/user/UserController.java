@@ -58,26 +58,29 @@ public class UserController {
         return new SimpleSucessResponse(true);
     }
 
-    @GetMapping("/user/duplication/{type}/{target}")
-    @ApiOperation(value = "중복체크 API", notes = "중복체크 할 데이터를 서버에 전달함에 따라 사용 가능한 데이터인지 여부를 반환")
-    public SimpleSucessResponse loginIdDuplicationCheck(@PathVariable String type, @PathVariable String target) {
-        boolean present;
-        switch (type) {
-            case "loginId":
-                present = userRepository.findFirstByLoginId(target).isPresent();
-                throwError(present, "이미 존재하는 로그인 아이디 입니다.");
-                break;
-            case "nickname":
-                present = userRepository.findFirstByNickname(target).isPresent();
-                throwError(present, "이미 존재하는 닉네임 입니다.");
-                break;
-            case "phoneNumber":
-                present = userRepository.findFirstByPhoneNumber(target).isPresent();
-                throwError(present, "이미 존재하는 전화번호 입니다.");
-                break;
-            default:
-                throw new IllegalUrlException("올바르지 않은 url 입니다.");
-        }
+    @GetMapping("/user/loginId/duplication/{target}")
+    @ApiOperation(value = "로그인 아이디 중복체크 API", notes = "중복체크 할 데이터를 서버에 전달함에 따라 사용 가능한 데이터인지 여부를 반환")
+    public SimpleSucessResponse loginIdDuplicationCheck(@PathVariable String target) {
+        boolean present = userRepository.findFirstByLoginId(target).isPresent();
+        throwError(present, "이미 존재하는 로그인 아이디 입니다.");
+
+        return new SimpleSucessResponse(true);
+    }
+
+    @GetMapping("/user/nickname/duplication/{target}")
+    @ApiOperation(value = "닉네임 중복체크 API", notes = "중복체크 할 데이터를 서버에 전달함에 따라 사용 가능한 데이터인지 여부를 반환")
+    public SimpleSucessResponse nicknameDuplicationCheck(@PathVariable String target) {
+        boolean present = userRepository.findFirstByNickname(target).isPresent();
+        throwError(present, "이미 존재하는 닉네임 입니다.");
+
+        return new SimpleSucessResponse(true);
+    }
+
+    @GetMapping("/user/phoneNumber/duplication/{target}")
+    @ApiOperation(value = "전화번호 중복체크 API", notes = "중복체크 할 데이터를 서버에 전달함에 따라 사용 가능한 데이터인지 여부를 반환")
+    public SimpleSucessResponse phoneNumberDuplicationCheck(@PathVariable String target) {
+        boolean present = userRepository.findFirstByPhoneNumber(target).isPresent();
+        throwError(present, "이미 존재하는 전화번호 입니다.");
 
         return new SimpleSucessResponse(true);
     }
