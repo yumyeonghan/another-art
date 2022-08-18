@@ -1,5 +1,6 @@
 package com.imagine.another_arts.domain.auctionhistory.repository;
 
+import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.auctionhistory.AuctionHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,6 @@ public interface AuctionHistoryRepository extends JpaRepository<AuctionHistory, 
             " JOIN FETCH ah.user" +
             " JOIN FETCH ah.auction")
     List<AuctionHistory> findAuctionHistoriesBy();
+
+    boolean existsByArtAndUserIsNotNull(Art art);
 }

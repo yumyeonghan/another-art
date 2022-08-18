@@ -3,14 +3,15 @@ package com.imagine.another_arts.web.art;
 import com.imagine.another_arts.domain.art.service.ArtService;
 import com.imagine.another_arts.domain.art.service.dto.AuctionArtResponse;
 import com.imagine.another_arts.exception.ArtNotFoundException;
-import com.imagine.another_arts.web.SimpleSucessResponse;
 import com.imagine.another_arts.web.art.dto.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,20 +25,28 @@ public class ArtController {
     private final ArtService artService;
     private static final int SLICE_PER_PAGE = 20;
 
-    @PostMapping(value = "/register/auctionart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/art/auction", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "경매 작품 등록 API", notes = "경매 전용 작품 등록 (multipart/form-data) -> 폼 데이터 전부 작성 (NOT NULL)")
-    public SimpleSucessResponse registerAuctionArt(AuctionArtRegisterRequest auctionArtRegisterRequest) {
-        artService.registerAuctionArt(auctionArtRegisterRequest.toServiceDto());
-        return new SimpleSucessResponse(true);
+    public ResponseEntity<SimpleArtSuccessResponse> registerAuctionArt(AuctionArtRegisterRequest auctionArtRegisterRequest) {
+        Long saveArtId = artService.registerAuctionArt(auctionArtRegisterRequest.toServiceDto());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Location", "/api/art/" + saveArtId);
+
+        return new ResponseEntity<>(new SimpleArtSuccessResponse(saveArtId), headers, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/register/generalart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/art/general", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "일반 작품 등록 API", notes = "일반 판매용 작품 등록 (multipart/form-data) -> 폼 데이터 전부 작성 (NOT NULL)")
-    public SimpleSucessResponse registerGeneralArt(GeneralArtRegisterRequest generalArtRegisterRequest) {
-        artService.registerGeneralArt(generalArtRegisterRequest.toServiceDto());
-        return new SimpleSucessResponse(true);
+    public ResponseEntity<SimpleArtSuccessResponse> registerGeneralArt(GeneralArtRegisterRequest generalArtRegisterRequest) {
+        Long saveArtId = artService.registerGeneralArt(generalArtRegisterRequest.toServiceDto());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Location", "/api/art/" + saveArtId);
+
+        return new ResponseEntity<>(new SimpleArtSuccessResponse(saveArtId), headers, HttpStatus.CREATED);
     }
 
     @GetMapping("/art/{artId}")
@@ -46,41 +55,41 @@ public class ArtController {
         return new SpecificArtResponse<>(true, artService.getSpecificArt(artId));
     }
 
-    @PutMapping("/edit/art/{artId}")
+    @PatchMapping("/art/{artId}")
     @ApiOperation(value = "작품 정보 변경 API", notes = "작품명, 작품 설명 변경")
-    public SimpleSucessResponse editArt(
+    public ResponseEntity<Void> editArt(
             @PathVariable Long artId,
             @ModelAttribute ArtEditRequest artEditRequest
     ) {
         artService.editArt(artId, artEditRequest.toServiceDto());
-        return new SimpleSucessResponse(true);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/delete/art/{artId}")
+    @DeleteMapping("/art/{artId}")
     @ApiOperation(value = "작품 삭제 API", notes = "작품 삭제 (경매 작품은 삭제 불가능)")
-    public SimpleSucessResponse deleteArt(@PathVariable Long artId) {
+    public ResponseEntity<Void> deleteArt(@PathVariable Long artId) {
         artService.deleteArt(artId);
-        return new SimpleSucessResponse(true);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/add/hashtag/{artId}")
+    @PatchMapping("/hashtag/{artId}")
     @ApiOperation(value = "작품 해시태그 추가 API", notes = "일반 판매용 작품 등록 (multipart/form-data)")
-    public SimpleSucessResponse addHashtag(
+    public ResponseEntity<Void> addHashtag(
             @PathVariable Long artId,
             @Valid @ModelAttribute HashtagListRequest hashtagListRequest
     ) {
         artService.addHashtag(artId, hashtagListRequest.getHashtagList());
-        return new SimpleSucessResponse(true);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/delete/hashtag/{artId}")
+    @DeleteMapping("/hashtag/{artId}")
     @ApiOperation(value = "작품 해시태그 삭제 API", notes = "작품의 해시태그 리스트중에 삭제할 해시태그를 삭제 요청")
-    public SimpleSucessResponse deleteHashtag(
+    public ResponseEntity<Void> deleteHashtag(
             @PathVariable Long artId,
             @RequestParam @ApiParam(value = "삭제할 해시태그", required = true) String hashtag
     ) {
         artService.deleteHashtag(artId, hashtag);
-        return new SimpleSucessResponse(true);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/main/art")

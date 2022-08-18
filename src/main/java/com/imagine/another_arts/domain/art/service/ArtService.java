@@ -14,7 +14,6 @@ import com.imagine.another_arts.domain.hashtag.Hashtag;
 import com.imagine.another_arts.domain.hashtag.repository.HashtagRepository;
 import com.imagine.another_arts.domain.likeart.LikeArt;
 import com.imagine.another_arts.domain.likeart.repository.LikeArtRepository;
-import com.imagine.another_arts.domain.purchase.PurchaseHistory;
 import com.imagine.another_arts.domain.purchase.repository.PurchaseHistoryRepository;
 import com.imagine.another_arts.domain.user.Users;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
@@ -50,10 +49,10 @@ public class ArtService {
 
     // 경매 작품 등록
     @Transactional
-    public void registerAuctionArt(AuctionArtRegisterRequestDto auctionArtRegisterRequestDto) {
+    public Long registerAuctionArt(AuctionArtRegisterRequestDto auctionArtRegisterRequestDto) {
         try {
             Users findArtOwner = userRepository.findById(auctionArtRegisterRequestDto.getUserId())
-                    .orElseThrow(() -> new UserNotFoundException("회원 정보가 존재하지 않습니다"));
+                    .orElseThrow(() -> new UnAuthenticatedUserException("가입하지 않은 사용자에 대한 작품 등록 권한은 없습니다"));
             MultipartFile file = auctionArtRegisterRequestDto.getFile();
             ArtFileUploadDto fileInfo = getMultipartFileInfo(file);
 
@@ -66,10 +65,13 @@ public class ArtService {
                     fileInfo.getUploadName(),
                     fileInfo.getStoregeName()
             );
+            validationRegisterArtName(saveArt.getName()); // 작품명 2차 검증
             artRepository.save(saveArt);
 
-            List<String> hashtagList = auctionArtRegisterRequestDto.getHashtagList(); // 해시태그 리스트
-            insertHashtagList(hashtagList, saveArt); // [ArtHashtag, Hashtag] 테이블에 값 넣어주기
+            if(auctionArtRegisterRequestDto.getHashtagList() != null) {
+                List<String> hashtagList = auctionArtRegisterRequestDto.getHashtagList(); // 해시태그 리스트
+                insertHashtagList(hashtagList, saveArt); // [ArtHashtag, Hashtag] 테이블에 값 넣어주기
+            }
 
             Auction saveAuction = Auction.createAuction(
                     auctionArtRegisterRequestDto.getInitPrice(), // 처음에는 InitPrice로 INSERT
@@ -80,6 +82,7 @@ public class ArtService {
             auctionRepository.save(saveAuction);
 
             file.transferTo(new File(fileDir + fileInfo.getStoregeName())); // 파일 저장
+            return saveArt.getId();
         } catch (IOException e) {
             throw new RunTimeArtRegisterException("작품 등록 과정에서 서버상에 오류가 발생했습니다");
         }
@@ -87,10 +90,10 @@ public class ArtService {
 
     // 일반 작품 등록
     @Transactional
-    public void registerGeneralArt(GeneralArtRegisterRequestDto generalArtRegisterRequestDto) {
+    public Long registerGeneralArt(GeneralArtRegisterRequestDto generalArtRegisterRequestDto) {
         try {
             Users findArtOwner = userRepository.findById(generalArtRegisterRequestDto.getUserId())
-                    .orElseThrow(() -> new UserNotFoundException("회원 정보가 존재하지 않습니다"));
+                    .orElseThrow(() -> new UnAuthenticatedUserException("가입하지 않은 사용자에 대한 작품 등록 권한은 없습니다"));
             MultipartFile file = generalArtRegisterRequestDto.getFile();
             ArtFileUploadDto fileInfo = getMultipartFileInfo(file);
 
@@ -103,19 +106,29 @@ public class ArtService {
                     fileInfo.getUploadName(),
                     fileInfo.getStoregeName()
             );
+            validationRegisterArtName(saveArt.getName()); // 작품명 2차 검증
             artRepository.save(saveArt);
 
-            List<String> hashtagList = generalArtRegisterRequestDto.getHashtagList(); // 해시태그 리스트
-            insertHashtagList(hashtagList, saveArt); // [ArtHashtag, Hashtag] 테이블에 값 넣어주기
+            if(generalArtRegisterRequestDto.getHashtagList() != null) {
+                List<String> hashtagList = generalArtRegisterRequestDto.getHashtagList(); // 해시태그 리스트
+                insertHashtagList(hashtagList, saveArt); // [ArtHashtag, Hashtag] 테이블에 값 넣어주기
+            }
 
             file.transferTo(new File(fileDir + fileInfo.getStoregeName())); // 파일 저장
+            return saveArt.getId();
         } catch (IOException e) {
             throw new RunTimeArtRegisterException("작품 등록 과정에서 서버상에 오류가 발생했습니다");
         }
     }
 
+    private void validationRegisterArtName(String artName) {
+        if (artRepository.existsByName(artName)) {
+            throw new DuplicationArtNameException("작품 이름이 중복됩니다");
+        }
+    }
+
     private ArtFileUploadDto getMultipartFileInfo(MultipartFile file) {
-        if (file.isEmpty()) {
+        if (file == null) {
             throw new IllegalArtFileUploadException("파일이 업로드되지 않았습니다");
         }
 
@@ -156,8 +169,7 @@ public class ArtService {
         List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagBy();
 
         if (findArt.getSaleType().equals(SaleType.AUCTION)) {
-            Auction findAuction = auctionRepository.findFirstAuctionBy(artId)
-                    .orElseThrow(() -> new AuctionNotFoundException("경매에 등록되지 않은 작품 입니다"));
+            Auction findAuction = auctionRepository.findFirstAuctionBy(artId);
             List<AuctionHistory> auctionHistoryList = auctionHistoryRepository.findAuctionHistoriesBy();
 
             return (T) new AuctionArtResponse(
@@ -198,12 +210,10 @@ public class ArtService {
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
 
         if (StringUtils.hasText(artEditRequestDto.getName())) {
-            Optional<Art> findArtByName = artRepository.findFirstByIdNotAndName(findArt.getId(), artEditRequestDto.getName());
-
-            if (findArtByName.isEmpty()) {
-                findArt.changeArtName(artEditRequestDto.getName());
-            } else {
+            if (artRepository.existsByIdNotAndName(artId, artEditRequestDto.getName())) {
                 throw new IllegalArtModifyException("변경하려는 작품 이름이 이미 존재합니다");
+            } else {
+                findArt.changeArtName(artEditRequestDto.getName());
             }
         }
 
@@ -218,17 +228,25 @@ public class ArtService {
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
 
-        if (findArt.getSaleType().equals(SaleType.AUCTION)) {
-            throw new IllegalArtDeleteException("경매로 등록된 작품은 삭제할 수 없습니다");
+        if (purchaseHistoryRepository.existsByArt(findArt)) {
+            throw new IllegalArtDeleteException("이미 거래된 작품은 삭제할 수 없습니다");
         } else {
-            List<ArtHashtag> artHashtagList = artHashtagRepository.findByArtId(artId);
-            Optional<PurchaseHistory> findPurchaseHistory = purchaseHistoryRepository.findFirstByArtId(artId);
-            if (findPurchaseHistory.isPresent()) {
-                throw new IllegalArtDeleteException("이미 거래된 작품은 삭제할 수 없습니다");
-            }
+            if (findArt.getSaleType().equals(SaleType.AUCTION)) {
+                if (auctionHistoryRepository.existsByArtAndUserIsNotNull(findArt)) {
+                    throw new IllegalArtDeleteException("입찰이 한번이라도 진행된 경매 작품은 삭제할 수 없습니다");
+                }
 
-            artHashtagRepository.deleteAll(artHashtagList);
-            artRepository.delete(findArt);
+                List<ArtHashtag> artHashtagList = artHashtagRepository.findByArtId(artId);
+                Auction auction = auctionRepository.findByArt(findArt);
+
+                artHashtagRepository.deleteAll(artHashtagList);
+                auctionRepository.delete(auction);
+                artRepository.delete(findArt);
+            } else {
+                List<ArtHashtag> artHashtagList = artHashtagRepository.findByArtId(artId);
+                artHashtagRepository.deleteAll(artHashtagList);
+                artRepository.delete(findArt);
+            }
         }
     }
 
@@ -248,9 +266,8 @@ public class ArtService {
                 hashtagRepository.save(hashtag);
             }
 
-            Optional<ArtHashtag> artHashtagByArtId = artHashtagRepository.findByArtIdAndHashtagName(artId, name);
-            if (artHashtagByArtId.isEmpty()) { // 비어있으면 동일 해시태그 이름이 존재하지 않는다는 의미 (동일 해시태그 중복 저장 X)
-                artHashtagRepository.save(ArtHashtag.insertArtHashtag(findArt, hashtag));
+            if (!artHashtagRepository.existsByArtAndHashtag(findArt, hashtag)) { // findArt에 대한 Hashtag가 이미 있는지에 대한 Validation
+                artHashtagRepository.save(ArtHashtag.insertArtHashtag(findArt, hashtag)); // 없으면 findArt에 대한 ArtHashtag를 save
             }
         }
     }
@@ -261,8 +278,12 @@ public class ArtService {
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
 
-        artHashtagRepository.delete(artHashtagRepository.findByArtIdAndHashtagName(findArt.getId(), name)
-                .orElseThrow(() -> new IllegalHashtagDeleteException("해시태그가 이미 삭제되거나 없습니다")));
+        Optional<ArtHashtag> findArtHashtag = artHashtagRepository.findByArtIdAndHashtagName(findArt.getId(), name);
+        if (findArtHashtag.isEmpty()) {
+            throw new IllegalHashtagDeleteException("해시태그가 이미 삭제되거나 없습니다");
+        } else {
+            artHashtagRepository.delete(findArtHashtag.get());
+        }
     }
 
     // 메인페이지 정렬 기준에 따른 "경매 작품" 정렬

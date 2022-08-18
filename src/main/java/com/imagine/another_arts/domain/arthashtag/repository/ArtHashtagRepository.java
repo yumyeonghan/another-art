@@ -1,6 +1,8 @@
 package com.imagine.another_arts.domain.arthashtag.repository;
 
+import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
+import com.imagine.another_arts.domain.hashtag.Hashtag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,4 +19,6 @@ public interface ArtHashtagRepository extends JpaRepository<ArtHashtag, Long> {
     List<ArtHashtag> findByArtId(Long artId);
 
     Optional<ArtHashtag> findByArtIdAndHashtagName(Long artId, String name);
+
+    boolean existsByArtAndHashtag(Art art, Hashtag hashtag);
 }
