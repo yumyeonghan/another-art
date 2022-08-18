@@ -18,12 +18,12 @@ public class ArtExceptionHandler {
         );
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
-    public ErrorDescription userNotFoundException(UserNotFoundException e) {
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnAuthenticatedUserException.class)
+    public ErrorDescription unAuthenticatedUserException(UnAuthenticatedUserException e) {
         return new ErrorDescription(
                 false,
-                "NOT_FOUND",
+                "UNAUTHORIZED",
                 e.getMessage()
         );
     }
@@ -48,16 +48,6 @@ public class ArtExceptionHandler {
         );
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(AuctionNotFoundException.class)
-    public ErrorDescription auctionNotFoundException(AuctionNotFoundException e) {
-        return new ErrorDescription(
-                false,
-                "NOT_FOUND",
-                e.getMessage()
-        );
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalHashtagDeleteException.class)
     public ErrorDescription illegalHashtagDeleteException(IllegalHashtagDeleteException e) {
@@ -68,22 +58,32 @@ public class ArtExceptionHandler {
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(IllegalArtModifyException.class)
     public ErrorDescription illegalArtEditException(IllegalArtModifyException e) {
         return new ErrorDescription(
                 false,
-                "BAD_REQUEST",
+                "CONFLICT",
                 e.getMessage()
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(IllegalArtDeleteException.class)
     public ErrorDescription illegalArtDeleteException(IllegalArtDeleteException e) {
         return new ErrorDescription(
                 false,
-                "BAD_REQUEST",
+                "CONFLICT",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DuplicationArtNameException.class)
+    public ErrorDescription duplicationArtNameException(DuplicationArtNameException e) {
+        return new ErrorDescription(
+                false,
+                "CONFLICT",
                 e.getMessage()
         );
     }

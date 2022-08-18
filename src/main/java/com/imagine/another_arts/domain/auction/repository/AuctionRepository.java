@@ -1,5 +1,6 @@
 package com.imagine.another_arts.domain.auction.repository;
 
+import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.auction.Auction;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -7,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
-
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
+
+    Auction findByArt(Art art);
 
     @Query(value = "SELECT *" +
                     " FROM auction ac" +
@@ -18,7 +19,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
                     " LEFT OUTER JOIN users u2 on ac.user_id = u2.user_id" +
                     " WHERE a.sale_type = 'AUCTION' AND a.art_id = :artId",
             nativeQuery = true)
-    Optional<Auction> findFirstAuctionBy(@Param("artId") Long artId);
+    Auction findFirstAuctionBy(@Param("artId") Long artId);
 
     // RegisterDateDESC
     @Query(value = "SELECT ac.*, u1.user_id, u1.nickname, u1.school_name, a.art_id, a.name, a.description, a.init_price," +

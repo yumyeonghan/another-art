@@ -12,13 +12,15 @@ import java.util.Optional;
 
 public interface ArtRepository extends JpaRepository<Art, Long> {
 
+    boolean existsByName(String name);
+
     @Query("SELECT a" +
             " FROM Art a" +
             " JOIN FETCH a.user" +
             " WHERE a.id = :artId")
     Optional<Art> findFirstArtBy(@Param("artId") Long artId);
 
-    Optional<Art> findFirstByIdNotAndName(Long artId, String name);
+    boolean existsByIdNotAndName(Long artId, String name);
 
     // RegisterDate or BidPrice or BidCount 기준 정렬 (N+1로 인해서 정렬 조회 시 Art-User 따로 fetch join)
     @Query("SELECT a" +
