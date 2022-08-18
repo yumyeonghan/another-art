@@ -1,26 +1,41 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <div>
+      <RegisterModals></RegisterModals>
+      <div class="btn-group">
+        <button @click="$router.push('/');" class="btn btn-outline-dark">Home</button>
+        <button @click="$router.push('/CreateAccount/TermsOfService')"
+          class="btn btn-outline-dark">CreateAccount</button>
+        <button @click="$router.push('/ArtworkRegister')" class="btn btn-outline-dark">ArtworkRegister</button>
+      </div>
+      <router-view></router-view>
+    </div>
+  </div>
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import RegisterModals from './components/RegisterModals.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      page: 1,
+    }
+  },
+  methods: {
+  },
   components: {
-    HelloWorld
+    RegisterModals,
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  /* background-color: rgb(249, 249, 249); */
+  /* background-image: url('./assets/registerBackgroundImage3.jpg');
+  background-size: cover;   */
 }
 </style>
