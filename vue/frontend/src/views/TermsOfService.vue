@@ -47,8 +47,8 @@
                     <div class="row mt-3">
                         <div class="col-md-8 offset-md-2 p-0">
                             <div class="fs-6 fw-bold text-start ps-3">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label ms-2 text-black" for="flexCheckDefault"
+                                <input type="checkbox" v-model="ifChecked1" class="form-check-input" value="" id="checkbox1">
+                                <label class="ms-2 text-black" for="checkbox1"
                                     style="--bs-text-opacity: 0.6;">약관동의</label>
                             </div>
                         </div>
@@ -98,16 +98,19 @@
                     <div class="row mt-3">
                         <div class="col-md-8 offset-md-2 p-0">
                             <div class="fs-6 fw-bold text-start ps-3">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <input type="checkbox" v-model="ifChecked2" class="form-check-input" id="checkbox2">
                                 <label class="form-check-label ms-2 text-black" style="--bs-text-opacity: 0.6;"
                                     for="flexCheckDefault">약관동의</label>
+                                <input type="checkbox" v-model="ifChecked3" @change="checkAll" class="form-check-input ms-2" id="checkbox3">
+                                <label class="form-check-label ms-2 text-black" style="--bs-text-opacity: 0.6;"
+                                    for="checkbox3">전체동의</label>
                             </div>
                         </div>
                     </div>
                     <div class="row mt-5">
                         <div class="col-md-8 offset-md-2">
                             <div class="fs-6 fw-bold text-center ps-3">
-                                <button type="button" @click="$router.push('/CreateAccount/UserRegister')"
+                                <button type="button" @click="verifyCheckbox($router)"
                                     class="btn btn-outline-dark btn-lg" style="width: 400px;">다음</button>
                             </div>
                         </div>
@@ -124,6 +127,31 @@
 <script>
 export default {
     name: 'termsOfServie',
+    data(){
+        return{
+            ifChecked1: false,
+            ifChecked2: false,
+            ifChecked3: false,
+        }
+    },
+    methods: {
+        verifyCheckbox($router) {
+            if (this.ifChecked1 && this.ifChecked2) {
+                $router.push('/createAccount/UserRegister');
+            } else {
+                alert('약관에 동의해야 합니다.');
+            }
+        },
+        checkAll() {
+            if (this.ifChecked3) {
+                this.ifChecked1 = true;
+                this.ifChecked2 = true;
+            } else {
+                this.ifChecked1 = false;
+                this.ifChecked2 = false;
+            }
+        },
+    }
 }
 </script>
 

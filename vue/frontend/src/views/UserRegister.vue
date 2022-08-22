@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper" class="container-fluid">
+   <div id="wrapper" class="container-fluid">
         <div class="container px-4s my-5">
             <div class="row gx-4 justify-content-center m-auto">
                 <div class="col-md-10 position-static d-block p-3 text-black" style="--bs-bg-opacity: .4; --bs-text-opacity: 0.6;">
@@ -7,17 +7,17 @@
                     <div class="p-4">
                         <h4 class="mb-3 text-center text-black fs-3" style="--bs-text-opacity: 0.6;">회원가입</h4>
                     </div>
-
-                    <form class="needs-validation" novalidate>
+                    <!-- @submit.prevent="submitForm" -->
+                    <form action="/" methods="post" class="needs-validation" novalidate>
                         <div class="row g-3">
                             <div class="col-md-6 offset-md-3">
-                                <input type="text" class="form-control form-control-lg p-3" id="name" name="name"
-                                    placeholder="이름" value="" required>
+                                <input type="text" v-model="formData.name" class="form-control form-control-lg p-3" id="name" name="name"
+                                    placeholder="이름" required>
                             </div>
 
                             <div class="col-md-6 offset-md-3">
-                                <input type="text" class="form-control form-control-lg p-3" id="nickname"
-                                    name="nickname" placeholder="닉네임" value="" required>
+                                <input type="text" v-model="formData.nickname" class="form-control form-control-lg p-3" id="nickname"
+                                    name="nickname" placeholder="닉네임" required>
                             </div>
                         </div>
 
@@ -29,8 +29,8 @@
                             <div class="col-md-6 offset-md-3">
                                 <div class="row">
                                     <div class="col-md-8 mb-2">
-                                        <input type="text" class="form-control form-control-lg p-3" id="id" name="id"
-                                            placeholder="아이디" value="" required>
+                                        <input type="text" v-model="formData.id" class="form-control form-control-lg p-3" id="id" name="id"
+                                            placeholder="아이디" required>
                                     </div>
                                     <div class="col-md-4">
                                         <button type="button" class="form-control btn btn-outline-dark p-3 mt-1"
@@ -41,13 +41,13 @@
                             </div>
 
                             <div class="col-md-6 offset-md-3">
-                                <input type="password" class="form-control form-control-lg p-3" id="password"
-                                    name="password" placeholder="암호" value="" required>
+                                <input type="password" v-model="formData.password1" class="form-control form-control-lg p-3" id="password1"
+                                    name="password1" placeholder="암호" required>
                             </div>
 
                             <div class="col-md-6 offset-md-3">
-                                <input type="password" class="form-control form-control-lg p-3" id="password2"
-                                    name="password2" placeholder="암호 확인" value="" required>
+                                <input type="password" v-model="formData.password2" class="form-control form-control-lg p-3" id="password2"
+                                    name="password2" placeholder="암호 확인" required>
                             </div>
 
                         </div>
@@ -61,8 +61,8 @@
                             <div class="col-md-6 offset-md-3">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control form-control-lg p-3" id="university" 
-                                        name="university" placeholder="학교명" required>
+                                        <input type="text" v-model="formData.univName" class="form-control form-control-lg p-3" id="univName" 
+                                        name="univName" placeholder="학교명" required>
                                     </div>
                                     <div class="col-md-4">
                                         <button type="button" class="form-control btn btn-outline-dark p-3 mt-1"
@@ -83,7 +83,7 @@
                             <div class="col-md-6 offset-md-3">
                                 <div class="row">
                                     <div class="col-md-8 mb-2">
-                                        <input type="text" v-model="postcode" class="form-control form-control-lg" id="postcode"
+                                        <input type="text" v-model="formData.postcode" class="form-control form-control-lg" id="postcode"
                                         name="postcode" placeholder="우편번호" required/>
                                     </div>
                                     <div class="col-md-4 mb-1">
@@ -91,11 +91,11 @@
                                             class="form-control btn btn-outline-dark p-2 mt-1" style="opacity: 0.7;" />
                                     </div>
                                 </div>
-                                <input type="text" v-model="address" class="form-control form-control-lg mb-2" 
+                                <input type="text" v-model="formData.address" class="form-control form-control-lg mb-2" 
                                 id="address" name="address" placeholder="주소" required>
-                                <input type="text" class="form-control form-control-lg mb-2"
+                                <input type="text" v-model="formData.detailAddress" class="form-control form-control-lg mb-2"
                                 id="detailAddress" name="detailAddress" placeholder="상세주소" required>
-                                <input type="text" v-model="extraAddress" class="form-control form-control-lg"
+                                <input type="text" v-model="formData.extraAddress" class="form-control form-control-lg"
                                 id="extraAddress" name="extraAddress" placeholder="참고항목">
 
                                 <!-- <div class="input-group has-validation">
@@ -111,8 +111,8 @@
                         <div class="row g-3">
 
                             <div class="col-md-6 offset-md-3">
-                                <input type="tel" class="form-control form-control-lg p-3" id="phoneNumber"
-                                name="phoneNumber" placeholder="전화번호('-'을 빼고 입력)" value="" required>
+                                <input type="tel" v-model="formData.phoneNumber" class="form-control form-control-lg p-3" id="phoneNumber"
+                                name="phoneNumber" placeholder="전화번호('-'을 빼고 입력)" required>
                             </div>
                         </div>
 
@@ -136,12 +136,25 @@ export default {
     name: 'userRegister',
     data() {
         return {
-            postcode: '',
-            address: '',
-            extraAddress: '',
+            formData: {
+                name: '',
+                nickname: '',
+                id: '',
+                password1: '',
+                password2: '',
+                univName: '',
+                postcode: '',
+                address: '',
+                detailAddress: '',
+                extraAddress: '',
+                phoneNumber: '',
+            },
         }
     },
     methods: {
+        submitForm() {
+            console.log(this.formData);
+        },
         execDaumPostcode() {
             new window.daum.Postcode({
                 oncomplete: (data) => {
@@ -186,7 +199,7 @@ export default {
 }
 
 </script>
-
+ 
 <style>
     input::placeholder {
     font-size: 14px;
