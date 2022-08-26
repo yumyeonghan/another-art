@@ -19,7 +19,9 @@ bin/
 
 ### IntelliJ IDEA ###
 application-anotherArt.properties
-
+application-dev.properties
+**/src/main/resources/images/
+**/src/main/resources/sql/
 .idea
 *.iws
 *.iml
