@@ -38,12 +38,12 @@ public class UserExceptionHandler {
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(IllegalUrlException.class)
     public ErrorDescription illegalUrlException(IllegalUrlException e) {
         return new ErrorDescription(
                 false,
-                "BAD_REQUEST",
+                "CONFLICT",
                 e.getMessage()
         );
     }
