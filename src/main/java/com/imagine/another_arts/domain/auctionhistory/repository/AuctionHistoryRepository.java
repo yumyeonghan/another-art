@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface AuctionHistoryRepository extends JpaRepository<AuctionHistory, Long> {
-    @Query("SELECT ah" +
+    @Query("SELECT DISTINCT ah" +
             " FROM AuctionHistory ah" +
             " JOIN FETCH ah.art" +
             " JOIN FETCH ah.user" +
             " JOIN FETCH ah.auction")
-    List<AuctionHistory> findAuctionHistoriesBy();
+    List<AuctionHistory> findAuctionHistoryBy();
 
     boolean existsByArtAndUserIsNotNull(Art art);
 }
