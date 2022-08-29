@@ -48,20 +48,27 @@ public class Art {
     private Users user;
 
     //==생성 메소드==//
-    public static Art createArt(Users user, String name, String description, Integer initPrice, SaleType saleType,
-                                String uploadName, String storageName) {
+    public static Art createArt(Users user, String name, String description, Integer initPrice, String uploadName, String storageName) {
         Art art = new Art();
         art.user = user;
         art.name = name;
         art.description = description;
         art.initPrice = initPrice;
-        art.saleType = saleType;
         art.uploadName = uploadName;
         art.storageName = storageName;
         return art;
     }
 
     //==관련 비즈니스 로직 작성 공간==//
+
+    // 작품 타입 설정
+    public void chooseSaleType(String saleType) {
+        if (saleType.equals("auction")) {
+            this.saleType = SaleType.AUCTION;
+        } else {
+            this.saleType = SaleType.GENERAL;
+        }
+    }
 
     // 작품 이름 수정
     public void changeArtName(String name){

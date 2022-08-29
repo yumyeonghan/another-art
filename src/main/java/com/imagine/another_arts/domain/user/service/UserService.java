@@ -1,10 +1,13 @@
 package com.imagine.another_arts.domain.user.service;
 
+import com.imagine.another_arts.domain.point.PointHistory;
+import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.user.Users;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
+import com.imagine.another_arts.domain.user.service.dto.request.UserEditRequestDto;
+import com.imagine.another_arts.domain.user.service.dto.request.UserJoinRequestDto;
 import com.imagine.another_arts.exception.IllegalUserModifyException;
 import com.imagine.another_arts.exception.UserNotFoundException;
-import com.imagine.another_arts.web.user.dto.UserEditRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,38 +19,61 @@ import org.springframework.util.StringUtils;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PointHistoryRepository pointHistoryRepository;
 
     @Transactional
-    public void editUser(Long userId, UserEditRequest editForm) {
+    public Long saveUser(UserJoinRequestDto userJoinRequestDto) {
+        Users user = Users.createUser(
+                userJoinRequestDto.getName(),
+                userJoinRequestDto.getNickname(),
+                userJoinRequestDto.getLoginId(),
+                userJoinRequestDto.getLoginPassword(),
+                userJoinRequestDto.getEmail(),
+                userJoinRequestDto.getSchoolName(),
+                userJoinRequestDto.getPhoneNumber(),
+                userJoinRequestDto.getAddress(),
+                userJoinRequestDto.getBirth()
+        );
+        Users saveUser = userRepository.save(user);
+
+        PointHistory pointHistory = PointHistory.createPointHistory(user);
+        pointHistoryRepository.save(pointHistory);
+
+        return saveUser.getId();
+    }
+
+
+    @Transactional
+    public void editUser(Long userId, UserEditRequestDto editRequestDto) {
         Users findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다"));
 
-        if (StringUtils.hasText(editForm.getName())) {
-            findUser.changeName(editForm.getName());
+        if (StringUtils.hasText(editRequestDto.getName())) {
+            findUser.changeName(editRequestDto.getName());
         }
 
-        if (StringUtils.hasText(editForm.getNickname())) {
-            if (validationChangeNickName(findUser.getId(), editForm.getNickname())) {
-                findUser.changeNickname(editForm.getNickname());
+        if (StringUtils.hasText(editRequestDto.getNickname())) {
+            if (validationChangeNickName(findUser.getId(), editRequestDto.getNickname())) {
+                findUser.changeNickname(editRequestDto.getNickname());
             } else {
                 throw new IllegalUserModifyException("이미 존재하는 닉네임입니다");
             }
         }
 
-        if (StringUtils.hasText(editForm.getSchoolName())) {
-            findUser.changeSchoolName(editForm.getSchoolName());
+        if (StringUtils.hasText(editRequestDto.getSchoolName())) {
+            findUser.changeSchoolName(editRequestDto.getSchoolName());
         }
 
-        if (StringUtils.hasText(editForm.getPhoneNumber())) {
-            if(validationChangePhoneNumber(findUser.getId(), editForm.getPhoneNumber())) {
-                findUser.changePhoneNumber(editForm.getPhoneNumber());
+        if (StringUtils.hasText(editRequestDto.getPhoneNumber())) {
+            if(validationChangePhoneNumber(findUser.getId(), editRequestDto.getPhoneNumber())) {
+                findUser.changePhoneNumber(editRequestDto.getPhoneNumber());
             } else {
                 throw new IllegalUserModifyException("이미 존재하는 전화번호 입니다");
             }
         }
 
-        if (StringUtils.hasText(editForm.getAddress())) {
-            findUser.changeAddress(editForm.getAddress());
+        if (StringUtils.hasText(editRequestDto.getAddress())) {
+            findUser.changeAddress(editRequestDto.getAddress());
         }
     }
 

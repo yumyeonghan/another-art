@@ -10,12 +10,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     // [로그인 아이디]로 User 찾기
     Optional<Users> findFirstByLoginId(String loginId);
 
-    // [닉네임]로 User 찾기
-    Optional<Users> findFirstByNickname(String nickname);
-
-    // [전화번호]로 User 찾기
-    Optional<Users> findFirstByPhoneNumber(String phoneNumber);
-
     // [이름, 이메일]로 User 찾기
     Optional<Users> findFirstByEmailAndName(String email, String name);
 

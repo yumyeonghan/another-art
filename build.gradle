@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.imagine'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -41,10 +41,12 @@ dependencies {
     providedCompile 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation 'javax.servlet:jstl:1.2'
 
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    // 접근 URL = localhost:8080/swagger-ui/index.html
+    implementation 'io.springfox:springfox-boot-starter:3.0.0' // Swagger 접근 URL = localhost:8080/swagger-ui/index.html
 
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+
+    // QLRM 추가
+    implementation 'org.qlrm:qlrm:3.0.4'
 }
 
 tasks.named('test') {

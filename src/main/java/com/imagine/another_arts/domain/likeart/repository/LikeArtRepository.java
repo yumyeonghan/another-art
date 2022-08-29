@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface LikeArtRepository extends JpaRepository<LikeArt, Long> {
-    @Query("SELECT la" +
+    @Query("SELECT DISTINCT la" +
             " FROM LikeArt la" +
-            " JOIN FETCH la.user" +
-            " JOIN FETCH la.art")
-    List<LikeArt> findLikeArtsBy();
+            " JOIN FETCH la.art" +
+            " JOIN FETCH la.user")
+    List<LikeArt> findLikeArtBy();
 }

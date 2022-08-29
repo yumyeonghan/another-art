@@ -1,9 +1,12 @@
 package com.imagine.another_arts.web.art;
 
 import com.imagine.another_arts.domain.art.service.ArtService;
-import com.imagine.another_arts.domain.art.service.dto.AuctionArtResponse;
-import com.imagine.another_arts.exception.ArtNotFoundException;
-import com.imagine.another_arts.web.art.dto.*;
+import com.imagine.another_arts.domain.art.service.dto.response.AuctionArtResponse;
+import com.imagine.another_arts.domain.art.service.dto.response.GeneralArtResponse;
+import com.imagine.another_arts.web.art.dto.request.*;
+import com.imagine.another_arts.web.art.dto.response.SimpleArtSuccessResponse;
+import com.imagine.another_arts.web.art.dto.response.SingleArtResponse;
+import com.imagine.another_arts.web.art.dto.response.SortedArtResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -25,23 +28,16 @@ public class ArtController {
     private final ArtService artService;
     private static final int SLICE_PER_PAGE = 20;
 
-    @PostMapping(value = "/art/auction", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "경매 작품 등록 API", notes = "경매 전용 작품 등록 (multipart/form-data) -> 폼 데이터 전부 작성 (NOT NULL)")
-    public ResponseEntity<SimpleArtSuccessResponse> registerAuctionArt(AuctionArtRegisterRequest auctionArtRegisterRequest) {
-        Long saveArtId = artService.registerAuctionArt(auctionArtRegisterRequest.toServiceDto());
+    @PostMapping(value = "/art", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation(value = "작품 등록 API", notes = "artType(auction, general)을 통해서 경매/일반 작품 등록 구분 -> 경매 작품일 경우 [경매 시작/종료 날짜] 반드시 기입")
+    public ResponseEntity<SimpleArtSuccessResponse> artRegister(ArtRegisterRequest artRegisterRequest) {
+        Long saveArtId;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Location", "/api/art/" + saveArtId);
-
-        return new ResponseEntity<>(new SimpleArtSuccessResponse(saveArtId), headers, HttpStatus.CREATED);
-    }
-
-    @PostMapping(value = "/art/general", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "일반 작품 등록 API", notes = "일반 판매용 작품 등록 (multipart/form-data) -> 폼 데이터 전부 작성 (NOT NULL)")
-    public ResponseEntity<SimpleArtSuccessResponse> registerGeneralArt(GeneralArtRegisterRequest generalArtRegisterRequest) {
-        Long saveArtId = artService.registerGeneralArt(generalArtRegisterRequest.toServiceDto());
+        if (artRegisterRequest.getSaleType().equals("auction")) {
+            saveArtId = artService.registerArt(artRegisterRequest.toAuctioArtDto());
+        } else {
+            saveArtId = artService.registerArt(artRegisterRequest.toGeneralArtDto());
+        }
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Location", "/api/art/" + saveArtId);
@@ -51,12 +47,12 @@ public class ArtController {
 
     @GetMapping("/art/{artId}")
     @ApiOperation(value = "작품 조회 API", notes = "PathVariable로 작품의 PK를 보내고 그에 따른 작품 조회")
-    public <T> SpecificArtResponse<T> getArt(@PathVariable Long artId) {
-        return new SpecificArtResponse<>(true, artService.getSpecificArt(artId));
+    public <T> SingleArtResponse<T> getSingleArt(@PathVariable Long artId) {
+        return new SingleArtResponse<>(artService.getSingleArt(artId));
     }
 
     @PatchMapping("/art/{artId}")
-    @ApiOperation(value = "작품 정보 변경 API", notes = "작품명, 작품 설명 변경")
+    @ApiOperation(value = "작품 정보 수정 API", notes = "작품명, 작품 설명 변경")
     public ResponseEntity<Void> editArt(
             @PathVariable Long artId,
             @ModelAttribute ArtEditRequest artEditRequest
@@ -76,9 +72,9 @@ public class ArtController {
     @ApiOperation(value = "작품 해시태그 추가 API", notes = "일반 판매용 작품 등록 (multipart/form-data)")
     public ResponseEntity<Void> addHashtag(
             @PathVariable Long artId,
-            @Valid @ModelAttribute HashtagListRequest hashtagListRequest
+            @Valid @ModelAttribute HashtagUpdateRequest hashtagUpdateRequest
     ) {
-        artService.addHashtag(artId, hashtagListRequest.getHashtagList());
+        artService.addHashtag(artId, hashtagUpdateRequest.getHashtagList());
         return ResponseEntity.noContent().build();
     }
 
@@ -92,49 +88,56 @@ public class ArtController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/main/art")
-    @ApiOperation(value = "메인페이지 작품 정렬 API", notes = "작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public SortedArtResponse<List<AuctionArtResponse>> mainArtList(
-            @ApiParam(name = "sort", value = "정렬 기준 [date, rdate, price, rprice, count, rcount]", required = true)
-            @RequestParam(value = "sort", defaultValue = "date") String sort,
-            @ApiParam(name = "scroll", value = "스크롤 이벤트 발생 시 +1해서 요청", required = true)
-            @RequestParam(value = "scroll", defaultValue = "0") Integer scroll
-    ) {
-        PageRequest pageRequest = PageRequest.of(scroll, SLICE_PER_PAGE);
-        List<AuctionArtResponse> sortedAuctionArtList = artService.getArtListTypeAuction(sort, pageRequest);
+    @GetMapping("/main/arts")
+    @ApiOperation(value = "메인페이지 경매 작품 조회 API", notes = "경매 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
+    public SortedArtResponse<List<AuctionArtResponse>> mainSortArtList(@ModelAttribute MainArtSortRequest mainArtSortRequest) {
+        PageRequest pageRequest = PageRequest.of(mainArtSortRequest.getScroll(), SLICE_PER_PAGE);
 
-        if (sortedAuctionArtList.size() == 0) {
-            throw new ArtNotFoundException("더이상 작품이 존재하지 않습니다");
-        }
-
-        return new SortedArtResponse<>(true, sortedAuctionArtList.size(), sortedAuctionArtList);
+        List<AuctionArtResponse> sortedAuctionArtList = artService.getSortedAuctionArtList(mainArtSortRequest.getSort(), pageRequest);
+        return new SortedArtResponse<>(sortedAuctionArtList.size(), sortedAuctionArtList);
     }
 
-    @GetMapping("/search/art")
-    @ApiOperation(value = "해시태그 검색 API", notes = "해시태그로 검색된 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public <T> SortedArtResponse<List<T>> searchArtList(
-            @ApiParam(name = "hashtag", value = "검색 해시태그", required = true)
-            @RequestParam(value = "hashtag") String hashtag,
-            @ApiParam(name = "type", value = "작품 타입 [auction/general]", required = true)
-            @RequestParam(value = "type") String type,
-            @ApiParam(name = "sort", value = "정렬 기준 [AUCTION = date, rdate, price, rprice, count, rcount / GENERAL = date, rdate, price, rprice, like, rlike]", required = true)
-            @RequestParam(value = "sort", defaultValue = "date") String sort,
-            @ApiParam(name = "scroll", value = "스크롤 이벤트 발생 시 +1해서 요청", required = true)
-            @RequestParam(value = "scroll", defaultValue = "0") Integer scroll
-    ) {
-        PageRequest pageRequest = PageRequest.of(scroll, SLICE_PER_PAGE);
-        List<T> sortedArtListBySearch;
+    @GetMapping("/hashtag/arts")
+    @ApiOperation(value = "해시태그를 통한 작품 조회 API", notes = "해시태그로 검색된 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
+    public <T> SortedArtResponse<T> hashtagSearchArtList(@ModelAttribute HashtagSearchArtRequest hashtagSearchArtRequest) {
+        PageRequest pageRequest = PageRequest.of(hashtagSearchArtRequest.getScroll(), SLICE_PER_PAGE);
 
-        if (type.equals("auction")) {
-            sortedArtListBySearch = (List<T>) artService.getArtListTypeAuctionSearchedByHashtag(hashtag, sort, pageRequest);
+        if (hashtagSearchArtRequest.getType().equals("auction")) {
+            List<AuctionArtResponse> auctionArtListSearchByHashtag = artService.getAuctionArtListSearchByHashtag(
+                    hashtagSearchArtRequest.getHashtag(),
+                    hashtagSearchArtRequest.getSort(),
+                    pageRequest
+            );
+            return new SortedArtResponse<>(auctionArtListSearchByHashtag.size(), (T)auctionArtListSearchByHashtag);
         } else {
-            sortedArtListBySearch = (List<T>) artService.getArtListTypeGeneralSearchedByHashtag(hashtag, sort, pageRequest);
+            List<GeneralArtResponse> generalArtListSearchByHashtag = artService.getGeneralArtListSearchByHashtag(
+                    hashtagSearchArtRequest.getHashtag(),
+                    hashtagSearchArtRequest.getSort(),
+                    pageRequest
+            );
+            return new SortedArtResponse<>(generalArtListSearchByHashtag.size(), (T)generalArtListSearchByHashtag);
         }
+    }
 
-        if(sortedArtListBySearch.size() == 0){
-            throw new ArtNotFoundException("더이상 작품이 존재하지 않습니다");
+    @GetMapping("/keyword/arts")
+    @ApiOperation(value = "키워드를 통한 작품 조회 API", notes = "키워드로 검색된 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
+    public <T> SortedArtResponse<T> keywordSearchArtList(@ModelAttribute KeywordSearchArtRequest keywordSearchArtRequest) {
+        PageRequest pageRequest = PageRequest.of(keywordSearchArtRequest.getScroll(), SLICE_PER_PAGE);
+
+        if (keywordSearchArtRequest.getType().equals("auction")) {
+            List<AuctionArtResponse> auctionArtListSearchByKeyword = artService.getAuctionArtListSearchByKeyword(
+                    "%" + keywordSearchArtRequest.getKeyword() + "%",
+                    keywordSearchArtRequest.getSort(),
+                    pageRequest
+            );
+            return new SortedArtResponse<>(auctionArtListSearchByKeyword.size(), (T)auctionArtListSearchByKeyword);
+        } else {
+            List<GeneralArtResponse> generalArtListSearchByKeyword = artService.getGeneralArtListSearchByKeyword(
+                    "%" + keywordSearchArtRequest.getKeyword() + "%",
+                    keywordSearchArtRequest.getSort(),
+                    pageRequest
+            );
+            return new SortedArtResponse<>(generalArtListSearchByKeyword.size(), (T)generalArtListSearchByKeyword);
         }
-
-        return new SortedArtResponse<>(true, sortedArtListBySearch.size(), sortedArtListBySearch);
     }
 }

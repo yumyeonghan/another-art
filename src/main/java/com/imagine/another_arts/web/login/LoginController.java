@@ -2,14 +2,17 @@ package com.imagine.another_arts.web.login;
 
 import com.imagine.another_arts.domain.login.LoginService;
 import com.imagine.another_arts.domain.login.dto.UserDto;
-import com.imagine.another_arts.web.SimpleSucessResponse;
-import com.imagine.another_arts.web.login.dto.*;
+import com.imagine.another_arts.web.login.dto.request.FindIdRequest;
+import com.imagine.another_arts.web.login.dto.request.FindPasswordRequest;
+import com.imagine.another_arts.web.login.dto.request.LoginRequest;
+import com.imagine.another_arts.web.login.dto.request.ResetPasswordRequest;
+import com.imagine.another_arts.web.login.dto.response.FindIdResponse;
+import com.imagine.another_arts.web.login.dto.response.FindPasswordResponse;
+import com.imagine.another_arts.web.login.dto.response.LoginResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,7 +37,6 @@ public class LoginController {
         session.setAttribute(LOGIN_USER, loginUser);
 
         return new LoginResponse(
-                true,
                 loginUser.getId(),
                 loginUser.getName(),
                 loginUser.getNickname(),
@@ -44,13 +46,13 @@ public class LoginController {
 
     @PostMapping("/logout")
     @ApiOperation(value = "로그아웃 API", notes = "사용자 로그아웃 (세션 만료)")
-    public SimpleSucessResponse userLogout(HttpServletRequest request) {
+    public ResponseEntity<Void> userLogout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
 
-        return new SimpleSucessResponse(true);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/find/id")
@@ -59,10 +61,7 @@ public class LoginController {
         UserDto findUser = loginService.findId(findIdRequest.getName(), findIdRequest.getEmail());
 
         return new FindIdResponse(
-                true,
                 findUser.getId(),
-                findUser.getName(),
-                findUser.getNickname(),
                 findUser.getLoginId()
         );
     }
@@ -77,19 +76,16 @@ public class LoginController {
         );
 
         return new FindPasswordResponse(
-                true,
                 findUser.getId(),
-                findUser.getName(),
-                findUser.getNickname(),
                 findUser.getLoginId(),
                 findUser.getLoginPassword()
         );
     }
 
-    @PostMapping("/reset/password")
+    @PatchMapping("/reset/password")
     @ApiOperation(value = "비밀번호 재설정 API", notes = "로그인 아이디를 통해서 사용자를 찾고, 비밀번호를 재설정")
-    public SimpleSucessResponse resetPassword(@Valid @ModelAttribute ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<Void> resetPassword(@Valid @ModelAttribute ResetPasswordRequest resetPasswordRequest) {
         loginService.resetPassword(resetPasswordRequest.getLoginId(), resetPasswordRequest.getChangePassword());
-        return new SimpleSucessResponse(true);
+        return ResponseEntity.noContent().build();
     }
 }
