@@ -1,0 +1,43 @@
+{
+    "data": {
+        "successResponse": true
+    },
+    "status": 201,
+    "statusText": "",
+    "headers": {
+        "connection": "keep-alive",
+        "content-type": "application/json",
+        "date": "Sun, 04 Sep 2022 11:03:37 GMT",
+        "keep-alive": "timeout=60",
+        "transfer-encoding": "chunked"
+    },
+    "config": {
+        "transitional": {
+            "silentJSONParsing": true,
+            "forcedJSONParsing": true,
+            "clarifyTimeoutError": false
+        },
+        "transformRequest": [
+            null
+        ],
+        "transformResponse": [
+            null
+        ],
+        "timeout": 0,
+        "xsrfCookieName": "XSRF-TOKEN",
+        "xsrfHeaderName": "X-XSRF-TOKEN",
+        "maxContentLength": -1,
+        "maxBodyLength": -1,
+        "env": {
+            "FormData": null
+        },
+        "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        "method": "post",
+        "url": "/api/join/user",
+        "data": "name=jae%20woo%20Jung&nickname=admin&birth=2000-03-05&loginId=awfjol2008&loginPassword=1234&loginPassword2=1234&schoolName=%EA%B2%BD%EA%B8%B0%EB%8C%80%ED%95%99%EA%B5%90&email=awfjol2008%40naver.com&phoneNumber=0312610980&postcode=16903&address=%EA%B8%B0%ED%9D%A5%EA%B5%AC%20%EB%B3%B4%EC%A0%95%EB%8F%99%20%EB%8F%99%EC%95%84%EC%86%94%EB%A0%88%EC%8B%9C%ED%8B%B0%20%EC%95%84%ED%8C%8C%ED%8A%B8&detailAddress=109-1302&extraAddress=%EC%B0%B8%EA%B3%A0%ED%95%AD%EB%AA%A9"
+    },
+    "request": {}
+}
