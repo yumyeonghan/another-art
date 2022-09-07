@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -280,7 +281,7 @@ public class ArtService {
                         getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArtResponse.getArtId().longValue()),
                         basicAuctionArtResponse,
                         getHashtagListByArtId(artHashtagList, basicAuctionArtResponse.getArtId().longValue())
-                )).toList();
+                )).collect(Collectors.toList());
     }
 
     // 해시태그 기반 "경매 작품" 검색
@@ -294,7 +295,7 @@ public class ArtService {
                         getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArtResponse.getArtId().longValue()),
                         basicAuctionArtResponse,
                         getHashtagListByArtId(artHashtagList, basicAuctionArtResponse.getArtId().longValue())
-                )).toList();
+                )).collect(Collectors.toList());
     }
 
     // 해시태그 기반 "일반 작품" 검색
@@ -308,7 +309,7 @@ public class ArtService {
                         getLikeArtCountByArtId(likeArtList, basicGeneralArtResponse.getArtId().longValue()),
                         basicGeneralArtResponse,
                         getHashtagListByArtId(artHashtagList, basicGeneralArtResponse.getArtId().longValue())
-                )).toList();
+                )).collect(Collectors.toList());
     }
 
     // 키워드 기반 "경매 작품" 검색
@@ -322,7 +323,7 @@ public class ArtService {
                         getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArtResponse.getArtId().longValue()),
                         basicAuctionArtResponse,
                         getHashtagListByArtId(artHashtagList, basicAuctionArtResponse.getArtId().longValue())
-                )).toList();
+                )).collect(Collectors.toList());
     }
 
     // 키워드 기반 "일반 작품" 검색
@@ -336,7 +337,7 @@ public class ArtService {
                         getLikeArtCountByArtId(likeArtList, basicGeneralArtResponse.getArtId().longValue()),
                         basicGeneralArtResponse,
                         getHashtagListByArtId(artHashtagList, basicGeneralArtResponse.getArtId().longValue())
-                )).toList();
+                )).collect(Collectors.toList());
     }
 
     // [art_id]에 대한 경매 비드 횟수
@@ -358,6 +359,6 @@ public class ArtService {
         return artHashtagList.stream()
                 .filter(artHashtag -> artHashtag.getArt().getId().equals(artId))
                 .map(artHashtag -> artHashtag.getHashtag().getName())
-                .toList();
+                .collect(Collectors.toList());
     }
 }

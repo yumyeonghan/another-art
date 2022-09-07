@@ -52,11 +52,14 @@ public class PointHistory {
 
     // 생성 메소드 2 - 포인트 내역 누적 //
     public static PointHistory insertPointHistory(Users user, DealType dealType, Integer dealAmount, Integer point) {
-        PointHistory pointHistory = new PointHistory();
+        PointHistory
+
+                pointHistory = new PointHistory();
         pointHistory.dealType = dealType;
         pointHistory.dealAmount = dealAmount;
         pointHistory.point = point;
         pointHistory.user = user;
         return pointHistory;
     }
+
 }
