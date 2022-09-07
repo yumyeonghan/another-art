@@ -22,13 +22,13 @@ public class PointHistoryService {
     @Transactional
     public void chargePoint(String loginId, Integer amount) {
 
-        Users users = userRepository.findFirstByLoginId(loginId).get();
+        Users user = userRepository.findFirstByLoginId(loginId).get();
 
-        PointHistory maxPoint = pointHistoryRepository.findAll(Sort.by(Sort.Direction.DESC, "point")).get(0);
+        PointHistory prePointHistory = pointHistoryRepository.findTopByUserOrderByDealDateDesc(user);
 
-        PointHistory pointHistory = PointHistory.insertPointHistory(users, DealType.CHARGE, amount, maxPoint.getPoint() + amount);
+        PointHistory proPointHistory = PointHistory.insertPointHistory(user, DealType.CHARGE, amount, prePointHistory.getPoint() + amount);
 
-        pointHistoryRepository.save(pointHistory);
+        pointHistoryRepository.save(proPointHistory);
 
     }
 }
