@@ -2,6 +2,7 @@ package com.imagine.another_arts.web.point;
 
 import com.imagine.another_arts.exception.ErrorDescription;
 import com.imagine.another_arts.exception.IllegalUserInfoFoundException;
+import com.imagine.another_arts.exception.PointNotFullException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,4 +20,16 @@ public class PointExceptionHandler {
                 e.getMessage()
         );
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PointNotFullException.class)
+    public ErrorDescription pointNotFullException(PointNotFullException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
+                e.getMessage()
+        );
+    }
+
+
 }

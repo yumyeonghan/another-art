@@ -42,4 +42,14 @@ public class PointController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/point-refund")
+    @ApiOperation(value = "포인트 환불", notes = "포인트 환불")
+    public ResponseEntity<Void> pointRefund(@RequestBody PointChargeRequest pointChargeRequest) {
+
+        pointHistoryService.refundPoint(pointChargeRequest.getLoginId(), pointChargeRequest.getAmount());
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
