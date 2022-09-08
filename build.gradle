@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.imagine'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = "11"
 
 configurations {
     compileOnly {
@@ -56,3 +56,4 @@ tasks.named('test') {
 war {
     archiveName("ROOT.war")
 }
+targetCompatibility = JavaVersion.VERSION_16

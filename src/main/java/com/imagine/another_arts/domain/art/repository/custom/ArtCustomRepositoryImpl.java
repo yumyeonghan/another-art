@@ -9,6 +9,7 @@ import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,12 +24,26 @@ public class ArtCustomRepositoryImpl implements ArtCustomRepository {
         query.append(GeneralArtQueryFactory.HASHTAG_QUERY);
 
         switch (sortType) {
-            case "date" -> query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_DATE + " DESC");
-            case "rdate" -> query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_DATE);
-            case "price" -> query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_PRICE + " DESC");
-            case "rprice" -> query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_PRICE);
-            case "like" -> query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_LIKE_COUNT + " DESC");
-            case "rlike" -> query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_LIKE_COUNT);
+            case "date":
+                query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_DATE + " DESC");
+                break;
+            case "rdate":
+                query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_DATE);
+                break;
+            case "price":
+                query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_PRICE + " DESC");
+                break;
+            case "rprice":
+                query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_PRICE);
+                break;
+            case "like":
+                query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_LIKE_COUNT + " DESC");
+                break;
+            case "rlike":
+                query.append(GeneralArtQueryFactory.HASHTAG_ORDER_BY_LIKE_COUNT);
+                break;
+            default:
+                return new ArrayList<>();
         }
 
         return mapper.list(
@@ -46,12 +61,26 @@ public class ArtCustomRepositoryImpl implements ArtCustomRepository {
         query.append(GeneralArtQueryFactory.KEYWORD_QUERY);
 
         switch (sortType) {
-            case "date" -> query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_DATE + " DESC");
-            case "rdate" -> query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_DATE);
-            case "price" -> query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_PRICE + " DESC");
-            case "rprice" -> query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_PRICE);
-            case "like" -> query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_LIKE_COUNT + " DESC");
-            case "rlike" -> query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_LIKE_COUNT);
+            case "date":
+                query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_DATE + " DESC");
+                break;
+            case "rdate":
+                query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_DATE);
+                break;
+            case "price":
+                query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_PRICE + " DESC");
+                break;
+            case "rprice":
+                query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_PRICE);
+                break;
+            case "like":
+                query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_LIKE_COUNT + " DESC");
+                break;
+            case "rlike":
+                query.append(GeneralArtQueryFactory.KEYWORD_ORDER_BY_LIKE_COUNT);
+                break;
+            default:
+                return new ArrayList<>();
         }
 
         return mapper.list(
@@ -69,12 +98,26 @@ public class ArtCustomRepositoryImpl implements ArtCustomRepository {
         query.append(AuctionArtQueryFactory.MAIN_QUERY);
 
         switch (sortType) {
-            case "date" -> query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_DATE + " DESC");
-            case "rdate" -> query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_DATE);
-            case "price" -> query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_PRICE + " DESC");
-            case "rprice" -> query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_PRICE);
-            case "count" -> query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_COUNT + " DESC");
-            case "rcount" -> query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_COUNT);
+            case "date":
+                query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_DATE + " DESC");
+                break;
+            case "rdate":
+                query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_DATE);
+                break;
+            case "price":
+                query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_PRICE + " DESC");
+                break;
+            case "rprice":
+                query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_PRICE);
+                break;
+            case "count":
+                query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_COUNT + " DESC");
+                break;
+            case "rcount":
+                query.append(AuctionArtQueryFactory.MAIN_ORDER_BY_BID_COUNT);
+                break;
+            default:
+                return new ArrayList<>();
         }
 
         return mapper.list(
@@ -91,12 +134,26 @@ public class ArtCustomRepositoryImpl implements ArtCustomRepository {
         query.append(AuctionArtQueryFactory.HASHTAG_QUERY);
 
         switch (sortType) {
-            case "date" -> query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_DATE + " DESC");
-            case "rdate" -> query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_DATE);
-            case "price" -> query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_PRICE + " DESC");
-            case "rprice" -> query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_PRICE);
-            case "count" -> query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_COUNT + " DESC");
-            case "rcount" -> query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_COUNT);
+            case "date":
+                query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_DATE + " DESC");
+                break;
+            case "rdate":
+                query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_DATE);
+                break;
+            case "price":
+                query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_PRICE + " DESC");
+                break;
+            case "rprice":
+                query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_PRICE);
+                break;
+            case "count":
+                query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_COUNT + " DESC");
+                break;
+            case "rcount":
+                query.append(AuctionArtQueryFactory.HASHTAG_ORDER_BY_BID_COUNT);
+                break;
+            default:
+                return new ArrayList<>();
         }
 
         return mapper.list(
@@ -114,12 +171,26 @@ public class ArtCustomRepositoryImpl implements ArtCustomRepository {
         query.append(AuctionArtQueryFactory.KEYWORD_QUERY);
 
         switch (sortType) {
-            case "date" -> query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_DATE + " DESC");
-            case "rdate" -> query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_DATE);
-            case "price" -> query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_PRICE + " DESC");
-            case "rprice" -> query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_PRICE);
-            case "count" -> query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_COUNT + " DESC");
-            case "rcount" -> query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_COUNT);
+            case "date":
+                query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_DATE + " DESC");
+                break;
+            case "rdate":
+                query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_DATE);
+                break;
+            case "price":
+                query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_PRICE + " DESC");
+                break;
+            case "rprice":
+                query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_PRICE);
+                break;
+            case "count":
+                query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_COUNT + " DESC");
+                break;
+            case "rcount":
+                query.append(AuctionArtQueryFactory.KEYWORD_ORDER_BY_BID_COUNT);
+                break;
+            default:
+                return new ArrayList<>();
         }
 
         return mapper.list(

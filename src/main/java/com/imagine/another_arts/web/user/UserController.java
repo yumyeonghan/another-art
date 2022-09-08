@@ -25,6 +25,7 @@ public class UserController {
     public ResponseEntity<SimpleUserSuccessResponse> joinUser(@Valid @ModelAttribute UserJoinRequest userJoinRequest) {
         Long saveUserId = userService.saveUser(userJoinRequest.toServiceDto());
 
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Location", "/api/user/" + saveUserId);
 
