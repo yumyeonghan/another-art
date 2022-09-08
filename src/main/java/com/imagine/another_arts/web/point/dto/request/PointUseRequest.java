@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PointChargeRequest {
+public class PointUseRequest {
     private String loginId;
     private Integer amount;
 }

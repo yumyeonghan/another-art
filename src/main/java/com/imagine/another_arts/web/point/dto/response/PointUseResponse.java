@@ -5,9 +5,10 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class PointChargeResponse {
+public class PointUseResponse {
 
     private Long id;
+    private String loginId;
     private String name;
     private String email;
     private String phoneNumber;
