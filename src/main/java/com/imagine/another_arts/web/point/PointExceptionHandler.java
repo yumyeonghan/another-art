@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice("com.imagine.another_arts.web.point")
 public class PointExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(IllegalUserInfoFoundException.class)
     public ErrorDescription illegalUserInfoFoundException(IllegalUserInfoFoundException e) {
         return new ErrorDescription(
                 false,
-                "BAD_REQUEST",
+                "UNAUTHORIZED",
                 e.getMessage()
         );
     }
