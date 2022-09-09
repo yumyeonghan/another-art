@@ -57,3 +57,4 @@ war {
     archiveName("ROOT.war")
 }
 targetCompatibility = JavaVersion.VERSION_16
+

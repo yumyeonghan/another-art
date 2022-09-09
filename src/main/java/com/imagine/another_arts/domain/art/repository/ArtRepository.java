@@ -19,3 +19,4 @@ public interface ArtRepository extends JpaRepository<Art, Long>, ArtCustomReposi
 
     boolean existsByIdNotAndName(Long artId, String name);
 }
+
