@@ -137,7 +137,7 @@ export default {
     methods: {
         verifyCheckbox($router) {
             if (this.ifChecked1 && this.ifChecked2) {
-                $router.push('/createAccount/UserRegister');
+                $router.push('/createAccount/userRegister');
             } else {
                 alert('약관에 동의해야 합니다.');
             }
