@@ -9,6 +9,8 @@
         <button @click="$router.push('/artworkRegister')" class="btn btn-outline-dark">ArtworkRegister</button>
         <button @click="$router.push('/idFind')" class="btn btn-outline-dark">IdFind</button>
         <button @click="$router.push('/passwordFind')" class="btn btn-outline-dark">PasswordFind</button>
+        <button @click="$router.push('/userPointCharge')" class="btn btn-outline-dark">UserPointCharge</button>
+        <button @click="$router.push('/userPointRefund')" class="btn btn-outline-dark">UserPointRefund</button>
 
       </div>
       <router-view></router-view>

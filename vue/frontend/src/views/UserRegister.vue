@@ -7,7 +7,8 @@
 
                     <button @click="test">test</button>
                     <div class="p-4">
-                        <h4 class="mb-3 text-center text-black fs-3" style="--bs-text-opacity: 0.6;">회원가입</h4>
+                         <!-- style="--bs-text-opacity: 0.6;" -->
+                        <h4 class="mb-3 text-center text-black fs-2 fw-bold">회원가입</h4>
                     </div>
                     <!-- @submit.prevent="submitForm" -->
                     <form class="needs-validation" novalidate>
