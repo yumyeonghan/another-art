@@ -137,7 +137,7 @@ export default {
         //     });
         // },
         requestPay() {
-            IMP.init("imp43261534");
+            window.IMP.init("imp43261534");
 
             IMP.request_pay({ // param
                 pg: "kakaopay.TC0ONETIME",
@@ -153,24 +153,12 @@ export default {
             }, (rsp) => { // callback
                 console.log(rsp);
                 if (rsp.success) {
-                    
-                    var mongoose = require('mongoose');
-                    var Schema = mongoose.Schema;
-                    var PaymentsSchema = new Schema({
-                        imp_uid: rsp.imp_uid, // 아임포트 `unique key`(환불 요청시 `unique key`로 사용)
-                        merchant_uid: rsp.merchant_uid, // 주문번호(결제정보 조회시 사용)
-                        amount: rsp.paid_amount, // 결제 금액(환불 가능 금액 계산시 사용)
-                        cancel_amount: { type: Number, default: 0 }, // 환불 된 총 금액(환불 가능 금액 계산시 사용)
-                        });
-
-                module.exports = mongoose.model('Payments', PaymentsSchema);
-            console.log("결제 성공");
-
-        } else {
-            console.log("결제 실패");
-        }
-    });
-},
+                    console.log("결제 성공");
+                } else {
+                    console.log("결제 실패");
+                }
+            });
+        },
         // cancelPay() {
         //     jQuery.ajax({
         //         "url": "{환불요청을 받을 서비스 URL}", // 예: http://www.myservice.com/payments/cancel
