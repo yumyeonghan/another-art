@@ -1,5 +1,6 @@
 package com.imagine.another_arts.domain.art;
 
+import com.imagine.another_arts.domain.art.enums.SaleStatus;
 import com.imagine.another_arts.domain.art.enums.SaleType;
 import com.imagine.another_arts.domain.user.Users;
 import lombok.AccessLevel;
@@ -27,11 +28,15 @@ public class Art {
     private String description;
 
     @Column(name = "init_price", nullable = false)
-    private Integer initPrice;
+    private Long initPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sale_type", nullable = false, length = 8)
     private SaleType saleType; // GENERAL(일반 판매), AUCTION(경매를 통한 판매) -> 이 값 그대로 insert
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sale_status", nullable = false, length = 8)
+    private SaleStatus saleStatus; // FOR_SALE(판매 중), SOLD_OUT(판매 완료)
 
     @CreationTimestamp // Art 저장하면 자동으로 등록 날짜 생성해서 insert
     @Column(name = "register_date")
@@ -48,7 +53,7 @@ public class Art {
     private Users user;
 
     //==생성 메소드==//
-    public static Art createArt(Users user, String name, String description, Integer initPrice, String uploadName, String storageName) {
+    public static Art createArt(Users user, String name, String description, Long initPrice, String uploadName, String storageName) {
         Art art = new Art();
         art.user = user;
         art.name = name;
@@ -56,6 +61,7 @@ public class Art {
         art.initPrice = initPrice;
         art.uploadName = uploadName;
         art.storageName = storageName;
+        art.saleStatus = SaleStatus.FOR_SALE;
         return art;
     }
 

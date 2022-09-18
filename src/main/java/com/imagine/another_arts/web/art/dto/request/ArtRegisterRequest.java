@@ -16,7 +16,7 @@ public class ArtRegisterRequest {
     private Long userId;
     private String name;
     private String description;
-    private Integer initPrice;
+    private Long initPrice;
     private MultipartFile file;
     private List<String> hashtagList;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

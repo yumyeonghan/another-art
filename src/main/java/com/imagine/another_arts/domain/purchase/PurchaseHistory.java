@@ -25,7 +25,7 @@ public class PurchaseHistory {
     private Long id;
 
     @Column(name = "price", nullable = false, updatable = false)
-    private Integer price;
+    private Long price;
 
     @CreatedDate
     @Column(name = "purchase_date")
@@ -49,7 +49,7 @@ public class PurchaseHistory {
 
 
     // 생성 메소드 1 - 일반 구매 내역 //
-    public static PurchaseHistory createPurchaseHistoryByGeneral(Users user, Art art, Integer price) {
+    public static PurchaseHistory createPurchaseHistoryByGeneral(Users user, Art art, Long price) {
         PurchaseHistory purchaseHistory = new PurchaseHistory();
         purchaseHistory.user = user;
         purchaseHistory.art = art;
@@ -59,7 +59,7 @@ public class PurchaseHistory {
     }
 
     // 생성 메소드 2 - 경매 낙찰 내역 //
-    public static PurchaseHistory createPurchaseHistoryByAuction(Users user, Art art, Auction auction, Integer price) {
+    public static PurchaseHistory createPurchaseHistoryByAuction(Users user, Art art, Auction auction, Long price) {
         PurchaseHistory purchaseHistory = new PurchaseHistory();
         purchaseHistory.user = user;
         purchaseHistory.art = art;

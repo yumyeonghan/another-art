@@ -20,7 +20,7 @@ public class PointHistoryService {
 
 
     @Transactional
-    public void chargePoint(String loginId, Integer amount) {
+    public void chargePoint(String loginId, Long amount) {
 
         Users user = userRepository.findFirstByLoginId(loginId).get();
 
@@ -33,7 +33,7 @@ public class PointHistoryService {
     }
 
     @Transactional
-    public void refundPoint(String loginId, Integer amount) {
+    public void refundPoint(String loginId, Long amount) {
         Users user = userRepository.findFirstByLoginId(loginId).get();
 
         PointHistory prePointHistory = pointHistoryRepository.findTopByUserOrderByDealDateDesc(user);

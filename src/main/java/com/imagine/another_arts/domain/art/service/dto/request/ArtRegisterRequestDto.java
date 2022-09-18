@@ -13,7 +13,7 @@ public class ArtRegisterRequestDto {
     private Long userId;
     private String name;
     private String description;
-    private Integer initPrice;
+    private Long initPrice;
     private MultipartFile file;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
@@ -22,7 +22,7 @@ public class ArtRegisterRequestDto {
     private List<String> hashtagList;
 
     // 경매 작품 등록
-    public ArtRegisterRequestDto(String saleType, Long userId, String name, String description, Integer initPrice, MultipartFile file,
+    public ArtRegisterRequestDto(String saleType, Long userId, String name, String description, Long initPrice, MultipartFile file,
                                  LocalDateTime startDate, LocalDateTime endDate, List<String> hashtagList) {
         this.saleType = saleType;
         this.userId = userId;
@@ -36,7 +36,7 @@ public class ArtRegisterRequestDto {
     }
 
     // 일반 작품 등록
-    public ArtRegisterRequestDto(String saleType, Long userId, String name, String description, Integer initPrice, MultipartFile file, List<String> hashtagList) {
+    public ArtRegisterRequestDto(String saleType, Long userId, String name, String description, Long initPrice, MultipartFile file, List<String> hashtagList) {
         this.saleType = saleType;
         this.userId = userId;
         this.name = name;

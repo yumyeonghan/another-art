@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
     Auction findByArt(Art art);
 
@@ -17,4 +19,11 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             " WHERE a.sale_type = 'AUCTION' AND a.art_id = :artId",
             nativeQuery = true)
     Auction findFirstAuctionBy(@Param("artId") Long artId);
+    
+    @Query("SELECT ac" +
+              " FROM Auction ac" +
+              " JOIN FETCH ac.user" +
+              " JOIN FETCH ac.art" +
+              " WHERE ac.id = :auctionId")
+    Optional<Auction> findFirstById(@Param("auctionId") Long auctionId);
 }

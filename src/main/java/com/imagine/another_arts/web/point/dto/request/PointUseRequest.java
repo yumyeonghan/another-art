@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class PointUseRequest {
     private String loginId;
-    private Integer amount;
+    private Long amount;
 }
