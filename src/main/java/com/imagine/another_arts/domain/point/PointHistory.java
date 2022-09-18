@@ -27,10 +27,10 @@ public class PointHistory {
     private DealType dealType; // JOIN(신규가입 - 포인트내역 instance 생성 = default), CHARGE(충전), REFUND(환불), USE(사용)
 
     @Column(name = "deal_amount", nullable = false, updatable = false)
-    private Integer dealAmount; // default 0
+    private Long dealAmount; // default 0
 
     @Column(name = "point", nullable = false, updatable = false)
-    private Integer point; // default 0
+    private Long point; // default 0
 
     @CreatedDate
     @Column(name = "deal_date")
@@ -44,14 +44,14 @@ public class PointHistory {
     public static PointHistory createPointHistory(Users user) {
         PointHistory pointHistory = new PointHistory();
         pointHistory.dealType = DealType.JOIN;
-        pointHistory.dealAmount = 0;
-        pointHistory.point = 0;
+        pointHistory.dealAmount = 0L;
+        pointHistory.point = 0L;
         pointHistory.user = user;
         return pointHistory;
     }
 
     // 생성 메소드 2 - 포인트 내역 누적 //
-    public static PointHistory insertPointHistory(Users user, DealType dealType, Integer dealAmount, Integer point) {
+    public static PointHistory insertPointHistory(Users user, DealType dealType, Long dealAmount, Long point) {
         PointHistory pointHistory = new PointHistory();
         pointHistory.dealType = dealType;
         pointHistory.dealAmount = dealAmount;

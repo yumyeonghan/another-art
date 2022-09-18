@@ -23,7 +23,7 @@ public class AuctionHistory {
     private Long id;
 
     @Column(name = "bid_price", nullable = false, updatable = false)
-    private Integer bidPrice;
+    private Long bidPrice;
 
     @CreatedDate
     @Column(name = "bid_date")
@@ -42,7 +42,7 @@ public class AuctionHistory {
     private Auction auction;
 
     //==생성 메소드==//
-    public static AuctionHistory createAuctionHistory(Auction auction, Art art, Users user, Integer bidPrice) { // bid 들어오면 반드시 생성해서 insert
+    public static AuctionHistory createAuctionHistory(Auction auction, Art art, Users user, Long bidPrice) { // bid 들어오면 반드시 생성해서 insert
         AuctionHistory auctionHistory = new AuctionHistory();
         auctionHistory.auction = auction;
         auctionHistory.art = art;

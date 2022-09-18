@@ -20,7 +20,7 @@ public class Auction {
     private Long id;
 
     @Column(name = "bid_price", nullable = false)
-    private Integer bidPrice;
+    private Long bidPrice;
 
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
@@ -37,7 +37,7 @@ public class Auction {
     private Art art;
 
     //==생성 메소드==//
-    public static Auction createAuction(Integer bidPrice, LocalDateTime startDate, LocalDateTime endDate, Art art) { // 경매 처음 등록할 때 사용
+    public static Auction createAuction(Long bidPrice, LocalDateTime startDate, LocalDateTime endDate, Art art) { // 경매 처음 등록할 때 사용
         Auction auction = new Auction();
         auction.bidPrice = bidPrice;
         auction.startDate = startDate;
@@ -47,7 +47,7 @@ public class Auction {
     }
 
     //==관련 비즈니스 로직 작성 공간==//
-    public void applyNewBid(Users user, Integer bidPrice){ // user의 새로운 비드 : bid 들어올 때 이 메소드 통해서 정보 변경
+    public void applyNewBid(Users user, Long bidPrice){ // user의 새로운 비드 : bid 들어올 때 이 메소드 통해서 정보 변경
         this.user = user;
         this.bidPrice = bidPrice;
     }

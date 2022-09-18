@@ -44,9 +44,12 @@ public class Users {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
+    @Column(name = "available_point", nullable = false)
+    private Long availablePoint;
+
     //==생성 메소드==//
     public static Users createUser(String name, String nickname, String loginId, String loginPassword,
-                 String email, String schoolName, String phoneNumber, String address, LocalDate birth) {
+                                   String email, String schoolName, String phoneNumber, String address, LocalDate birth) {
         Users user = new Users();
         user.name = name;
         user.nickname = nickname;
@@ -57,6 +60,7 @@ public class Users {
         user.phoneNumber = phoneNumber;
         user.address = address;
         user.birth = birth;
+        user.availablePoint = 0L;
         return user;
     }
 
@@ -90,4 +94,7 @@ public class Users {
     public void changePassword(String loginPassword){
         this.loginPassword = loginPassword;
     }
+
+    // 사용가능 포인트 변경
+    public void changeAvailablePoint(Long availablePoint) { this.availablePoint = availablePoint; }
 }
