@@ -1,6 +1,7 @@
 <template>
   <div>
-    This is home
+    <img @click="$router.push('/artworkPurchase')" src="https://via.placeholder.com/150">
+    <p>This is home</p>
   </div>
 </template>
 

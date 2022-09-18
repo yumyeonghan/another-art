@@ -64,13 +64,16 @@
                                     href="#">로그인</a>
                             </li>
                             <li class="nav-item">
-                                <h6 @click="$router.push('');" class="nav-link active text-secondary"
+                                <h6 class="nav-link active text-secondary"
                                     aria-current="page" href="#">|</h6>
                             </li>
                             <li class="nav-item">
                                 <a @click="$router.push('/createAccount/termsOfService');" class="nav-link active"
                                     href="#">회원가입</a>
                             </li>
+                            <button @click="$router.push('/artworkRegister')" class="btn btn-outline-primary mx-2">
+                                작품 등록
+                            </button>
                         </ul>
                         <!-- <li class="nav-item">
                             <a class="nav-link me-3 py-1" href="#" data-mdb-toggle="tooltip" title="Create">

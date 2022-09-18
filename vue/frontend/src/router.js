@@ -8,6 +8,7 @@ import IdFind from './views/IdFind.vue'
 import PasswordFind from './views/PasswordFind.vue'
 import UserPointCharge from './views/UserPointCharge.vue'
 import UserPointRefund from './views/UserPointRefund.vue'
+import ArtworkPurchase from './views/ArtworkPurchase.vue'
 
 const routes = [
   {
@@ -47,6 +48,10 @@ const routes = [
   {
     path: "/userPointRefund",
     component: UserPointRefund,
+  },
+  {
+    path: "/artworkPurchase",
+    component: ArtworkPurchase,
   },
 ];
 

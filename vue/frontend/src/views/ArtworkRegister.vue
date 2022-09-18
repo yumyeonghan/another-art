@@ -80,8 +80,8 @@
 </template>
 
 <script>
-import AuctionWork from '../components/AuctionWork.vue'
-import GeneralWork from '../components/GeneralWork.vue'
+import AuctionWork from '../components/AuctionWorkRegister.vue'
+import GeneralWork from '../components/GeneralWorkRegister.vue'
 
 export default {
   name: 'artworkRegister',
