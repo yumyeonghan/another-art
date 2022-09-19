@@ -85,4 +85,8 @@ public class Art {
     public void changeDescription(String description){
         this.description = description;
     }
+
+    // 작품 판매 상태 수정
+    public void changeSaleStatus(SaleStatus saleStatus) { this.saleStatus = saleStatus; }
 }
+
