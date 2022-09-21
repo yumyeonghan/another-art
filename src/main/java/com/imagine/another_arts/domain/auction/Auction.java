@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "auction_id")
     private Long id;
 
     @Column(name = "bid_price", nullable = false)

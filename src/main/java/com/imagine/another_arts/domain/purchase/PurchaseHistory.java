@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 public class PurchaseHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "purchase_id")
     private Long id;
 
     @Column(name = "price", nullable = false, updatable = false)

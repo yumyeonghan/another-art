@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 public class Art {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "art_id")
     private Long id;
 
     @Column(name = "name", nullable = false, unique = true, length = 100)

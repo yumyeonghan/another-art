@@ -19,11 +19,10 @@ import java.time.LocalDateTime;
 public class PointHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "point_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "deal_type", nullable = false, updatable = false, length = 8)
+    @Column(name = "point_type", nullable = false, updatable = false, length = 8)
     private PointType pointType; // JOIN(신규가입 - 포인트내역 instance 생성 = default), CHARGE(충전), REFUND(환불), USE(사용)
 
     @Column(name = "deal_amount", nullable = false, updatable = false)
