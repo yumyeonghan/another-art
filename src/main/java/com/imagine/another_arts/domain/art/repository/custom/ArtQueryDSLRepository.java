@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface ArtQueryDSLRepository {
     Optional<Art> findArtByArtId(Long artId);
 
-    BasicGeneralArtResponse findSingleGeneralArt(Long artId);
+    BasicGeneralArtResponse findSingleGeneralArtByArtId(Long artId);
 
-    BasicAuctionArtResponse findSingleAuctionArt(Long artId);
+    BasicAuctionArtResponse findSingleAuctionArtByArtId(Long artId);
 
     List<BasicGeneralArtResponse> findGeneralArtHashtagSearch(String givenHashtag, String sortType, Pageable pageRequest);
 

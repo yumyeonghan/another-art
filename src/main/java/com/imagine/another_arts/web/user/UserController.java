@@ -21,10 +21,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/user")
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입 API", notes = "Form 데이터 정보들을 서버로 전달함에 따라 회원가입 진행")
-    public ResponseEntity<SimpleUserSuccessResponse> joinUser(@Valid @ModelAttribute UserJoinRequest userJoinRequest) {
+    public ResponseEntity<SimpleUserSuccessResponse> joinUser(@Valid @RequestBody UserJoinRequest userJoinRequest) {
         Long saveUserId = userService.saveUser(userJoinRequest.toServiceDto());
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Location", "/api/user/" + saveUserId);
@@ -34,10 +34,7 @@ public class UserController {
 
     @PatchMapping("/user/{userId}")
     @ApiOperation(value = "회원수정 API", notes = "수정할 회원 정보들을 서버에 전달함에 따라 회원 수정 진행")
-    public ResponseEntity<Void> editUser(
-            @PathVariable Long userId,
-            @ModelAttribute UserEditRequest userEditRequest
-    ) {
+    public ResponseEntity<Void> editUser(@PathVariable Long userId, @RequestBody UserEditRequest userEditRequest) {
         userService.editUser(userId, userEditRequest.toServiceDto());
         return ResponseEntity.noContent().build();
     }

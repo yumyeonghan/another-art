@@ -1,11 +1,11 @@
-package com.imagine.another_arts.web.auction.dto;
+package com.imagine.another_arts.domain.auction.service.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
-public class BidAuctionResponse {
+public class BidAuctionRequestDto {
     private Long auctionId;
     private Long userId;
     private Long bidPrice;

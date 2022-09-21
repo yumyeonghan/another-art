@@ -60,7 +60,7 @@ public class ArtQueryDSLRepositoryImpl implements ArtQueryDSLRepository {
     }
 
     @Override
-    public BasicGeneralArtResponse findSingleGeneralArt(Long artId) {
+    public BasicGeneralArtResponse findSingleGeneralArtByArtId(Long artId) {
         return query
                 .select(new QBasicGeneralArtResponse(
                         art.id, art.name, art.description, art.initPrice, art.registerDate, art.storageName,
@@ -72,7 +72,7 @@ public class ArtQueryDSLRepositoryImpl implements ArtQueryDSLRepository {
     }
 
     @Override
-    public BasicAuctionArtResponse findSingleAuctionArt(Long artId) {
+    public BasicAuctionArtResponse findSingleAuctionArtByArtId(Long artId) {
         return query
                 .select(new QBasicAuctionArtResponse(
                         auction.id, userB.id, userB.nickname, userB.schoolName, auction.bidPrice, auction.startDate,

@@ -1,9 +1,9 @@
 package com.imagine.another_arts.domain.login;
 
-import com.imagine.another_arts.domain.login.dto.UserDto;
+import com.imagine.another_arts.domain.login.dto.UserSessionDto;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
-import com.imagine.another_arts.exception.IllegalUserInfoFoundException;
+import com.imagine.another_arts.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,41 +16,42 @@ public class LoginService {
     private final UserRepository userRepository;
 
     // 로그인
-    public UserDto login(String loginId, String loginPassword) {
-        User findUser = userRepository.findFirstByLoginId(loginId)
-                .orElseThrow(() -> new IllegalUserInfoFoundException("아이디에 대한 회원정보가 존재하지 않습니다"));
+    public UserSessionDto login(String loginId, String loginPassword) {
+        User findUser = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UserNotFoundException("회원정보가 존재하지 않습니다"));
 
-        validateUserLogin(findUser, loginPassword);
-        return new UserDto(findUser);
+        isCorrectPassword(findUser, loginPassword);
+        return new UserSessionDto(findUser);
     }
 
-    private void validateUserLogin(User findUser, String loginPassword) {
+    private void isCorrectPassword(User findUser, String loginPassword) {
         if (!findUser.getLoginPassword().equals(loginPassword)) {
-            throw new IllegalUserInfoFoundException("비밀번호가 일치하지 않습니다");
+            throw new UserNotFoundException("비밀번호가 일치하지 않습니다");
         }
     }
 
     // [이름, 이메일]로 아이디 찾기
-    public UserDto findId(String name, String email){
-        User findUser = userRepository.findFirstByEmailAndName(email, name)
-                .orElseThrow(() -> new IllegalUserInfoFoundException("이름, 이메일에 대한 회원정보가 존재하지 않습니다"));
+    public UserSessionDto findId(String name, String email){
+        User findUser = userRepository.findByEmailAndName(email, name)
+                .orElseThrow(() -> new UserNotFoundException("정보가 일치하지 않기 때문에 아이디를 찾을 수 없습니다"));
 
-        return new UserDto(findUser);
+        return new UserSessionDto(findUser);
     }
 
     // [로그인 아이디, 이름, 이메일]로 비밀번호 찾기
-    public UserDto findPassword(String loginId, String name, String email){
-        User findUser = userRepository.findFirstByLoginIdAndNameAndEmail(loginId, name, email)
-                .orElseThrow(() -> new IllegalUserInfoFoundException("아이디, 이름, 이메일에 대한 회원정보가 존재하지 않습니다"));
+    public UserSessionDto findPassword(String loginId, String name, String email){
+        User findUser = userRepository.findByLoginIdAndNameAndEmail(loginId, name, email)
+                .orElseThrow(() -> new UserNotFoundException("정보가 일치하지 않기 때문에 비밀번호를 찾을 수 없습니다"));
 
-        return new UserDto(findUser);
+        return new UserSessionDto(findUser);
     }
+
 
     // 비밀번호 재설정
     @Transactional
     public void resetPassword(String loginId, String changeLoginPassword){
-        User findUser = userRepository.findFirstByLoginId(loginId)
-                .orElseThrow(() -> new IllegalUserInfoFoundException("아이디에 대한 회원정보가 존재하지 않습니다"));
+        User findUser = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UserNotFoundException("회원정보가 존재하지 않습니다"));
         findUser.changePassword(changeLoginPassword);
     }
 }

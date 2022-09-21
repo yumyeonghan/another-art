@@ -2,13 +2,13 @@ package com.imagine.another_arts.domain.login.dto;
 
 import com.imagine.another_arts.domain.user.User;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
 @AllArgsConstructor
-public class UserDto {
+public class UserSessionDto {
     private Long id;
     private String name;
     private String nickname;
@@ -20,7 +20,7 @@ public class UserDto {
     private String address;
     private LocalDate birth;
 
-    public UserDto(User user) {
+    public UserSessionDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.nickname = user.getNickname();

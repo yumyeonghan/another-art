@@ -1,9 +1,11 @@
 package com.imagine.another_arts.web.login.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class FindPasswordResponse {
     private Long userId;

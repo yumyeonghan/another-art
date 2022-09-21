@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice("com.imagine.another_arts.web.auction")
 public class AuctionExceptionHandler {
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(PointNotFullException.class)
-    public ErrorDescription pointNotFullException(PointNotFullException e) {
+    @ExceptionHandler(PointNotEnoughException.class)
+    public ErrorDescription pointNotEnoughtException(PointNotEnoughException e) {
         return new ErrorDescription(
                 false,
                 "BAD_REQUEST",
@@ -20,7 +21,7 @@ public class AuctionExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BidAmountNotEnoughException.class)
-    public ErrorDescription bidAmountNotFullException(BidAmountNotEnoughException e) {
+    public ErrorDescription bidAmountNotEnoughException(BidAmountNotEnoughException e) {
         return new ErrorDescription(
                 false,
                 "BAD_REQUEST",
@@ -53,7 +54,7 @@ public class AuctionExceptionHandler {
     public ErrorDescription closedAuctionException(ClosedAuctionException e) {
         return new ErrorDescription(
                 false,
-                "NOT_FOUND",
+                "BAD_REQUEST",
                 e.getMessage()
         );
     }

@@ -1,9 +1,11 @@
 package com.imagine.another_arts.web.art.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class SingleArtResponse<T> {
     private T art; // result

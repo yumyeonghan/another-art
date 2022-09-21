@@ -33,6 +33,7 @@ public class PointHistoryQueryDSLRepositoryImpl implements PointHistoryQueryDSLR
                 .selectFrom(pointHistory)
                 .innerJoin(pointHistory.user, user).fetchJoin()
                 .where(userIdIn(userIdList))
+                .orderBy(pointHistory.dealDate.desc())
                 .fetch();
     }
 

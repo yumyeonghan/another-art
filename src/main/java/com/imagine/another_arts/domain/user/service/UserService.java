@@ -6,6 +6,7 @@ import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.domain.user.service.dto.request.UserEditRequestDto;
 import com.imagine.another_arts.domain.user.service.dto.request.UserJoinRequestDto;
+import com.imagine.another_arts.exception.DuplicateUserInfoException;
 import com.imagine.another_arts.exception.IllegalUserModifyException;
 import com.imagine.another_arts.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,22 +23,20 @@ public class UserService {
     private final PointHistoryRepository pointHistoryRepository;
 
     @Transactional
-    public Long saveUser(UserJoinRequestDto userJoinRequestDto) {
+    public Long saveUser(UserJoinRequestDto userJoinRequest) {
         User user = User.createUser(
-                userJoinRequestDto.getName(),
-                userJoinRequestDto.getNickname(),
-                userJoinRequestDto.getLoginId(),
-                userJoinRequestDto.getLoginPassword(),
-                userJoinRequestDto.getEmail(),
-                userJoinRequestDto.getSchoolName(),
-                userJoinRequestDto.getPhoneNumber(),
-                userJoinRequestDto.getAddress(),
-                userJoinRequestDto.getBirth()
+                userJoinRequest.getName(),
+                userJoinRequest.getNickname(),
+                userJoinRequest.getLoginId(),
+                userJoinRequest.getLoginPassword(),
+                userJoinRequest.getEmail(),
+                userJoinRequest.getSchoolName(),
+                userJoinRequest.getPhoneNumber(),
+                userJoinRequest.getAddress(),
+                userJoinRequest.getBirth()
         );
         User saveUser = userRepository.save(user);
-
-        PointHistory pointHistory = PointHistory.createPointHistory(user);
-        pointHistoryRepository.save(pointHistory);
+        pointHistoryRepository.save(PointHistory.createPointHistory(user));
 
         return saveUser.getId();
     }
@@ -53,11 +52,8 @@ public class UserService {
         }
 
         if (StringUtils.hasText(editRequestDto.getNickname())) {
-            if (validationChangeNickName(findUser.getId(), editRequestDto.getNickname())) {
-                findUser.changeNickname(editRequestDto.getNickname());
-            } else {
-                throw new IllegalUserModifyException("이미 존재하는 닉네임입니다");
-            }
+            checkDuplicateNicknameInModification(findUser.getId(), editRequestDto.getNickname());
+            findUser.changeNickname(editRequestDto.getNickname());
         }
 
         if (StringUtils.hasText(editRequestDto.getSchoolName())) {
@@ -65,11 +61,8 @@ public class UserService {
         }
 
         if (StringUtils.hasText(editRequestDto.getPhoneNumber())) {
-            if(validationChangePhoneNumber(findUser.getId(), editRequestDto.getPhoneNumber())) {
-                findUser.changePhoneNumber(editRequestDto.getPhoneNumber());
-            } else {
-                throw new IllegalUserModifyException("이미 존재하는 전화번호 입니다");
-            }
+            checkDuplicatePhoneNumberInModification(findUser.getId(), editRequestDto.getPhoneNumber());
+            findUser.changePhoneNumber(editRequestDto.getPhoneNumber());
         }
 
         if (StringUtils.hasText(editRequestDto.getAddress())) {
@@ -77,11 +70,39 @@ public class UserService {
         }
     }
 
-    private boolean validationChangeNickName(Long userId, String changeNickname) {
-        return userRepository.findByIdNotAndNickname(userId, changeNickname).isEmpty();
+    public void checkDuplicateNicknameInModification(Long userId, String changeNickname) {
+        if (userRepository.existsByIdNotAndNickname(userId, changeNickname)) {
+            throw new IllegalUserModifyException("이미 존재하는 닉네임입니다");
+        }
     }
 
-    private boolean validationChangePhoneNumber(Long userId, String changePhoneNumber) {
-        return userRepository.findByIdNotAndPhoneNumber(userId, changePhoneNumber).isEmpty();
+    public void checkDuplicatePhoneNumberInModification(Long userId, String changePhoneNumber) {
+        if (userRepository.existsByIdNotAndPhoneNumber(userId, changePhoneNumber)) {
+            throw new IllegalUserModifyException("이미 존재하는 전화번호 입니다");
+        }
+    }
+
+    public void hasDuplicateNickname(String nickName) {
+        if (userRepository.existsByNickname(nickName)) {
+            throw new DuplicateUserInfoException("이미 존재하는 닉네임입니다");
+        }
+    }
+
+    public void hasDuplicateLoginId(String loginId) {
+        if (userRepository.existsByLoginId(loginId)) {
+            throw new DuplicateUserInfoException("이미 존재하는 아이디입니다");
+        }
+    }
+
+    public void hasDuplicatePhoneNumber(String phoneNumber) {
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new DuplicateUserInfoException("이미 존재하는 전화번호입니다");
+        }
+    }
+
+    public void hasDuplicateEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new DuplicateUserInfoException("이미 존재하는 이메일입니다");
+        }
     }
 }

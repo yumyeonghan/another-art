@@ -2,11 +2,11 @@ package com.imagine.another_arts.domain.art.service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 public class BasicGeneralArtResponse {
     private Long artId; // 작품 ID
     private String artName; // 작품명

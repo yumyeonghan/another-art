@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice("com.imagine.another_arts.web.art")
 public class ArtExceptionHandler {
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ArtNotFoundException.class)
     public ErrorDescription artNotFoundException(ArtNotFoundException e){
@@ -48,16 +49,6 @@ public class ArtExceptionHandler {
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalHashtagDeleteException.class)
-    public ErrorDescription illegalHashtagDeleteException(IllegalHashtagDeleteException e) {
-        return new ErrorDescription(
-                false,
-                "BAD_REQUEST",
-                e.getMessage()
-        );
-    }
-
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(IllegalArtModifyException.class)
     public ErrorDescription illegalArtEditException(IllegalArtModifyException e) {
@@ -79,11 +70,21 @@ public class ArtExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(DuplicationArtNameException.class)
-    public ErrorDescription duplicationArtNameException(DuplicationArtNameException e) {
+    @ExceptionHandler(DuplicateArtNameException.class)
+    public ErrorDescription duplicationArtNameException(DuplicateArtNameException e) {
         return new ErrorDescription(
                 false,
                 "CONFLICT",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalUrlRequestException.class)
+    public ErrorDescription illegalUrlRequestException(IllegalUrlRequestException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
                 e.getMessage()
         );
     }

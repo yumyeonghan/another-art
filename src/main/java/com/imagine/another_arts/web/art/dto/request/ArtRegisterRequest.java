@@ -2,14 +2,18 @@ package com.imagine.another_arts.web.art.dto.request;
 
 import com.imagine.another_arts.domain.art.service.dto.request.ArtRegisterRequestDto;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ArtRegisterRequest {
     private String saleType;

@@ -1,13 +1,22 @@
 package com.imagine.another_arts.web.point.dto.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Getter
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
 public class PointUseRequest {
+    @NotBlank(message = "사용자 로그인 아이디는 필수입니다")
+    @ApiModelProperty(value = "사용자 로그인 아이디", required = true)
     private String loginId;
-    private Long amount;
+
+    @NotNull(message = "충전/환불 금액은 필수입니다")
+    @ApiModelProperty(value = "충전/환불 금액", required = true)
+    private Long dealAmount;
 }

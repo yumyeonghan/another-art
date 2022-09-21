@@ -2,11 +2,11 @@ package com.imagine.another_arts.domain.art.service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 public class BasicAuctionArtResponse {
     private Long auctionId; // 경매 ID
     private Long highestBidUserId; // 최고 비드 유저 ID
