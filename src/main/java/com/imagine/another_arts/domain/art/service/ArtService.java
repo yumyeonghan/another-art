@@ -293,6 +293,47 @@ public class ArtService {
                 )).collect(Collectors.toList());
     }
 
+    @Transactional
+    public void likeArt(Long artId, Long userId) {
+        Art findArt = artRepository.findArtByArtId(artId)
+                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자 정보가 존재하지 않습니다"));
+
+        isAlreadyLikeMarked(findArt, findUser);
+        isSelfLikeMarked(findArt, findUser);
+        likeArtRepository.save(LikeArt.insertLikeArt(findArt, findUser));
+    }
+
+    @Transactional
+    public void cancelArt(Long artId, Long userId) {
+        Art findArt = artRepository.findById(artId)
+                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자 정보가 존재하지 않습니다"));
+
+        isAlreadyCancelMarked(findArt, findUser);
+        likeArtRepository.deleteByArtAndUser(findArt.getId(), findUser.getId());
+    }
+
+    private void isAlreadyLikeMarked(Art art, User user) {
+        if (likeArtRepository.existsByArtAndUser(art, user)) {
+            throw new IllegalMarkedException("이미 좋아요를 누른 작품입니다");
+        }
+    }
+
+    private void isSelfLikeMarked(Art art, User user) {
+        if (art.getUser().getId().equals(user.getId())) {
+            throw new IllegalMarkedException("자신의 작품에 좋아요를 누를 수 없습니다");
+        }
+    }
+
+    private void isAlreadyCancelMarked(Art art, User user) {
+        if (!likeArtRepository.existsByArtAndUser(art, user)) {
+            throw new IllegalMarkedException("이미 좋아요를 취소하였거나 좋아요를 누른적이 없는 작품입니다");
+        }
+    }
+
     // [art_id]에 대한 경매 비드 횟수
     private Long getAuctionBidCountByArtId(List<AuctionHistory> auctionHistoryList, Long artId) {
         return auctionHistoryList.stream()

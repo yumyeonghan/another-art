@@ -18,18 +18,18 @@ public class LikeArt {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "art_id", nullable = false)
     private Art art;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     //==생성 메소드==//
-    public static LikeArt insertLikeArt(User user, Art art){
+    public static LikeArt insertLikeArt(Art art, User user){
         LikeArt likeArt = new LikeArt();
-        likeArt.user = user;
         likeArt.art = art;
+        likeArt.user = user;
         art.getLikeArtList().add(likeArt);
         return likeArt;
     }

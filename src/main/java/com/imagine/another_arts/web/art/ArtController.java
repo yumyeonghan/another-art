@@ -134,4 +134,18 @@ public class ArtController {
             throw new IllegalUrlRequestException("잘못된 요청입니다");
         }
     }
+
+    @PostMapping("/art/like")
+    @ApiOperation(value = "작품 좋아요 API", notes = "사용자가 작품에 좋아요 마킹을 하기 위한 API")
+    public ResponseEntity<Void> likeArt(@Valid @RequestBody LikeArtRequest likeArtRequest) {
+        artService.likeArt(likeArtRequest.getArtId(), likeArtRequest.getUserId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/art/cancel")
+    @ApiOperation(value = "작품 좋아요 취소 API", notes = "이전에 좋아요 버튼을 누른 작품에 대해서 좋아요 취소")
+    public ResponseEntity<Void> cancelArt(@Valid @RequestBody CancelArtRequest cancelArtRequest) {
+        artService.cancelArt(cancelArtRequest.getArtId(), cancelArtRequest.getUserId());
+        return ResponseEntity.noContent().build();
+    }
 }

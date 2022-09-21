@@ -36,11 +36,27 @@ public class LikeArtQueryDSLRepositoryImpl implements LikeArtQueryDSLRepository 
                 .fetchOne();
     }
 
+    @Override
+    public Long deleteByArtAndUser(Long artId, Long userId) {
+        return query
+                .delete(likeArt)
+                .where(artIdEq(artId), userIdEq(userId))
+                .execute();
+    }
+
     private BooleanExpression artIdEq(Long artId) {
         if (artId == null) {
             return null;
         }
 
         return art.id.eq(artId);
+    }
+
+    private BooleanExpression userIdEq(Long userId) {
+        if (userId == null) {
+            return null;
+        }
+
+        return user.id.eq(userId);
     }
 }

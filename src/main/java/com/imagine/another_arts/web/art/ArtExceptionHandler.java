@@ -9,6 +9,26 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice("com.imagine.another_arts.web.art")
 public class ArtExceptionHandler {
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalMarkedException.class)
+    public ErrorDescription illegalMarkedException(IllegalMarkedException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserNotFoundException.class)
+    public ErrorDescription userNotFoundException(UserNotFoundException e) {
+        return new ErrorDescription(
+                false,
+                "NOT_FOUND",
+                e.getMessage()
+        );
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ArtNotFoundException.class)
     public ErrorDescription artNotFoundException(ArtNotFoundException e){
