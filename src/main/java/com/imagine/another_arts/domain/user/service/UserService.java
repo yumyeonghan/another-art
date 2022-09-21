@@ -43,30 +43,30 @@ public class UserService {
 
 
     @Transactional
-    public void editUser(Long userId, UserEditRequestDto editRequestDto) {
+    public void editUser(Long userId, UserEditRequestDto userEditRequest) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다"));
 
-        if (StringUtils.hasText(editRequestDto.getName())) {
-            findUser.changeName(editRequestDto.getName());
+        if (StringUtils.hasText(userEditRequest.getName())) {
+            findUser.changeName(userEditRequest.getName());
         }
 
-        if (StringUtils.hasText(editRequestDto.getNickname())) {
-            checkDuplicateNicknameInModification(findUser.getId(), editRequestDto.getNickname());
-            findUser.changeNickname(editRequestDto.getNickname());
+        if (StringUtils.hasText(userEditRequest.getNickname())) {
+            checkDuplicateNicknameInModification(findUser.getId(), userEditRequest.getNickname());
+            findUser.changeNickname(userEditRequest.getNickname());
         }
 
-        if (StringUtils.hasText(editRequestDto.getSchoolName())) {
-            findUser.changeSchoolName(editRequestDto.getSchoolName());
+        if (StringUtils.hasText(userEditRequest.getSchoolName())) {
+            findUser.changeSchoolName(userEditRequest.getSchoolName());
         }
 
-        if (StringUtils.hasText(editRequestDto.getPhoneNumber())) {
-            checkDuplicatePhoneNumberInModification(findUser.getId(), editRequestDto.getPhoneNumber());
-            findUser.changePhoneNumber(editRequestDto.getPhoneNumber());
+        if (StringUtils.hasText(userEditRequest.getPhoneNumber())) {
+            checkDuplicatePhoneNumberInModification(findUser.getId(), userEditRequest.getPhoneNumber());
+            findUser.changePhoneNumber(userEditRequest.getPhoneNumber());
         }
 
-        if (StringUtils.hasText(editRequestDto.getAddress())) {
-            findUser.changeAddress(editRequestDto.getAddress());
+        if (StringUtils.hasText(userEditRequest.getAddress())) {
+            findUser.changeAddress(userEditRequest.getAddress());
         }
     }
 

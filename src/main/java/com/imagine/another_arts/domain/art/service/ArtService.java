@@ -56,36 +56,36 @@ public class ArtService {
     @Transactional
     public Long registerArt(ArtRegisterRequestDto artRegisterRequest) {
         try {
-            User findArtOwner = userRepository.findById(artRegisterRequest.getUserId())
+            User artOwner = userRepository.findById(artRegisterRequest.getUserId())
                     .orElseThrow(() -> new UnAuthenticatedUserException("가입하지 않은 사용자에 대한 작품 등록 권한은 없습니다"));
 
             MultipartFile uploadFile = artRegisterRequest.getFile();
             UploadArtImageInfo fileInfo = getUploadArtImageInfo(uploadFile);
 
-            Art saveArt = Art.createArt(
-                    findArtOwner,
+            Art art = Art.createArt(
+                    artOwner,
                     artRegisterRequest.getName(),
                     artRegisterRequest.getDescription(),
                     artRegisterRequest.getInitPrice(),
                     fileInfo.getUploadName(),
                     fileInfo.getStoregeName()
             );
-            saveArt.chooseSaleType(artRegisterRequest.getSaleType());
-            artRepository.save(saveArt);
-            insertHashtagList(artRegisterRequest.getHashtagList(), saveArt);
+            art.chooseSaleType(artRegisterRequest.getSaleType());
+            artRepository.save(art);
+            insertHashtagList(artRegisterRequest.getHashtagList(), art);
 
             if (artRegisterRequest.getSaleType().equals("auction")) {
-                Auction saveAuction = Auction.createAuction(
+                Auction auction = Auction.createAuction(
                         artRegisterRequest.getInitPrice(),
                         artRegisterRequest.getStartDate(),
                         artRegisterRequest.getEndDate(),
-                        saveArt
+                        art
                 );
-                auctionRepository.save(saveAuction);
+                auctionRepository.save(auction);
             }
 
             uploadFile.transferTo(new File(fileDir + fileInfo.getStoregeName())); // 파일 저장
-            return saveArt.getId();
+            return art.getId();
         } catch (IOException e) {
             throw new RunTimeArtRegisterException("작품 등록 과정에서 서버상에 오류가 발생했습니다");
         }
@@ -115,10 +115,7 @@ public class ArtService {
         if (hashtagNameList == null || hashtagNameList.size() == 0) {
             return;
         }
-
-        hashtagNameList.forEach(name -> {
-            artHashtagRepository.save(ArtHashtag.insertArtHashtag(saveArt, name));
-        });
+        hashtagNameList.forEach(name -> artHashtagRepository.save(ArtHashtag.insertArtHashtag(saveArt, name)));
     }
 
     // 작품 단건 조회
@@ -143,17 +140,17 @@ public class ArtService {
 
     // 작품 정보 변경
     @Transactional
-    public void editArt(Long artId, ArtEditRequestDto artEditRequestDto) {
+    public void editArt(Long artId, ArtEditRequestDto artEditRequest) {
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
 
-        if (StringUtils.hasText(artEditRequestDto.getUpdateName())) {
-            hasDuplicateArtNameInModification(artId, artEditRequestDto.getUpdateName());
-            findArt.changeArtName(artEditRequestDto.getUpdateName());
+        if (StringUtils.hasText(artEditRequest.getUpdateName())) {
+            hasDuplicateArtNameInModification(artId, artEditRequest.getUpdateName());
+            findArt.changeArtName(artEditRequest.getUpdateName());
         }
 
-        if (StringUtils.hasText(artEditRequestDto.getUpdateDescription())) {
-            findArt.changeDescription(artEditRequestDto.getUpdateDescription());
+        if (StringUtils.hasText(artEditRequest.getUpdateDescription())) {
+            findArt.changeDescription(artEditRequest.getUpdateDescription());
         }
     }
 

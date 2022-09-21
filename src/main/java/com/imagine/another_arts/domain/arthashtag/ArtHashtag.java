@@ -28,6 +28,7 @@ public class ArtHashtag {
         ArtHashtag artHashtag = new ArtHashtag();
         artHashtag.art = art;
         artHashtag.name = name;
+        art.getArtHashtagList().add(artHashtag);
         return artHashtag;
     }
 }

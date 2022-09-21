@@ -29,7 +29,7 @@ public class AuctionService {
         Auction currentAuction = auctionRepository.findAuctionByAuctionId(bidAuctionRequest.getAuctionId())
                 .orElseThrow(() -> new AuctionNotFoundException("경매 정보가 존재하지 않습니다"));
 
-        if(currentAuction.getEndDate().isBefore(LocalDateTime.now())) {
+        if (currentAuction.getEndDate().isBefore(LocalDateTime.now())) {
             throw new ClosedAuctionException("이미 종료된 경매입니다");
         } else if (currentAuction.getBidPrice() >= bidAuctionRequest.getBidPrice()) {
             throw new BidAmountNotEnoughException("입찰 금액이 부족합니다");

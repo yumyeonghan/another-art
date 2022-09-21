@@ -30,7 +30,7 @@ public class Art {
     private String name;
 
     @Lob
-    @Column(name = "description", nullable = false, length = 160, columnDefinition = "TEXT") // 글자 제한 X
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT") // 글자 제한 X
     private String description;
 
     @Column(name = "init_price", nullable = false)
@@ -102,4 +102,3 @@ public class Art {
         this.saleStatus = saleStatus;
     }
 }
-

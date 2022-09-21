@@ -30,6 +30,7 @@ public class LikeArt {
         LikeArt likeArt = new LikeArt();
         likeArt.user = user;
         likeArt.art = art;
+        art.getLikeArtList().add(likeArt);
         return likeArt;
     }
 }

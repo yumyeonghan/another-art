@@ -48,6 +48,7 @@ public class AuctionHistory {
         auctionHistory.art = art;
         auctionHistory.user = user;
         auctionHistory.bidPrice = bidPrice;
+        auction.getAuctionHistoryList().add(auctionHistory);
         return auctionHistory;
     }
 }
