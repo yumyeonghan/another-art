@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "art")
+@EntityListeners(AuditingEntityListener.class)
 public class Art {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +40,7 @@ public class Art {
     @Column(name = "sale_status", nullable = false, length = 8)
     private SaleStatus saleStatus; // FOR_SALE(판매 중), SOLD_OUT(판매 완료)
 
-    @CreationTimestamp // Art 저장하면 자동으로 등록 날짜 생성해서 insert
+    @CreatedDate
     @Column(name = "register_date")
     private LocalDateTime registerDate;
 
