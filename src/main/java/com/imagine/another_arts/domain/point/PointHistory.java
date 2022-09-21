@@ -1,6 +1,6 @@
 package com.imagine.another_arts.domain.point;
 
-import com.imagine.another_arts.domain.point.enums.DealType;
+import com.imagine.another_arts.domain.point.enums.PointType;
 import com.imagine.another_arts.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class PointHistory {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "deal_type", nullable = false, updatable = false, length = 8)
-    private DealType dealType; // JOIN(신규가입 - 포인트내역 instance 생성 = default), CHARGE(충전), REFUND(환불), USE(사용)
+    private PointType pointType; // JOIN(신규가입 - 포인트내역 instance 생성 = default), CHARGE(충전), REFUND(환불), USE(사용)
 
     @Column(name = "deal_amount", nullable = false, updatable = false)
     private Long dealAmount; // default 0
@@ -43,7 +43,7 @@ public class PointHistory {
     // 생성 메소드 1 - 신규가입시 Instance Generate 용도 //
     public static PointHistory createPointHistory(User user) {
         PointHistory pointHistory = new PointHistory();
-        pointHistory.dealType = DealType.JOIN;
+        pointHistory.pointType = PointType.JOIN;
         pointHistory.dealAmount = 0L;
         pointHistory.point = 0L;
         pointHistory.user = user;
@@ -51,9 +51,9 @@ public class PointHistory {
     }
 
     // 생성 메소드 2 - 포인트 내역 누적 //
-    public static PointHistory insertPointHistory(User user, DealType dealType, Long dealAmount, Long point) {
+    public static PointHistory insertPointHistory(User user, PointType pointType, Long dealAmount, Long point) {
         PointHistory pointHistory = new PointHistory();
-        pointHistory.dealType = dealType;
+        pointHistory.pointType = pointType;
         pointHistory.dealAmount = dealAmount;
         pointHistory.point = point;
         pointHistory.user = user;

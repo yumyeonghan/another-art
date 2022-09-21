@@ -1,7 +1,7 @@
 package com.imagine.another_arts.domain.point.service;
 
 import com.imagine.another_arts.domain.point.PointHistory;
-import com.imagine.another_arts.domain.point.enums.DealType;
+import com.imagine.another_arts.domain.point.enums.PointType;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
@@ -26,7 +26,7 @@ public class PointHistoryService {
 
         PointHistory prePointHistory = pointHistoryRepository.findTopByUserOrderByDealDateDesc(user);
 
-        PointHistory proPointHistory = PointHistory.insertPointHistory(user, DealType.CHARGE, amount, prePointHistory.getPoint() + amount);
+        PointHistory proPointHistory = PointHistory.insertPointHistory(user, PointType.CHARGE, amount, prePointHistory.getPoint() + amount);
 
         pointHistoryRepository.save(proPointHistory);
 
@@ -42,7 +42,7 @@ public class PointHistoryService {
             throw new PointNotFullException("포인트가 부족하여 환불할 수 없습니다.");
         }
 
-        PointHistory proPointHistory = PointHistory.insertPointHistory(user, DealType.REFUND, amount, prePointHistory.getPoint() - amount);
+        PointHistory proPointHistory = PointHistory.insertPointHistory(user, PointType.REFUND, amount, prePointHistory.getPoint() - amount);
 
         pointHistoryRepository.save(proPointHistory);
 

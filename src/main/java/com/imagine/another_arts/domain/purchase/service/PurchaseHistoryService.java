@@ -7,7 +7,7 @@ import com.imagine.another_arts.domain.art.repository.ArtRepository;
 import com.imagine.another_arts.domain.auction.Auction;
 import com.imagine.another_arts.domain.auction.repository.AuctionRepository;
 import com.imagine.another_arts.domain.point.PointHistory;
-import com.imagine.another_arts.domain.point.enums.DealType;
+import com.imagine.another_arts.domain.point.enums.PointType;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.purchase.PurchaseHistory;
 import com.imagine.another_arts.domain.purchase.repository.PurchaseHistoryRepository;
@@ -47,7 +47,7 @@ public class PurchaseHistoryService {
 
             saleArt.changeSaleStatus(SaleStatus.SOLD_OUT);
             pointHistoryRepository.save(PointHistory.insertPointHistory(
-                    purchaseUser, DealType.USE,
+                    purchaseUser, PointType.USE,
                     auction.getBidPrice(),
                     pointHistoryRepository
                             .findTopByUserOrderByDealDateDesc(purchaseUser).getPoint() - auction.getBidPrice()));
@@ -62,7 +62,7 @@ public class PurchaseHistoryService {
             purchaseUser.changeAvailablePoint(purchaseUser.getAvailablePoint() - saleArt.getInitPrice());
             saleArt.changeSaleStatus(SaleStatus.SOLD_OUT);
             pointHistoryRepository.save(PointHistory.insertPointHistory(
-                    purchaseUser, DealType.USE,
+                    purchaseUser, PointType.USE,
                     saleArt.getInitPrice(),
                     pointHistoryRepository
                             .findTopByUserOrderByDealDateDesc(purchaseUser).getPoint() - saleArt.getInitPrice()));
