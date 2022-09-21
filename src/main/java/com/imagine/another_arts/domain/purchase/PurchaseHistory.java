@@ -46,7 +46,6 @@ public class PurchaseHistory {
     @JoinColumn(name = "auction_id", unique = true) // 경매를 통한 구매일 경우 포함
     private Auction auction;
 
-
     // 생성 메소드 1 - 일반 구매 내역 //
     public static PurchaseHistory createPurchaseHistoryByGeneral(User user, Art art, Long price) {
         PurchaseHistory purchaseHistory = new PurchaseHistory();

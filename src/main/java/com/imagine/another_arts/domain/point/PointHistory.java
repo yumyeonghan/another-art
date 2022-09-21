@@ -58,5 +58,4 @@ public class PointHistory {
         pointHistory.user = user;
         return pointHistory;
     }
-
 }

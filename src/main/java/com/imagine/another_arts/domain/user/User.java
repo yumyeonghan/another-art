@@ -94,6 +94,8 @@ public class User {
         this.loginPassword = loginPassword;
     }
 
-    // 사용가능 포인트 변경
-    public void changeAvailablePoint(Long availablePoint) { this.availablePoint = availablePoint; }
+    // 사용가능 포인트 업데이트
+    public void updateAvailablePoint(Long availablePoint) {
+        this.availablePoint = availablePoint;
+    }
 }

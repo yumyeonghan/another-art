@@ -1,15 +1,18 @@
 package com.imagine.another_arts.domain.art.service.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class GeneralArtResponse {
+public class GeneralArtResponse extends ArtResponse {
     private Long artLikeCount;
     private BasicGeneralArtResponse generalArt;
-    private List<String> artHashtagList = new ArrayList<>();
+    private List<String> artHashtagList;
 }

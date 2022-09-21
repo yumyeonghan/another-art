@@ -25,7 +25,7 @@ public class LikeArt {
     @JoinColumn(name = "art_id", nullable = false)
     private Art art;
 
-    //==User의 작품 찜에 대해서 등록할 생성 메소드==//
+    //==생성 메소드==//
     public static LikeArt insertLikeArt(User user, Art art){
         LikeArt likeArt = new LikeArt();
         likeArt.user = user;
