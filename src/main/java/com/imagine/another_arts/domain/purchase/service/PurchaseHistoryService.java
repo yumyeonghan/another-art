@@ -12,7 +12,7 @@ import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.purchase.PurchaseHistory;
 import com.imagine.another_arts.domain.purchase.repository.PurchaseHistoryRepository;
 import com.imagine.another_arts.domain.purchase.service.dto.PurchaseArtRequestDto;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.exception.*;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class PurchaseHistoryService {
     public void savePurchaseHistory(PurchaseArtRequestDto purchaseArtRequestDto) {
         Art saleArt = artRepository.findFirstArtBy(purchaseArtRequestDto.getArtId())
                 .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
-        Users purchaseUser = userRepository.findById(purchaseArtRequestDto.getUserId())
+        User purchaseUser = userRepository.findById(purchaseArtRequestDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다"));
 
         validateSaleableArt(saleArt);
@@ -72,13 +72,13 @@ public class PurchaseHistoryService {
         }
     }
 
-    private void validateSufficientPoint(Art art, Users user) {
+    private void validateSufficientPoint(Art art, User user) {
         if(user.getAvailablePoint() < art.getInitPrice()) {
             throw new PointNotFullException("포인트가 충분하지 않습니다다");
         }
     }
 
-    private void validateQualifiedUser(Users user, Auction auction) {
+    private void validateQualifiedUser(User user, Auction auction) {
         if(!auction.getUser().equals(user)) {
             throw new PurchaserNotQualifiedException("구매 자격이 없는 사용자입니다");
         }

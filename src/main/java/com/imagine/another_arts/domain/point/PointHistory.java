@@ -1,7 +1,7 @@
 package com.imagine.another_arts.domain.point;
 
 import com.imagine.another_arts.domain.point.enums.DealType;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,10 +38,10 @@ public class PointHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private Users user;
+    private User user;
 
     // 생성 메소드 1 - 신규가입시 Instance Generate 용도 //
-    public static PointHistory createPointHistory(Users user) {
+    public static PointHistory createPointHistory(User user) {
         PointHistory pointHistory = new PointHistory();
         pointHistory.dealType = DealType.JOIN;
         pointHistory.dealAmount = 0L;
@@ -51,7 +51,7 @@ public class PointHistory {
     }
 
     // 생성 메소드 2 - 포인트 내역 누적 //
-    public static PointHistory insertPointHistory(Users user, DealType dealType, Long dealAmount, Long point) {
+    public static PointHistory insertPointHistory(User user, DealType dealType, Long dealAmount, Long point) {
         PointHistory pointHistory = new PointHistory();
         pointHistory.dealType = dealType;
         pointHistory.dealAmount = dealAmount;

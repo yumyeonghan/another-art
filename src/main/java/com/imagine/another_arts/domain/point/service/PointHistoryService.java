@@ -3,7 +3,7 @@ package com.imagine.another_arts.domain.point.service;
 import com.imagine.another_arts.domain.point.PointHistory;
 import com.imagine.another_arts.domain.point.enums.DealType;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.exception.PointNotFullException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class PointHistoryService {
     @Transactional
     public void chargePoint(String loginId, Long amount) {
 
-        Users user = userRepository.findFirstByLoginId(loginId).get();
+        User user = userRepository.findFirstByLoginId(loginId).get();
 
         PointHistory prePointHistory = pointHistoryRepository.findTopByUserOrderByDealDateDesc(user);
 
@@ -34,7 +34,7 @@ public class PointHistoryService {
 
     @Transactional
     public void refundPoint(String loginId, Long amount) {
-        Users user = userRepository.findFirstByLoginId(loginId).get();
+        User user = userRepository.findFirstByLoginId(loginId).get();
 
         PointHistory prePointHistory = pointHistoryRepository.findTopByUserOrderByDealDateDesc(user);
 

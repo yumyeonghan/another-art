@@ -2,7 +2,7 @@ package com.imagine.another_arts.domain.user.service;
 
 import com.imagine.another_arts.domain.point.PointHistory;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.domain.user.service.dto.request.UserEditRequestDto;
 import com.imagine.another_arts.domain.user.service.dto.request.UserJoinRequestDto;
@@ -23,7 +23,7 @@ public class UserService {
 
     @Transactional
     public Long saveUser(UserJoinRequestDto userJoinRequestDto) {
-        Users user = Users.createUser(
+        User user = User.createUser(
                 userJoinRequestDto.getName(),
                 userJoinRequestDto.getNickname(),
                 userJoinRequestDto.getLoginId(),
@@ -34,7 +34,7 @@ public class UserService {
                 userJoinRequestDto.getAddress(),
                 userJoinRequestDto.getBirth()
         );
-        Users saveUser = userRepository.save(user);
+        User saveUser = userRepository.save(user);
 
         PointHistory pointHistory = PointHistory.createPointHistory(user);
         pointHistoryRepository.save(pointHistory);
@@ -45,7 +45,7 @@ public class UserService {
 
     @Transactional
     public void editUser(Long userId, UserEditRequestDto editRequestDto) {
-        Users findUser = userRepository.findById(userId)
+        User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다"));
 
         if (StringUtils.hasText(editRequestDto.getName())) {

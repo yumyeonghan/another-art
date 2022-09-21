@@ -21,7 +21,7 @@ import com.imagine.another_arts.domain.hashtag.repository.HashtagRepository;
 import com.imagine.another_arts.domain.likeart.LikeArt;
 import com.imagine.another_arts.domain.likeart.repository.LikeArtRepository;
 import com.imagine.another_arts.domain.purchase.repository.PurchaseHistoryRepository;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.exception.*;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +60,7 @@ public class ArtService {
     @Transactional
     public Long registerArt(ArtRegisterRequestDto artRegisterRequestDto) {
         try {
-            Users findArtOwner = userRepository.findById(artRegisterRequestDto.getUserId())
+            User findArtOwner = userRepository.findById(artRegisterRequestDto.getUserId())
                     .orElseThrow(() -> new UnAuthenticatedUserException("가입하지 않은 사용자에 대한 작품 등록 권한은 없습니다"));
 
             MultipartFile uploadFile = artRegisterRequestDto.getFile();

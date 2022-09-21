@@ -3,7 +3,7 @@ package com.imagine.another_arts.domain.purchase;
 import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.auction.Auction;
 import com.imagine.another_arts.domain.purchase.enums.PurchaseCategory;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +37,7 @@ public class PurchaseHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    private Users user;
+    private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "art_id", nullable = false, updatable = false, unique = true)
@@ -49,7 +49,7 @@ public class PurchaseHistory {
 
 
     // 생성 메소드 1 - 일반 구매 내역 //
-    public static PurchaseHistory createPurchaseHistoryByGeneral(Users user, Art art, Long price) {
+    public static PurchaseHistory createPurchaseHistoryByGeneral(User user, Art art, Long price) {
         PurchaseHistory purchaseHistory = new PurchaseHistory();
         purchaseHistory.user = user;
         purchaseHistory.art = art;
@@ -59,7 +59,7 @@ public class PurchaseHistory {
     }
 
     // 생성 메소드 2 - 경매 낙찰 내역 //
-    public static PurchaseHistory createPurchaseHistoryByAuction(Users user, Art art, Auction auction, Long price) {
+    public static PurchaseHistory createPurchaseHistoryByAuction(User user, Art art, Auction auction, Long price) {
         PurchaseHistory purchaseHistory = new PurchaseHistory();
         purchaseHistory.user = user;
         purchaseHistory.art = art;

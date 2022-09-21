@@ -1,7 +1,7 @@
 package com.imagine.another_arts.domain.auction;
 
 import com.imagine.another_arts.domain.art.Art;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +30,7 @@ public class Auction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users user; // 경매에 참여하는 사람들 & 처음 경매 등록할때는 NULL 허용
+    private User user; // 경매에 참여하는 사람들 & 처음 경매 등록할때는 NULL 허용
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "art_id", nullable = false, unique = true, updatable = false)
@@ -47,7 +47,7 @@ public class Auction {
     }
 
     //==관련 비즈니스 로직 작성 공간==//
-    public void applyNewBid(Users user, Long bidPrice){ // user의 새로운 비드 : bid 들어올 때 이 메소드 통해서 정보 변경
+    public void applyNewBid(User user, Long bidPrice){ // user의 새로운 비드 : bid 들어올 때 이 메소드 통해서 정보 변경
         this.user = user;
         this.bidPrice = bidPrice;
     }

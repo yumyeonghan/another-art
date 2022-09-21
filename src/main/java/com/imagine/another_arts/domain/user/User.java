@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -48,9 +48,9 @@ public class Users {
     private Long availablePoint;
 
     //==생성 메소드==//
-    public static Users createUser(String name, String nickname, String loginId, String loginPassword,
-                                   String email, String schoolName, String phoneNumber, String address, LocalDate birth) {
-        Users user = new Users();
+    public static User createUser(String name, String nickname, String loginId, String loginPassword,
+                                  String email, String schoolName, String phoneNumber, String address, LocalDate birth) {
+        User user = new User();
         user.name = name;
         user.nickname = nickname;
         user.loginId = loginId;

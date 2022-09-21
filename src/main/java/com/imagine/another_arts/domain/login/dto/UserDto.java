@@ -1,6 +1,6 @@
 package com.imagine.another_arts.domain.login.dto;
 
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class UserDto {
     private String address;
     private LocalDate birth;
 
-    public UserDto(Users user) {
+    public UserDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.nickname = user.getNickname();

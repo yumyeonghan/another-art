@@ -2,7 +2,7 @@ package com.imagine.another_arts.domain.art;
 
 import com.imagine.another_arts.domain.art.enums.SaleStatus;
 import com.imagine.another_arts.domain.art.enums.SaleType;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,10 +50,10 @@ public class Art {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false) // 작품 등록하면 등록작가 변경 불가능 (FE에서 경고 알람 생성)
-    private Users user;
+    private User user;
 
     //==생성 메소드==//
-    public static Art createArt(Users user, String name, String description, Long initPrice, String uploadName, String storageName) {
+    public static Art createArt(User user, String name, String description, Long initPrice, String uploadName, String storageName) {
         Art art = new Art();
         art.user = user;
         art.name = name;
