@@ -1,8 +1,8 @@
 package com.imagine.another_arts.web.point;
 
 import com.imagine.another_arts.exception.ErrorDescription;
-import com.imagine.another_arts.exception.IllegalUserInfoFoundException;
-import com.imagine.another_arts.exception.PointNotFullException;
+import com.imagine.another_arts.exception.PointNotEnoughException;
+import com.imagine.another_arts.exception.UnAuthenticatedUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class PointExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(IllegalUserInfoFoundException.class)
-    public ErrorDescription illegalUserInfoFoundException(IllegalUserInfoFoundException e) {
+    @ExceptionHandler(UnAuthenticatedUserException.class)
+    public ErrorDescription unAuthenticatedUserException(UnAuthenticatedUserException e) {
         return new ErrorDescription(
                 false,
                 "UNAUTHORIZED",
@@ -22,14 +22,12 @@ public class PointExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(PointNotFullException.class)
-    public ErrorDescription pointNotFullException(PointNotFullException e) {
+    @ExceptionHandler(PointNotEnoughException.class)
+    public ErrorDescription pointNotFullException(PointNotEnoughException e) {
         return new ErrorDescription(
                 false,
                 "BAD_REQUEST",
                 e.getMessage()
         );
     }
-
-
 }

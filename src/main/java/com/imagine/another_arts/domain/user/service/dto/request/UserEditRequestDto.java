@@ -1,9 +1,9 @@
 package com.imagine.another_arts.domain.user.service.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class UserEditRequestDto {
     private String name;

@@ -1,13 +1,13 @@
 package com.imagine.another_arts.domain.art.service.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
 public class ArtRegisterRequestDto {
     private String saleType;
     private Long userId;

@@ -8,29 +8,39 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice("com.imagine.another_arts.web.purchase")
 public class PurchaseExceptionHandler {
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(AuctionNotFoundException.class)
+    public ErrorDescription auctionNotFoundException(AuctionNotFoundException e) {
+        return new ErrorDescription(
+                false,
+                "NOT_FOUND",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ArtNotFoundException.class)
     public ErrorDescription artNotFoundException(ArtNotFoundException e) {
         return new ErrorDescription(
                 false,
-                "BAD_REQUEST",
+                "NOT_FOUND",
                 e.getMessage()
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ErrorDescription userNotFoundException(UserNotFoundException e) {
         return new ErrorDescription(
                 false,
-                "BAD_REQUEST",
+                "NOT_FOUND",
                 e.getMessage()
         );
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(PointNotFullException.class)
-    public ErrorDescription pointNotFullException(PointNotFullException e) {
+    @ExceptionHandler(NotClosedAuctionException.class)
+    public ErrorDescription notClosedAuctionException(NotClosedAuctionException e) {
         return new ErrorDescription(
                 false,
                 "BAD_REQUEST",
@@ -39,8 +49,18 @@ public class PurchaseExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(PurchaserNotQualifiedException.class)
-    public ErrorDescription purchaseNotQualifiedException(PurchaserNotQualifiedException e) {
+    @ExceptionHandler(PointNotEnoughException.class)
+    public ErrorDescription pointNotEnoughtException(PointNotEnoughException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
+                e.getMessage()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UnQualifiedUserException.class)
+    public ErrorDescription unQualifiedUserException(UnQualifiedUserException e) {
         return new ErrorDescription(
                 false,
                 "BAD_REQUEST",

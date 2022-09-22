@@ -1,15 +1,14 @@
 package com.imagine.another_arts.domain.art.service.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @AllArgsConstructor
-public class AuctionArtResponse {
+public class AuctionArtResponse extends ArtResponse {
     private Long auctionArtBidCount;
     private BasicAuctionArtResponse auctionArt;
-    private List<String> artHashtagList = new ArrayList<>();
+    private List<String> artHashtagList;
 }

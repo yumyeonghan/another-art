@@ -2,7 +2,7 @@ package com.imagine.another_arts.domain.auctionhistory;
 
 import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.auction.Auction;
-import com.imagine.another_arts.domain.user.Users;
+import com.imagine.another_arts.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,7 @@ public class AuctionHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", updatable = false)
-    private Users user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "art_id", updatable = false)
@@ -42,12 +42,13 @@ public class AuctionHistory {
     private Auction auction;
 
     //==생성 메소드==//
-    public static AuctionHistory createAuctionHistory(Auction auction, Art art, Users user, Long bidPrice) { // bid 들어오면 반드시 생성해서 insert
+    public static AuctionHistory createAuctionHistory(Auction auction, Art art, User user, Long bidPrice) { // bid 들어오면 반드시 생성해서 insert
         AuctionHistory auctionHistory = new AuctionHistory();
         auctionHistory.auction = auction;
         auctionHistory.art = art;
         auctionHistory.user = user;
         auctionHistory.bidPrice = bidPrice;
+        auction.getAuctionHistoryList().add(auctionHistory);
         return auctionHistory;
     }
 }

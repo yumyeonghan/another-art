@@ -8,7 +8,6 @@ import org.hibernate.engine.jdbc.internal.FormatStyle;
 import java.util.Locale;
 
 public class P6SpyFormatter extends JdbcEventListener implements MessageFormattingStrategy {
-
     @Override
     public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
         StringBuilder sb = new StringBuilder();
