@@ -8,10 +8,11 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import router from './router'
+import store from './store.js'
 
 library.add(fas, far, fab);
 
 let app = createApp(App);
 app.config.globalProperties.window = window;
 
-app.use(router).component("font-awesome-icon", FontAwesomeIcon).mount('#app');
+app.use(router).use(store).component("font-awesome-icon", FontAwesomeIcon).mount('#app');

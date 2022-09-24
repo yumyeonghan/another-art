@@ -38,19 +38,20 @@
                     </ul> -->
                     <!-- Search form -->
                     <!-- class="d-none d-md-flex justify-content-center" -->
-                    
-                    <div class="mx-auto input-group w-auto my-auto">
-                            <select class="btn btn-outline-primary rounded-start dropdown-toggle"
-                                data-bs-toggle="dropdown" aria-expanded="false"  @change="test($event)"
-                                style="border-end-end-radius: 0; border-start-end-radius: 0;">
-                                <option class="dropdown-item" href="#">경매 작품</option>
-                                <option class="dropdown-item" href="#">일반 작품</option>
-                            </select>
 
-                        <input autocomplete="off" type="text" v-model="searchData.hashtag"
+                    <div class="mx-auto input-group w-auto my-auto">
+                        <select class="btn btn-outline-primary rounded-start dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false" @change="test($event)"
+                            style="border-end-end-radius: 0; border-start-end-radius: 0;">
+                            <option class="dropdown-item" href="#">경매 작품</option>
+                            <option class="dropdown-item" href="#">일반 작품</option>
+                        </select>
+
+                        <input autocomplete="off" type="text" v-model="searchData.keyword"
                             class="form-control rounded-0 border border-primary" placeholder='Search'
-                            style="min-width: 225px; max-width: 600px;" aria-label="Text input with dropdown button"/>
-                        <button @click="artworkSearch" class="input-group-text border border-primary bg-light form-control">
+                            style="min-width: 225px; max-width: 600px;" aria-label="Text input with dropdown button" />
+                        <button @click="artworkSearch"
+                            class="input-group-text border border-primary bg-light form-control">
                             <font-awesome-icon icon="search" />
                         </button>
                     </div>
@@ -60,16 +61,13 @@
 
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a @click="$router.push('/userLogin');" class="nav-link active" aria-current="page"
-                                    href="#">로그인</a>
+                                <a href="/userLogin" class="nav-link active" aria-current="page">로그인</a>
                             </li>
                             <li class="nav-item">
-                                <h6 class="nav-link active text-secondary"
-                                    aria-current="page" href="#">|</h6>
+                                <h6 class="nav-link active text-secondary" aria-current="page" href="#">|</h6>
                             </li>
                             <li class="nav-item">
-                                <a @click="$router.push('/createAccount/termsOfService');" class="nav-link active"
-                                    href="#">회원가입</a>
+                                <a href="/createAccount/userRegister" class="nav-link active">회원가입</a>
                             </li>
                             <button @click="$router.push('/artworkRegister')" class="btn btn-outline-primary mx-2">
                                 작품 등록
@@ -104,6 +102,7 @@
 
 <script>
 import axios from 'axios';
+// import qs from 'qs';
 
 export default {
     name: 'navbar',
@@ -111,16 +110,17 @@ export default {
         return {
             searchDropdownValue: '',
             searchData: {
-                hashtag: '사자',
+                keyword: 'art3',
                 scroll: 0,
                 sort: 'date',
                 type: 'general',
             },
+            num: 0,
         }
     },
     methods: {
         test($event) {
-            if($event.target.value == '일반 작품') {
+            if ($event.target.value == '일반 작품') {
                 this.searchData.type = 'general';
             } else {
                 this.searchData.type = 'auction';
@@ -132,22 +132,28 @@ export default {
             // }).catch((res) => {
             //     console.log(res);
             // });
-            let url = '/api/search/art';
             console.log(this.searchData);
 
-            axios({
-                method: 'GET',
-                headers: { 'content-type': 'application/json' },
-                data: this.searchData,
-                url
+            // axios({
+            //     method: 'GET',
+            //     headers: { 'content-type': 'application/json' },
+            //     data: this.searchData,
+            //     url
+            // }).then((res) => {
+            //     console.log('success');
+            //     console.log(res);
+            // }).catch((res) => {
+            //     console.log('fail');
+            //     console.log(res);
+            // });
+            axios.get('/api/keyword/arts', {
+                params: this.searchData
             }).then((res) => {
-                console.log('success');
-                console.log(res);
+                console.log("then " + JSON.stringify(res.data));
             }).catch((res) => {
-                console.log('fail');
-                console.log(res);
-            });
-                
+                console.log("catch " + JSON.stringify(res));
+            })
+
         },
     }
 

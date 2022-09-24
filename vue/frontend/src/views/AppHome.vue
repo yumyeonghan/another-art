@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="mb-3">
+      <button @click="$router.push('/searchResults')" class="btn btn-primary">searchResults</button>
+      </div>
     <img @click="$router.push('/artworkPurchase')" src="https://via.placeholder.com/150">
     <p>This is home</p>
   </div>
@@ -7,10 +10,9 @@
 
 <script>
 export default {
-    name: 'appHome',
+  name: 'appHome',
 }
 </script>
 
 <style>
-
 </style>

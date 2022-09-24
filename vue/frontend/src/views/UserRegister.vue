@@ -4,8 +4,6 @@
             <div class="row gx-4 justify-content-center m-auto">
                 <div class="col-md-10 position-static d-block p-3 text-black"
                     style="--bs-bg-opacity: .4; --bs-text-opacity: 0.6;">
-
-                    <button @click="test">test</button>
                     <div class="p-4">
                          <!-- style="--bs-text-opacity: 0.6;" -->
                         <h4 class="mb-3 text-center text-black fs-2 fw-bold">회원가입</h4>
