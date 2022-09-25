@@ -1,23 +1,27 @@
 import { createWebHistory, createRouter } from "vue-router"
-import AppHome from './views/AppHome.vue'
-import UserRegister from './views/UserRegister.vue'
-import ArtworkRegister from './views/ArtworkRegister.vue'
-import TermsOfService from './views/TermsOfService.vue'
-import CreateAccount from './views/CreateAccount.vue'
-import IdFind from './views/IdFind.vue'
-import PasswordFind from './views/PasswordFind.vue'
-import UserPointCharge from './views/UserPointCharge.vue'
-import UserPointRefund from './views/UserPointRefund.vue'
+import AppHome from './views/home/AppHome.vue'
+import UserRegister from './views/user/UserRegister.vue'
+import ArtworkRegister from './views/art/ArtworkRegister.vue'
+// import TermsOfService from './views/TermsOfService.vue'
+import CreateAccount from './views/user/CreateAccount.vue'
+import IdFind from './views/login/IdFind.vue'
+import PasswordFind from './views/login/PasswordFind.vue'
+import UserPointCharge from './views/user/UserPointCharge.vue'
+import UserPointRefund from './views/user/UserPointRefund.vue'
+import ArtworkPurchase from './views/art/ArtworkPurchase.vue'
+import UserLogin from './views/login/UserLogin.vue'
+import SearchResults from './views/search/SearchResults.vue'
+import UpdateUserInfo from './views/myPage/UpdateUserInfo.vue'
 
 const routes = [
   {
     path: "/createAccount",
     component: CreateAccount,
     children: [
-      {
-        path: "termsOfService",
-        component: TermsOfService,
-      },
+      // {
+      //   path: "termsOfService",
+      //   component: TermsOfService,
+      // },
       {
         path: "userRegister",
         component: UserRegister,
@@ -47,6 +51,22 @@ const routes = [
   {
     path: "/userPointRefund",
     component: UserPointRefund,
+  },
+  {
+    path: "/artworkPurchase",
+    component: ArtworkPurchase,
+  },
+  {
+    path: "/userLogin",
+    component: UserLogin,
+  },
+  {
+    path: "/searchResults",
+    component: SearchResults,
+  },
+  {
+    path: "/updateUserInfo",
+    component: UpdateUserInfo,
   },
 ];
 

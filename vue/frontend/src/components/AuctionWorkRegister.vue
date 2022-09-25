@@ -8,7 +8,7 @@
             </div>
 
             <div :class="col_style" class="mb-2">
-                <label for="tag" class="form-label">태그</label>
+                <label for="tag" class="form-label">해시태그</label>
                 <input type="text" class="form-control form-control-lg p-3" id="tag" name="tag"
                     placeholder="#산뜻한 #차가운 #심오한" value="" required>
             </div>
@@ -57,7 +57,7 @@
 
 <script>
 export default {
-    name: 'auctionWork',
+    name: 'auctionWorkRegister',
     data() {
     return {
       col_style: 'col-md-10 offset-md-1',
