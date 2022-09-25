@@ -69,6 +69,12 @@
                             <li class="nav-item">
                                 <a href="/createAccount/userRegister" class="nav-link active">회원가입</a>
                             </li>
+                            <li class="nav-item">
+                                <h6 class="nav-link active text-secondary" aria-current="page" href="#">|</h6>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/myPage" class="nav-link active">마이페이지</a>
+                            </li>
                             <button @click="$router.push('/artworkRegister')" class="btn btn-outline-primary mx-2">
                                 작품 등록
                             </button>

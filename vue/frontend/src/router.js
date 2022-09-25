@@ -6,12 +6,13 @@ import ArtworkRegister from './views/art/ArtworkRegister.vue'
 import CreateAccount from './views/user/CreateAccount.vue'
 import IdFind from './views/login/IdFind.vue'
 import PasswordFind from './views/login/PasswordFind.vue'
-import UserPointCharge from './views/user/UserPointCharge.vue'
-import UserPointRefund from './views/user/UserPointRefund.vue'
+import UserPointCharge from './views/myPage/UserPointCharge.vue'
+import UserPointRefund from './views/myPage/UserPointRefund.vue'
 import ArtworkPurchase from './views/art/ArtworkPurchase.vue'
 import UserLogin from './views/login/UserLogin.vue'
 import SearchResults from './views/search/SearchResults.vue'
 import UpdateUserInfo from './views/myPage/UpdateUserInfo.vue'
+import MyPage from './views/myPage/MyPage.vue'
 
 const routes = [
   {
@@ -25,6 +26,24 @@ const routes = [
       {
         path: "userRegister",
         component: UserRegister,
+      },
+    ]
+  },
+  {
+    path: "/myPage",
+    component: MyPage,
+    children: [
+      {
+        path: "updateUserInfo",
+        component: UpdateUserInfo,
+      },
+      {
+        path: "userPointCharge",
+        component: UserPointCharge,
+      },
+      {
+        path: "userPointRefund",
+        component: UserPointRefund,
       },
     ]
   },
