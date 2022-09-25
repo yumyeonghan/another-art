@@ -6,21 +6,29 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">duplicateCheckModal</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">아이디 중복체크</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        duplicateCheckModal
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Understood</button>
+                        <div class="input-group rounded">
+                            <input v-model="userId" type="search" class="form-control rounded" placeholder="아이디"
+                                aria-label="Search" aria-describedby="search-addon" autofucus/>
+                            <span class="input-group-text border-0" id="search-addon">
+                                <button type="button" @click="userIdSearch(userId)" class="btn">검색</button>
+                            </span>
+                            <div>
+                                
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" disabled>사용하기</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- univModal -->
-        <div class="modal fade" id="univModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        <div class="modal fade" id="schoolModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content h-598">
@@ -78,6 +86,7 @@ export default {
     name: 'registerModals',
     data() {
         return {
+            userId: '',
             univName: '',
             univSearchKeyword: '',
             univInfoList: [],
@@ -101,6 +110,14 @@ export default {
                     // content[i].adres -> 학교 주소
                 }).catch(() => {
                     console.log('error: no more url');
+                })
+        },
+        userIdSearch(userId) {
+            axios.get(`/api/user/nickname/duplication/${userId}`)
+                .then((response) => {
+                    console.log('success ' + response);
+                }).catch(() => {
+                    console.log('fail');
                 })
         },
     }

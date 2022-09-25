@@ -37,14 +37,13 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="card mt-3 mb-5">
-                  <!-- <img src="https://via.placeholder.com/150" style="height: auto;"> -->
                   <label for="image" class="input-button" style="cursor: pointer;">
                     <button type="button" class="btn btn-outline-dark importar">
                       <h5 style="position: relative; top: 30%;">이미지 등록</h5>
                     </button>
                   </label>
-                  <input type="file" @change="upload" accept="image/*" multiple id="image" name="image"
-                    class="inputfile" style="display: none;" />
+                  <input type="file" @change="upload" accept="image/*" enctype="multipart/form-data" id="image" name="image"
+                    class="inputfile" style="display: none;" multiple />
                   <div class="card-body pt-4">
                     <!-- <h2 class="card-title"></h2> -->
                     <p class="card-text">이미지 파일을 추가하면 오른쪽 공간에 이미지가 표시됩니다.</p>

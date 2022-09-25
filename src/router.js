@@ -6,8 +6,8 @@ import TermsOfService from './views/TermsOfService.vue'
 import CreateAccount from './views/CreateAccount.vue'
 import IdFind from './views/IdFind.vue'
 import PasswordFind from './views/PasswordFind.vue'
-import MyPage from "@/views/MyPage";
-import SearchPage from "@/views/SearchPage";
+import UserPointCharge from './views/UserPointCharge.vue'
+import UserPointRefund from './views/UserPointRefund.vue'
 
 const routes = [
   {
@@ -41,13 +41,13 @@ const routes = [
     component: PasswordFind,
   },
   {
-    path: "/myPage",
-    component: MyPage,
+    path: "/userPointCharge",
+    component: UserPointCharge,
   },
   {
-    path: "/searchPage",
-    component: SearchPage
-  }
+    path: "/userPointRefund",
+    component: UserPointRefund,
+  },
 ];
 
 const router = createRouter({
