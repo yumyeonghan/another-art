@@ -2,7 +2,10 @@
   <div>
     <div class="mb-3">
       <button @click="$router.push('/searchResults')" class="btn btn-primary">searchResults</button>
-      </div>
+    </div>
+    <div class="mb-3">
+      <button @click="$router.push('/updateUserInfo')" class="btn btn-primary">updateUserInfo</button>
+    </div>
     <img @click="$router.push('/artworkPurchase')" src="https://via.placeholder.com/150">
     <p>This is home</p>
   </div>
@@ -15,4 +18,5 @@ export default {
 </script>
 
 <style>
+
 </style>

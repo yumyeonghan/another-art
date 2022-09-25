@@ -14,13 +14,13 @@
                   aria-label="Basic example">
                   <button type="button" @click="workType = 'general';" id="artworkType" class="btn btn-outline-dark">
                     <div class="mb-2">
-                      <img src="../assets/won2.png" style="height: 40px;">
+                      <img src="../../assets/won2.png" style="height: 40px;">
                     </div>
                     일반 작품
                   </button>
                   <button type="button" @click="workType = 'auction';" class="btn btn-outline-dark">
                     <div class="mb-2">
-                      <img src="../assets/hammer.png" style="height: 40px;">
+                      <img src="../../assets/hammer.png" style="height: 40px;">
                     </div>
                     경매 작품
                   </button>
@@ -80,8 +80,8 @@
 </template>
 
 <script>
-import AuctionWork from '../components/AuctionWorkRegister.vue'
-import GeneralWork from '../components/GeneralWorkRegister.vue'
+import AuctionWork from '../../components/AuctionWorkRegister.vue'
+import GeneralWork from '../../components/GeneralWorkRegister.vue'
 
 export default {
   name: 'artworkRegister',
@@ -113,7 +113,7 @@ input[type=number] {
   width: 100%;
   height: 272px;
   pointer-events: none;
-  background: url('../assets/camera-128.jpg');
+  background: url('../../assets/camera-128.jpg');
   background-color: rgb(250, 250, 253);
   background-position: 50% 50%;
   background-repeat: no-repeat;

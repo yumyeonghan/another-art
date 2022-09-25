@@ -1,16 +1,17 @@
 import { createWebHistory, createRouter } from "vue-router"
-import AppHome from './views/AppHome.vue'
-import UserRegister from './views/UserRegister.vue'
-import ArtworkRegister from './views/ArtworkRegister.vue'
+import AppHome from './views/home/AppHome.vue'
+import UserRegister from './views/user/UserRegister.vue'
+import ArtworkRegister from './views/art/ArtworkRegister.vue'
 // import TermsOfService from './views/TermsOfService.vue'
-import CreateAccount from './views/CreateAccount.vue'
-import IdFind from './views/IdFind.vue'
-import PasswordFind from './views/PasswordFind.vue'
-import UserPointCharge from './views/UserPointCharge.vue'
-import UserPointRefund from './views/UserPointRefund.vue'
-import ArtworkPurchase from './views/ArtworkPurchase.vue'
-import UserLogin from './views/UserLogin.vue'
-import SearchResults from './views/SearchResults.vue'
+import CreateAccount from './views/user/CreateAccount.vue'
+import IdFind from './views/login/IdFind.vue'
+import PasswordFind from './views/login/PasswordFind.vue'
+import UserPointCharge from './views/user/UserPointCharge.vue'
+import UserPointRefund from './views/user/UserPointRefund.vue'
+import ArtworkPurchase from './views/art/ArtworkPurchase.vue'
+import UserLogin from './views/login/UserLogin.vue'
+import SearchResults from './views/search/SearchResults.vue'
+import UpdateUserInfo from './views/myPage/UpdateUserInfo.vue'
 
 const routes = [
   {
@@ -62,6 +63,10 @@ const routes = [
   {
     path: "/searchResults",
     component: SearchResults,
+  },
+  {
+    path: "/updateUserInfo",
+    component: UpdateUserInfo,
   },
 ];
 

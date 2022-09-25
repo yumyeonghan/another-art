@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import GeneralWorkPurchase from '../components/GeneralWorkPurchase.vue'
+import GeneralWorkPurchase from '../../components/GeneralWorkPurchase.vue'
 export default {
     name: 'ArtworkPruchase',
     components: {
