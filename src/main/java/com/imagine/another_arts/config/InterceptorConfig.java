@@ -14,6 +14,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor())
                 .order(1)
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/user", "/api/login");
+                .excludePathPatterns("/api/user", "/api/login", "/api/user/duplicate-check", "/api/main/arts");
     }
 }
