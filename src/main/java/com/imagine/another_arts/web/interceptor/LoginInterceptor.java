@@ -31,7 +31,7 @@ public class LoginInterceptor implements HandlerInterceptor{
 
             ErrorDescription errorDescription = new ErrorDescription(
                     false,
-                    "Unauthorized",
+                    "UNAUTHORIZED",
                     "비로그인 사용자 요청"
             );
 

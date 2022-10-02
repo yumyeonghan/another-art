@@ -1,18 +1,25 @@
 package com.imagine.another_arts.domain.user.service;
 
+import com.imagine.another_arts.domain.login.dto.UserSessionDto;
 import com.imagine.another_arts.domain.point.PointHistory;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.domain.user.service.dto.request.UserEditRequestDto;
 import com.imagine.another_arts.domain.user.service.dto.request.UserJoinRequestDto;
+import com.imagine.another_arts.domain.user.service.dto.response.MyPageUserResponse;
 import com.imagine.another_arts.exception.DuplicateUserInfoException;
+import com.imagine.another_arts.exception.IllegalUserApiRequestException;
 import com.imagine.another_arts.exception.IllegalUserModifyException;
 import com.imagine.another_arts.exception.UserNotFoundException;
+import com.imagine.another_arts.web.SessionFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +111,22 @@ public class UserService {
         if (userRepository.existsByEmail(email)) {
             throw new DuplicateUserInfoException("이미 존재하는 이메일입니다");
         }
+    }
+
+    public MyPageUserResponse getUserInformation(HttpServletRequest request, Long userId) {
+        UserSessionDto currentUserSession = getCurrentUserSession(request);
+        if (!Objects.equals(currentUserSession.getId(), userId)) {
+            throw new IllegalUserApiRequestException("타인의 정보는 요청할 수 없습니다");
+        }
+
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다"));
+        Long currentUserTotalPoint = pointHistoryRepository.findLatestPointByUserId(userId);
+
+        return new MyPageUserResponse(findUser, currentUserTotalPoint);
+    }
+
+    private UserSessionDto getCurrentUserSession(HttpServletRequest request) {
+        return (UserSessionDto) request.getSession(false).getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
     }
 }
