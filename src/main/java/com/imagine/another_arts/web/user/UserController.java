@@ -1,6 +1,7 @@
 package com.imagine.another_arts.web.user;
 
 import com.imagine.another_arts.domain.user.service.UserService;
+import com.imagine.another_arts.domain.user.service.dto.response.MyPageUserResponse;
 import com.imagine.another_arts.exception.IllegalUrlRequestException;
 import com.imagine.another_arts.web.user.dto.request.DuplicateCheckRequest;
 import com.imagine.another_arts.web.user.dto.request.UserEditRequest;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -67,5 +69,11 @@ public class UserController {
             default:
                 throw new IllegalUrlRequestException("잘못된 요청입니다");
         }
+    }
+
+    @GetMapping("/user/{userId}")
+    @ApiOperation(value = "마이페이지 사용자 정보 API", notes = "마이페이지에서 사용자에 관한 정보를 응답하는 API")
+    public MyPageUserResponse getUserInformation (@PathVariable Long userId, HttpServletRequest request) {
+        return userService.getUserInformation(request, userId);
     }
 }

@@ -47,4 +47,14 @@ public class UserExceptionHandler {
                 e.getMessage()
         );
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalUserApiRequestException.class)
+    public ErrorDescription illegalUserApiRequestException(IllegalUserApiRequestException e) {
+        return new ErrorDescription(
+                false,
+                "BAD_REQUEST",
+                e.getMessage()
+        );
+    }
 }
