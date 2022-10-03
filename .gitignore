@@ -4,7 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-src/main/resources/application-anotherArt.properties
 
 ### STS ###
 .apt_generated
@@ -23,7 +22,7 @@ application-anotherArt.properties
 application-dev.properties
 **/src/main/resources/images/
 **/src/main/resources/sql/
-**/src/main/generated/**
+**/src/main/generated/
 .idea
 *.iws
 *.iml
