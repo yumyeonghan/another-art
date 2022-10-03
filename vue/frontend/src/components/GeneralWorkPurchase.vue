@@ -4,20 +4,20 @@
             <div class="col-md-5">
                 <div class="row">
                     <div class="col-md-12 offset-md-1 mt-5">
-                        <img :src="require(`../../../../src/main/resources/images/${artwork.imageStorageName}`)"
+                        <img :src="require(`../../../../src/main/resources/images/${art.generalArt.artStorageName}`)"
                             class="w-100 border border-1">
                         <!-- src="https://via.placeholder.com/470x305" -->
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 offset-md-1 mt-2">
-                        <a href="#"><img src="https://via.placeholder.com/90x60" class="mx-1"
+                        <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
                                 style="width: 23.3%; height: 100px;"></a>
-                        <a href="#"><img src="https://via.placeholder.com/90x60" class="mx-1"
+                        <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
                                 style="width: 23.3%; height: 100px;"></a>
-                        <a href="#"><img src="https://via.placeholder.com/90x60" class="mx-1"
+                        <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
                                 style="width: 23.3%; height: 100px;"></a>
-                        <a href="#"><img src="https://via.placeholder.com/90x60" class="mx-1"
+                        <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
                                 style="width: 23.3%; height: 100px;"></a>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                                 </li>
                                 <li class="list-group-item" style="border: none;">
                                     <font-awesome-icon icon="fa-solid fa-clock" class="mx-1" />
-                                    <a > {{ art.generalArt.artRegisterDate }}</a>
+                                    <a> {{ art.generalArt.artRegisterDate }}</a>
                                 </li>
                             </ul>
 
@@ -78,8 +78,8 @@
                                 </a>
                             </div>
                             <div class="col-md-3">
-                                <a href="#" class="btn btn-lg btn-outline-primary"
-                                    style="border-radius: 6px; width: 120px;">바로구매</a>
+                                <a @click="artPurchase" href="#" class="btn btn-lg btn-outline-primary"
+                                    style="border-radius: 6px; width: 120px;">구매하기</a>
                             </div>
                         </div>
                     </div>
@@ -96,19 +96,6 @@ export default {
     name: 'generalWorkPurchase',
     data() {
         return {
-            artwork: {
-                artId: 2,
-                name: '',
-                price: '',
-                description: '',
-                saleType: '',
-                likes: 2,
-                views: 46,
-                registerDate: "2022-07-13",
-                imageSource: `../assets/6e0dc3f002.png`,
-                // `../../../../src/main/resources/images/6e0dc3f002.png`
-                imageStorageName: '6e0dc3f002.png',
-            },
             art: {
                 artLikeCount: 9,
                 generalArt: {
@@ -116,7 +103,7 @@ export default {
                     artName: "art3",
                     artDescription: "이 작품은 작품입니다 - 3",
                     artInitPrice: 10000,
-                    artRegisterDate: "2022-09-09 20:28:23",
+                    artRegisterDate: "2022-09-27 19:32:30",
                     artStorageName: "6e0dc3f002.png",
                     artOwnerId: 1,
                     artOwnerNickname: "user1-Nickname",
@@ -130,19 +117,38 @@ export default {
                     "타조"
                 ]
             },
+            purchaseData: {
+                artId: this.$store.state.selectedArt.generalArt.artId,
+                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+            }
         }
     },
-    beforeMount() {
-        axios.get(`/api/art/9`).then((res) => {
-            // console.log(res.data.art);
-            this.art = { ...res.data.art };
-            // console.log("복사본", this.art);
-        }).catch((res) => {
-            console.log(res);
-        })
+    methods: {
+        artPurchase() {
+            axios.post('/api/purchase/general', this.purchaseData).then((res) => {
+                console.log("req: " + JSON.stringify(this.purchaseData));
+                console.log("res: " + JSON.stringify(res.data));
+                if (res.data.purchaseId) {
+                    alert('구매완료');
+                }
+            }).catch((res) =>{
+                console.log("catch: " + JSON.stringify(res.data));
+            })
+        },
     },
+    beforeMount() {
+        this.art = { ...this.$store.state.selectedArt };
+        // axios.get('/api/session-check').then((res) => {
+        //         console.log("session-check: " + JSON.stringify(res.data));
+
+        //     }).catch((res) =>{
+        //         console.log("catch: " + JSON.stringify(res.data));
+        //     });
+    },
+
 }
 </script>
 
 <style>
+
 </style>

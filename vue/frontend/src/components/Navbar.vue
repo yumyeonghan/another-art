@@ -4,7 +4,7 @@
             class="fixed-top navbar navbar-expand-lg navbar-light bg-white py-4 border-bottom border-black-50">
             <div class="container-fluid">
                 <!-- Container wrapper -->
-                <a @click="$router.push('/');" class="navbar-brand fs-3" href="#">Another Art</a>
+                <a @click="$router.push('/vue');" class="navbar-brand fs-3" href="#">Another Art</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -40,11 +40,11 @@
                     <!-- class="d-none d-md-flex justify-content-center" -->
 
                     <div class="mx-auto input-group w-auto my-auto">
-                        <select class="btn btn-outline-primary rounded-start dropdown-toggle" data-bs-toggle="dropdown"
-                            aria-expanded="false" @change="test($event)"
+                        <select v-model="searchData.type" class="btn btn-outline-primary rounded-start" 
+                            aria-expanded="false" @change="test"
                             style="border-end-end-radius: 0; border-start-end-radius: 0;">
-                            <option class="dropdown-item" href="#">경매 작품</option>
-                            <option class="dropdown-item" href="#">일반 작품</option>
+                            <option :value="typeList[0].type">{{ typeList[0].name }}</option>
+                            <option :value="typeList[1].type">{{ typeList[1].name }}</option>
                         </select>
 
                         <input autocomplete="off" type="text" v-model="searchData.keyword"
@@ -60,20 +60,25 @@
                     <ul class="navbar-nav d-flex align-items-center flex-row">
 
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a href="/userLogin" class="nav-link active" aria-current="page">로그인</a>
+                            <!-- 비로그인 시 -->
+                            <li v-if="$store.state.isLogined === false" class="nav-item">
+                                <a href="#" @click="$router.push('/userLogin')" class="nav-link active" aria-current="page">로그인</a>
                             </li>
-                            <li class="nav-item">
+                            <li v-if="$store.state.isLogined === false" class="nav-item">
                                 <h6 class="nav-link active text-secondary" aria-current="page" href="#">|</h6>
                             </li>
-                            <li class="nav-item">
-                                <a href="/createAccount/userRegister" class="nav-link active">회원가입</a>
+                            <li v-if="$store.state.isLogined === false" class="nav-item">
+                                <a href="#" @click="$router.push('/createAccount/userRegister')" class="nav-link active">회원가입</a>
                             </li>
-                            <li class="nav-item">
+                            <!-- 로그인 시 -->
+                            <li v-if="$store.state.isLogined === true" class="nav-item">
+                                <a href="#" @click="logout" class="nav-link active">로그아웃</a>
+                            </li>
+                            <li v-if="$store.state.isLogined === true" class="nav-item">
                                 <h6 class="nav-link active text-secondary" aria-current="page" href="#">|</h6>
                             </li>
-                            <li class="nav-item">
-                                <a href="/myPage" class="nav-link active">마이페이지</a>
+                            <li v-if="$store.state.isLogined === true" class="nav-item">
+                                <a href="#" @click="$router.push('/myPage')" class="nav-link active">마이페이지</a>
                             </li>
                             <button @click="$router.push('/artworkRegister')" class="btn btn-outline-primary mx-2">
                                 작품 등록
@@ -108,7 +113,6 @@
 
 <script>
 import axios from 'axios';
-// import qs from 'qs';
 
 export default {
     name: 'navbar',
@@ -119,47 +123,41 @@ export default {
                 keyword: 'art3',
                 scroll: 0,
                 sort: 'date',
-                type: 'general',
+                type: 'auction',
             },
+            typeList: [
+                {
+                    type: 'auction',
+                    name: '경매 작품',
+                },
+                {
+                    type: 'general',
+                    name: '일반 작품',
+                }
+            ],
             num: 0,
         }
     },
     methods: {
-        test($event) {
-            if ($event.target.value == '일반 작품') {
-                this.searchData.type = 'general';
-            } else {
-                this.searchData.type = 'auction';
-            }
-        },
         artworkSearch() {
-            // axios.get('/api/search/art', this.searchData).then((res) => {
-            //     console.log(res);
-            // }).catch((res) => {
-            //     console.log(res);
-            // });
             console.log(this.searchData);
-
-            // axios({
-            //     method: 'GET',
-            //     headers: { 'content-type': 'application/json' },
-            //     data: this.searchData,
-            //     url
-            // }).then((res) => {
-            //     console.log('success');
-            //     console.log(res);
-            // }).catch((res) => {
-            //     console.log('fail');
-            //     console.log(res);
-            // });
-            axios.get('/api/keyword/arts', {
-                params: this.searchData
-            }).then((res) => {
+            axios.post('/api/keyword/arts', this.searchData).then((res) => {
                 console.log("then " + JSON.stringify(res.data));
+                this.$store.commit("setSearchType", this.searchData.type);
+                this.$store.commit("setSearchData", JSON.stringify(res.data));
+                this.$router.push('/searchResults');
             }).catch((res) => {
                 console.log("catch " + JSON.stringify(res));
             })
+        },
+        logout() {
+            axios.post('/api/logout').then(() => {
+                sessionStorage.clear();
+                this.$store.commit("setIsLogined", false);
+                this.$router.push('/vue')
+            }).catch(() => {
 
+            })
         },
     }
 

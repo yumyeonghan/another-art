@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--duplicateCheckModal-->
+        <!--duplicateCheckModal [userId]-->
         <div class="modal fade" id="duplicateCheckModal" data-bs-backdrop="static" data-bs-keyboard="false"
             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -11,17 +11,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="input-group rounded">
-                            <input v-model="userId" type="search" class="form-control rounded" placeholder="아이디"
+                            <input v-model="loginId.input" type="search" class="form-control rounded" placeholder="아이디"
                                 aria-label="Search" aria-describedby="search-addon" autofucus/>
                             <span class="input-group-text border-0" id="search-addon">
-                                <button type="button" @click="userIdSearch(userId)" class="btn">검색</button>
+                                <button type="button" @click="userIdSearch" class="btn">검색</button>
                             </span>
                             <div>
                                 
                             </div>
                         </div>
                         <div class="text-center mt-4">
-                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" disabled>사용하기</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" aria-label="Close" :disabled="buttonDisable == true">사용하기</button>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         </div>
                         <div v-for="(univ, i) in univInfoList[0]" :key="i" class="mt-3">
                             <div>
-                                <button type="button" @click="univName = univ.schoolName + ' ' + univ.campusName;" 
+                                <button type="button" @click="setUnivName(univ.schoolName, univ.campusName)" 
                                 class="btn btn-outline-dark pt-3" style="width: 466px;"  data-bs-dismiss="modal" aria-label="Close">
                                 <h4>{{ univ.schoolName }} ({{ univ.campusName }})</h4>
                                 <p>{{ univ.adres }}</p>
@@ -76,6 +76,27 @@
                 </div>
             </div>
         </div>
+        <!-- auctionMoadl -->
+        <div class="modal fade" id="auctionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">경매 응찰</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group rounded">
+                            <input v-model="bidData.bidPrice" type="search" class="form-control rounded" placeholder="응찰금액"
+                                aria-label="Search" aria-describedby="search-addon" autofucus/>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="button" @click="bidArt" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">응찰하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -86,10 +107,32 @@ export default {
     name: 'registerModals',
     data() {
         return {
-            userId: '',
+            nickname: {
+                input: '',
+                resource: 'nickname',
+            },
+            loginId: {
+                input: '',
+                resource: 'loginId',
+            },
+            phoneNumber: {
+                input: '',
+                resource: 'phoneNumber',
+            },
+            email: {
+                input: '',
+                resource: 'email',
+            },
             univName: '',
             univSearchKeyword: '',
             univInfoList: [],
+            buttonDisable: true,
+            bidData: {
+                auctionId: 73,
+                bidPrice: 0,
+                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+            },
+
         }
     },
     methods: {
@@ -112,15 +155,32 @@ export default {
                     console.log('error: no more url');
                 })
         },
-        userIdSearch(userId) {
-            axios.get(`/api/user/nickname/duplication/${userId}`)
-                .then((response) => {
-                    console.log('success ' + response);
-                }).catch(() => {
-                    console.log('fail');
+        setUnivName(schoolName, campusName) {
+            let univName = schoolName + ' ' + campusName;
+            this.$store.commit("setUnivName", univName);
+        },
+        userIdSearch() {
+            axios.post(`/api/user/duplicate-check`, this.loginId)
+                .then((res) => {
+                    console.log('success ' + JSON.stringify(res));
+                    alert('사용할 수 있는 이메일입니다');
+                    this.buttonDisable = false;
+                }).catch((res) => {
+                    console.log(JSON.stringify(res));
+                    alert('이미 존재하는 아이디입니다');
                 })
         },
-    }
+        bidArt() {
+            axios.post(`/api/bid`, this.bidData).then((res) => {
+                    console.log('this.bidData ' + JSON.stringify(this.bidData));
+                    console.log('success ' + JSON.stringify(res));
+                    console.log('응찰완료');
+                    
+                }).catch((res) => {
+                    console.log('fail: ' + JSON.stringify(res));
+                })
+        },
+    },
 }
 </script>
 
