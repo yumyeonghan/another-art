@@ -14,7 +14,7 @@ import com.imagine.another_arts.domain.purchase.service.dto.request.PurchaseAuct
 import com.imagine.another_arts.domain.purchase.service.dto.request.PurchaseGeneralArtRequestDto;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
-import com.imagine.another_arts.exception.*;
+import com.imagine.another_arts.exception.AnotherArtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PurchaseHistoryService {
-
     private final PurchaseHistoryRepository purchaseHistoryRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final AuctionRepository auctionRepository;
@@ -38,14 +39,14 @@ public class PurchaseHistoryService {
     @Transactional
     public Long purchaseAuctionArt(PurchaseAuctionArtRequestDto purchaseAuctionArtRequest) {
         Auction auction = auctionRepository.findAuctionByAuctionId(purchaseAuctionArtRequest.getAuctionId())
-                .orElseThrow(() -> new AuctionNotFoundException("경매 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(AUCTION_NOT_FOUND));
         isAuctionInProgress(auction); // Validation
 
         Art targetArt = auction.getArt();
         isAlreadySoldOut(targetArt); // Validation
 
         User purchaseUser = userRepository.findById(purchaseAuctionArtRequest.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("사용자 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
         isQualifiedUser(auction.getUser(), purchaseUser); // Validation
 
         // PointHistory & PurchaseHistory Process
@@ -56,11 +57,11 @@ public class PurchaseHistoryService {
     @Transactional
     public Long purchaseGeneralArt(PurchaseGeneralArtRequestDto purchaseGeneralArtRequest) {
         Art targetArt = artRepository.findArtByArtId(purchaseGeneralArtRequest.getArtId())
-                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
         isAlreadySoldOut(targetArt); // Validation
 
         User purchaseUser = userRepository.findById(purchaseGeneralArtRequest.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("사용자 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
         hasSufficientPoint(purchaseUser, targetArt.getInitPrice()); // Validation
 
         // PointHistory & PurchaseHistory Process
@@ -131,25 +132,25 @@ public class PurchaseHistoryService {
 
     private void isAuctionInProgress(Auction auction) {
         if (auction.getEndDate().isAfter(LocalDateTime.now())) {
-            throw new NotClosedAuctionException("종료되지 않은 경매 작품은 구매할 수 없습니다");
+            throw AnotherArtException.type(NOT_CLOSED_AUCTION);
         }
     }
 
     private void hasSufficientPoint(User user, Long purchasePrice) {
         if (user.getAvailablePoint() < purchasePrice) {
-            throw new PointNotEnoughException("포인트가 충분하지 않습니다");
+            throw AnotherArtException.type(POINT_NOT_ENOUGH);
         }
     }
 
     private void isQualifiedUser(User highestBidUser, User purchaseUser) {
         if (!highestBidUser.equals(purchaseUser)) {
-            throw new UnQualifiedUserException("구매 자격이 없는 사용자입니다");
+            throw AnotherArtException.type(INELIGIBLE_USER_PURCHASE);
         }
     }
 
     private void isAlreadySoldOut(Art art) {
         if (art.getSaleStatus().equals(SaleStatus.SOLD_OUT)) {
-            throw new ArtSoldOutException("이미 판매된 작품입니다");
+            throw AnotherArtException.type(ART_SOLD_OUT);
         }
     }
 }

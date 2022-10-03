@@ -5,16 +5,17 @@ import com.imagine.another_arts.domain.point.enums.PointType;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
-import com.imagine.another_arts.exception.PointNotEnoughException;
+import com.imagine.another_arts.exception.AnotherArtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.POINT_NOT_ENOUGH;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PointHistoryService {
-
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
 
@@ -33,7 +34,7 @@ public class PointHistoryService {
         Long currentPoint = pointHistoryRepository.findLatestPointByUserId(findUser.getId());
 
         if (findUser.getAvailablePoint() < dealAmount) {
-            throw new PointNotEnoughException("포인트가 부족해서 환불할 수 없습니다");
+            throw AnotherArtException.type(POINT_NOT_ENOUGH);
         }
 
         pointHistoryRepository.save(PointHistory.insertPointHistory(findUser, PointType.REFUND, dealAmount, currentPoint - dealAmount));

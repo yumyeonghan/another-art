@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArtRepository extends JpaRepository<Art, Long>, ArtQueryDSLRepository {
     boolean existsByName(String name);
-
     boolean existsByIdNotAndName(Long artId, String name);
 }

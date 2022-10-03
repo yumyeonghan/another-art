@@ -8,10 +8,7 @@ import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.domain.user.service.dto.request.UserEditRequestDto;
 import com.imagine.another_arts.domain.user.service.dto.request.UserJoinRequestDto;
 import com.imagine.another_arts.domain.user.service.dto.response.MyPageUserResponse;
-import com.imagine.another_arts.exception.DuplicateUserInfoException;
-import com.imagine.another_arts.exception.IllegalUserApiRequestException;
-import com.imagine.another_arts.exception.IllegalUserModifyException;
-import com.imagine.another_arts.exception.UserNotFoundException;
+import com.imagine.another_arts.exception.AnotherArtException;
 import com.imagine.another_arts.web.SessionFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +18,12 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
-
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
 
@@ -52,7 +50,7 @@ public class UserService {
     @Transactional
     public void editUser(Long userId, UserEditRequestDto userEditRequest) {
         User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다"));
+                .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
         if (StringUtils.hasText(userEditRequest.getName())) {
             findUser.changeName(userEditRequest.getName());
@@ -79,48 +77,48 @@ public class UserService {
 
     public void checkDuplicateNicknameInModification(Long userId, String changeNickname) {
         if (userRepository.existsByIdNotAndNickname(userId, changeNickname)) {
-            throw new IllegalUserModifyException("이미 존재하는 닉네임입니다");
+            throw AnotherArtException.type(DUPLICATE_USER_NICKNAME);
         }
     }
 
     public void checkDuplicatePhoneNumberInModification(Long userId, String changePhoneNumber) {
         if (userRepository.existsByIdNotAndPhoneNumber(userId, changePhoneNumber)) {
-            throw new IllegalUserModifyException("이미 존재하는 전화번호 입니다");
+            throw AnotherArtException.type(DUPLICATE_USER_PHONENUMBER);
         }
     }
 
     public void hasDuplicateNickname(String nickName) {
         if (userRepository.existsByNickname(nickName)) {
-            throw new DuplicateUserInfoException("이미 존재하는 닉네임입니다");
+            throw AnotherArtException.type(DUPLICATE_USER_NICKNAME);
         }
     }
 
     public void hasDuplicateLoginId(String loginId) {
         if (userRepository.existsByLoginId(loginId)) {
-            throw new DuplicateUserInfoException("이미 존재하는 아이디입니다");
+            throw AnotherArtException.type(DUPLICATE_USER_LOGIN_ID);
         }
     }
 
     public void hasDuplicatePhoneNumber(String phoneNumber) {
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new DuplicateUserInfoException("이미 존재하는 전화번호입니다");
+            throw AnotherArtException.type(DUPLICATE_USER_PHONENUMBER);
         }
     }
 
     public void hasDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new DuplicateUserInfoException("이미 존재하는 이메일입니다");
+            throw AnotherArtException.type(DUPLICATE_USER_EMAIL);
         }
     }
 
     public MyPageUserResponse getUserInformation(HttpServletRequest request, Long userId) {
         UserSessionDto currentUserSession = getCurrentUserSession(request);
         if (!Objects.equals(currentUserSession.getId(), userId)) {
-            throw new IllegalUserApiRequestException("타인의 정보는 요청할 수 없습니다");
+            throw AnotherArtException.type(ILLEGAL_USER_API_REQUEST);
         }
 
         User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다"));
+                .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
         Long currentUserTotalPoint = pointHistoryRepository.findLatestPointByUserId(userId);
 
         return new MyPageUserResponse(findUser, currentUserTotalPoint);

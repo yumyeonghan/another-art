@@ -17,7 +17,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class PurchaseController {
-
     private final PurchaseHistoryService purchaseHistoryService;
 
     @PostMapping("/purchase/auction")

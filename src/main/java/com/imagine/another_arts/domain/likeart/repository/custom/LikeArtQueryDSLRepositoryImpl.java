@@ -13,7 +13,6 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 public class LikeArtQueryDSLRepositoryImpl implements LikeArtQueryDSLRepository {
-
     private final JPAQueryFactory query;
 
     @Override

@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface LikeArtQueryDSLRepository {
     List<LikeArt> findLikeArtList();
-
     Long getLikeArtCountByArtId(Long artId);
-
     Long deleteByArtAndUser(Long artId, Long userId);
 }

@@ -20,7 +20,7 @@ import com.imagine.another_arts.domain.likeart.repository.LikeArtRepository;
 import com.imagine.another_arts.domain.purchase.repository.PurchaseHistoryRepository;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
-import com.imagine.another_arts.exception.*;
+import com.imagine.another_arts.exception.AnotherArtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -36,11 +36,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ArtService {
-
     private final UserRepository userRepository;
     private final ArtRepository artRepository;
     private final AuctionRepository auctionRepository;
@@ -57,7 +58,7 @@ public class ArtService {
     public Long registerArt(ArtRegisterRequestDto artRegisterRequest) {
         try {
             User artOwner = userRepository.findById(artRegisterRequest.getUserId())
-                    .orElseThrow(() -> new UnAuthenticatedUserException("가입하지 않은 사용자에 대한 작품 등록 권한은 없습니다"));
+                    .orElseThrow(() -> AnotherArtException.type(AUTHENTICATION_USER));
 
             MultipartFile uploadFile = artRegisterRequest.getFile();
             UploadArtImageInfo fileInfo = getUploadArtImageInfo(uploadFile);
@@ -87,13 +88,13 @@ public class ArtService {
             uploadFile.transferTo(new File(fileDir + fileInfo.getStoregeName())); // 파일 저장
             return art.getId();
         } catch (IOException e) {
-            throw new RunTimeArtRegisterException("작품 등록 과정에서 서버상에 오류가 발생했습니다");
+            throw AnotherArtException.type(RUN_TIME_ART_REGISTER);
         }
     }
 
     private UploadArtImageInfo getUploadArtImageInfo(MultipartFile file) {
         if (file == null) {
-            throw new IllegalArtFileUploadException("파일이 업로드되지 않았습니다");
+            throw AnotherArtException.type(ILLEGAL_ART_UPLOAD);
         }
 
         String uploadName = file.getOriginalFilename();
@@ -121,7 +122,7 @@ public class ArtService {
     // 작품 단건 조회
     public <T extends ArtResponse> T getSingleArt(Long artId) {
         Art findArt = artRepository.findArtByArtId(artId)
-                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
 
         if (findArt.getSaleType().equals(SaleType.AUCTION)) {
             return (T) new AuctionArtResponse(
@@ -142,7 +143,7 @@ public class ArtService {
     @Transactional
     public void editArt(Long artId, ArtEditRequestDto artEditRequest) {
         Art findArt = artRepository.findById(artId)
-                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
 
         if (StringUtils.hasText(artEditRequest.getUpdateName())) {
             hasDuplicateArtNameInModification(artId, artEditRequest.getUpdateName());
@@ -156,7 +157,7 @@ public class ArtService {
 
     private void hasDuplicateArtNameInModification(Long artId, String updateName) {
         if (artRepository.existsByIdNotAndName(artId, updateName)) {
-            throw new IllegalArtModifyException("변경하려는 작품명이 이미 존재합니다");
+            throw AnotherArtException.type(DUPLICATE_ART_NAME);
         }
     }
 
@@ -164,7 +165,7 @@ public class ArtService {
     @Transactional
     public void deleteArt(Long artId) {
         Art findArt = artRepository.findById(artId)
-                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
 
         hasPurchaseHistory(findArt);
         if (findArt.getSaleType().equals(SaleType.AUCTION)) {
@@ -181,13 +182,13 @@ public class ArtService {
 
     private void hasPurchaseHistory(Art art) {
         if (purchaseHistoryRepository.existsByArt(art)) {
-            throw new IllegalArtDeleteException("이미 거래된 작품은 삭제할 수 없습니다");
+            throw AnotherArtException.type(ART_SOLD_OUT);
         }
     }
 
     private void hasAtLeastOneBid(Art art) {
         if (auctionHistoryRepository.existsByArtAndUserIsNotNull(art)) {
-            throw new IllegalArtDeleteException("입찰이 진행된 경매 작품은 삭제할 수 없습니다");
+            throw AnotherArtException.type(ALREADY_AUCTION_PROCESS);
         }
     }
 
@@ -199,7 +200,7 @@ public class ArtService {
         }
 
         Art findArt = artRepository.findById(artId)
-                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
         List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagListByArtId(findArt.getId());
 
         hashtagNameList.forEach(name -> {
@@ -296,9 +297,9 @@ public class ArtService {
     @Transactional
     public void likeArt(Long artId, Long userId) {
         Art findArt = artRepository.findArtByArtId(artId)
-                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
         User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("사용자 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
         isAlreadyLikeMarked(findArt, findUser);
         isSelfLikeMarked(findArt, findUser);
@@ -308,9 +309,9 @@ public class ArtService {
     @Transactional
     public void cancelArt(Long artId, Long userId) {
         Art findArt = artRepository.findById(artId)
-                .orElseThrow(() -> new ArtNotFoundException("작품 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
         User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("사용자 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
         isAlreadyCancelMarked(findArt, findUser);
         likeArtRepository.deleteByArtAndUser(findArt.getId(), findUser.getId());
@@ -318,19 +319,19 @@ public class ArtService {
 
     private void isAlreadyLikeMarked(Art art, User user) {
         if (likeArtRepository.existsByArtAndUser(art, user)) {
-            throw new IllegalMarkedException("이미 좋아요를 누른 작품입니다");
+            throw AnotherArtException.type(ALREADY_LIKE_MARKING);
         }
     }
 
     private void isSelfLikeMarked(Art art, User user) {
         if (art.getUser().getId().equals(user.getId())) {
-            throw new IllegalMarkedException("자신의 작품에 좋아요를 누를 수 없습니다");
+            throw AnotherArtException.type(ILLEGAL_LIKE_MARKING);
         }
     }
 
     private void isAlreadyCancelMarked(Art art, User user) {
         if (!likeArtRepository.existsByArtAndUser(art, user)) {
-            throw new IllegalMarkedException("이미 좋아요를 취소하였거나 좋아요를 누른적이 없는 작품입니다");
+            throw AnotherArtException.type(ILLEGAL_LIKE_MARKING_CANCEL);
         }
     }
 
@@ -358,7 +359,7 @@ public class ArtService {
 
     public void checkDuplicateArtName(String artName) {
         if (artRepository.existsByName(artName)) {
-            throw new DuplicateArtNameException("중복된 작품명입니다.");
+            throw AnotherArtException.type(DUPLICATE_ART_NAME);
         }
     }
 }

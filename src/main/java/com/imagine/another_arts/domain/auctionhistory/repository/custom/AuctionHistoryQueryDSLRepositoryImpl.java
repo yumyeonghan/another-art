@@ -12,7 +12,6 @@ import static com.imagine.another_arts.domain.auctionhistory.QAuctionHistory.auc
 
 @RequiredArgsConstructor
 public class AuctionHistoryQueryDSLRepositoryImpl implements AuctionHistoryQueryDSLRepository {
-
     private final JPAQueryFactory query;
 
     @Override

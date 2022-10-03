@@ -2,7 +2,7 @@ package com.imagine.another_arts.web.user;
 
 import com.imagine.another_arts.domain.user.service.UserService;
 import com.imagine.another_arts.domain.user.service.dto.response.MyPageUserResponse;
-import com.imagine.another_arts.exception.IllegalUrlRequestException;
+import com.imagine.another_arts.exception.AnotherArtException;
 import com.imagine.another_arts.web.user.dto.request.DuplicateCheckRequest;
 import com.imagine.another_arts.web.user.dto.request.UserEditRequest;
 import com.imagine.another_arts.web.user.dto.request.UserJoinRequest;
@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL_REQUEST;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
-
     private final UserService userService;
 
     @PostMapping("/user")
@@ -67,7 +68,7 @@ public class UserController {
                 return ResponseEntity.noContent().build();
 
             default:
-                throw new IllegalUrlRequestException("잘못된 요청입니다");
+                throw AnotherArtException.type(ILLEGAL_URL_REQUEST);
         }
     }
 
