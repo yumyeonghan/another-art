@@ -3,12 +3,8 @@
 <!--정렬-->
 <div>
     <div class="mb-3">
-      <button @click="$router.push('/searchResults')" class="btn btn-primary">searchResults</button>
-    </div>
-    <div class="mb-3">
       <button @click="$router.push('/updateUserInfo')" class="btn btn-primary">updateUserInfo</button>
     </div>
-    <img @click="$router.push('/artworkPurchase')" src="https://via.placeholder.com/150">
     <p>This is home</p>
   </div>
     <div>
@@ -30,8 +26,8 @@
 
 <!-- 작품 리스트-->
     <div className="product_container" >
-      <div className="product" v-for="(a,i) in contents" :key="i">
-        <ArtList :a="a"/>
+      <div className="product" v-for="(art,i) in contents" :key="i">
+        <ArtList :art="art"/>
       </div>
     </div>
 
@@ -58,6 +54,10 @@ export default {
         contents : [],
         scrollCheck:0,
         img : '',
+        artRequest: {
+          scroll: 0,
+          sort: "date",
+        }
   }),
   created: function(){
       this.fetchData(),
@@ -68,10 +68,10 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`api/main/art?scroll=${this.$route.query.scroll}&sort=${this.$route.query.sort}`)
+      axios.post(`api/main/arts`, this.artRequest)
           .then(res => {
-            console.log(res.data.artList);
-            this.contents = res.data.artList;
+            console.log("res.data.artList" + res.data.artList);
+            this.contents = [...res.data.artList];
           })
           .catch(function (error) {
             console.log(error);
@@ -111,6 +111,9 @@ export default {
         behavior: 'smooth',
         left: 0,
         top:body.offsetTop});
+    },
+    test1() {
+      console.log("contents: " + this.contents);
     },
 }}
 

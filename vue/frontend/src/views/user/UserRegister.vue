@@ -9,7 +9,7 @@
                         <h4 class="mb-3 text-center text-black fs-2 fw-bold">회원가입</h4>
                     </div>
                     <!-- @submit.prevent="submitForm" -->
-                    <form class="needs-validation" novalidate>
+                    <div class="needs-validation" novalidate>
                         <div class="row g-3">
                             <div class="col-md-6 offset-md-3">
                                 <input type="text" v-model="formData.name" class="form-control form-control-lg p-3"
@@ -71,9 +71,9 @@
                             <div class="col-md-6 offset-md-3">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <input type="text" v-model="formData.schoolName"
+                                        <input type="text" v-model="$store.state.univName"
                                             class="form-control form-control-lg p-3" id="schoolName" name="schoolName"
-                                            placeholder="학교명" required>
+                                            placeholder="학교명" disabled required>
                                     </div>
                                     <div class="col-md-4">
                                         <button type="button" class="form-control btn btn-outline-dark p-3 mt-1"
@@ -149,7 +149,7 @@
                             <button type="button" @click="submitForm($router)" class="btn btn-outline-dark btn-lg col-md-6 offset-md-3 p-3" id="signup"
                                 style="opacity: 0.7;">완료</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,7 +158,6 @@
 
 <script>
 import axios from 'axios';
-import qs from 'qs';
 
 export default {
     name: 'userRegister',
@@ -182,23 +181,14 @@ export default {
         }
     },
     methods: {
-        test() {
-            axios.get('../assets/test.json').then((res) => {
-                console.log(res);
-            }).catch(() => {
-                console.log('fail');
-            });
-        },
         submitForm() {
+            this.formData.schoolName = this.$store.state.univName;
             const data = this.formData;
-            axios.post('/api/join/user', qs.stringify(data))
+            axios.post('/api/user', data)
                 .then((res) => {
-                    // if (res == 'success') {
-                    //     $router.push('/');
-                    // }
-                    console.log(JSON.stringify(res));
+                    console.log(res);
                 }).catch((res)=> {
-                    console.log('fail:' + JSON.stringify(res));
+                    console.log('fail:' + res);
                 });
 
             // const data = this.formData;
