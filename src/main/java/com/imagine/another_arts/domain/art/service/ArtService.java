@@ -58,7 +58,7 @@ public class ArtService {
     public Long registerArt(ArtRegisterRequestDto artRegisterRequest) {
         try {
             User artOwner = userRepository.findById(artRegisterRequest.getUserId())
-                    .orElseThrow(() -> AnotherArtException.type(AUTHENTICATION_USER));
+                    .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
             MultipartFile uploadFile = artRegisterRequest.getFile();
             UploadArtImageInfo fileInfo = getUploadArtImageInfo(uploadFile);
