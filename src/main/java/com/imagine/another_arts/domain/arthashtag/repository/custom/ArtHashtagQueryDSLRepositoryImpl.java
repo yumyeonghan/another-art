@@ -13,7 +13,6 @@ import static com.imagine.another_arts.domain.arthashtag.QArtHashtag.artHashtag;
 
 @RequiredArgsConstructor
 public class ArtHashtagQueryDSLRepositoryImpl implements ArtHashtagQueryDSLRepository {
-
     private final JPAQueryFactory query;
 
     @Override

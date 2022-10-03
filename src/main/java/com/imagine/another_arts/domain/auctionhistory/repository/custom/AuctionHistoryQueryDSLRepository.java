@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface AuctionHistoryQueryDSLRepository {
     List<AuctionHistory> findAuctionHistoryList();
-
     Long getAuctionHistoryCountByArtId(Long artId);
 }

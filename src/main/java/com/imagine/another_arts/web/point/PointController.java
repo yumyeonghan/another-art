@@ -16,7 +16,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class PointController {
-
     private final PointHistoryService pointHistoryService;
 
     @PostMapping("/point/charge")

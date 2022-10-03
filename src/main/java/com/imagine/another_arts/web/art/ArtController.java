@@ -4,7 +4,7 @@ import com.imagine.another_arts.domain.art.service.ArtService;
 import com.imagine.another_arts.domain.art.service.dto.response.ArtResponse;
 import com.imagine.another_arts.domain.art.service.dto.response.AuctionArtResponse;
 import com.imagine.another_arts.domain.art.service.dto.response.GeneralArtResponse;
-import com.imagine.another_arts.exception.IllegalUrlRequestException;
+import com.imagine.another_arts.exception.AnotherArtException;
 import com.imagine.another_arts.web.art.dto.request.*;
 import com.imagine.another_arts.web.art.dto.response.SimpleArtSuccessResponse;
 import com.imagine.another_arts.web.art.dto.response.SingleArtResponse;
@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL_REQUEST;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @SuppressWarnings("unchecked")
 public class ArtController {
-
     private final ArtService artService;
     private static final int SLICE_PER_PAGE = 20;
 
@@ -131,7 +132,7 @@ public class ArtController {
             artService.checkDuplicateArtName(input);
             return ResponseEntity.noContent().build();
         } else {
-            throw new IllegalUrlRequestException("잘못된 요청입니다");
+            throw AnotherArtException.type(ILLEGAL_URL_REQUEST);
         }
     }
 

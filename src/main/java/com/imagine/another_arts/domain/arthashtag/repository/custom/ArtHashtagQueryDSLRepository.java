@@ -7,10 +7,7 @@ import java.util.List;
 
 public interface ArtHashtagQueryDSLRepository {
     List<String> findHashtagListByArtId(Long artId);
-
     List<ArtHashtag> findArtHashtagList();
-
     List<ArtHashtag> findArtHashtagListByArtId(Long artId);
-
     Long deleteByArtIdAndHashtagNameIn(Long art_id, Collection<String> hashtagName);
 }

@@ -27,7 +27,6 @@ import static com.imagine.another_arts.web.SessionFactory.ANOTHER_ART_SESSION_KE
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class LoginController {
-
     private final LoginService loginService;
 
     @PostMapping("/login")

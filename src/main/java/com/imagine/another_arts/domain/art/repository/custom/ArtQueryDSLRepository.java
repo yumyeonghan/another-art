@@ -10,18 +10,11 @@ import java.util.Optional;
 
 public interface ArtQueryDSLRepository {
     Optional<Art> findArtByArtId(Long artId);
-
     BasicGeneralArtResponse findSingleGeneralArtByArtId(Long artId);
-
     BasicAuctionArtResponse findSingleAuctionArtByArtId(Long artId);
-
     List<BasicGeneralArtResponse> findGeneralArtHashtagSearch(String givenHashtag, String sortType, Pageable pageRequest);
-
     List<BasicGeneralArtResponse> findGeneralArtKeywordSearch(String givenKeyword, String sortType, Pageable pageRequest);
-
     List<BasicAuctionArtResponse> findAuctionArt(String sortType, Pageable pageRequest);
-
     List<BasicAuctionArtResponse> findAuctionArtHashtagSearch(String givenHashtag, String sortType, Pageable pageRequest);
-
     List<BasicAuctionArtResponse> findAuctionArtKeywordSearch(String givenKeyword, String sortType, Pageable pageRequest);
 }

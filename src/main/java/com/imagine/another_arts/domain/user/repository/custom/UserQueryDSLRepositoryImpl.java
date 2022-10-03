@@ -9,7 +9,6 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepository {
-
     private final JPAQueryFactory query;
 
     @Override

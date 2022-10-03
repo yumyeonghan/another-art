@@ -27,3 +27,4 @@ application-anotherArt.properties
 application-dev.properties
 **/src/main/resources/images/
 **/src/main/resources/sql/
+**/src/main/generated/

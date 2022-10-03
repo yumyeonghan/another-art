@@ -29,7 +29,6 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 public class ArtQueryDSLRepositoryImpl implements ArtQueryDSLRepository {
-
     private final JPAQueryFactory query;
     private static QUser userA = new QUser("userA");
     private static QUser userB = new QUser("userB");

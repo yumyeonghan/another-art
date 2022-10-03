@@ -16,7 +16,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class AuctionController {
-
     private final AuctionService auctionService;
 
     @PostMapping("/bid")
