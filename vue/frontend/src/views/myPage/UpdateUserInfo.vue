@@ -30,7 +30,7 @@
                             <div class="col-md-6 offset-md-3">
                                 <div class="row g-3">
                                     <div class="col-md-8">
-                                        <input type="text" v-model="formData.schoolName"
+                                        <input type="text" v-model="$store.state.univName"
                                             class="form-control form-control-lg p-3" id="schoolName" name="schoolName"
                                             placeholder="학교명" required>
                                     </div>
@@ -71,7 +71,7 @@
                         </div>
 
                         <div class="row g-3">
-                            <button type="button" @click="submitForm($router)"
+                            <button type="button" @click="submitForm"
                                 class="btn btn-outline-dark btn-lg col-md-6 offset-md-3 p-3" id="signup"
                                 style="opacity: 0.7;">완료</button>
                         </div>
@@ -84,7 +84,6 @@
 
 <script>
 import axios from 'axios';
-import qs from 'qs';
 
 export default {
     name: 'updateUserInfo',
@@ -103,12 +102,18 @@ export default {
     methods: {
         submitForm() {
             const data = this.formData;
-            axios.post(`/api/user/${this.userId}`, qs.stringify(data))
+            data.schoolName = this.$store.state.univName;
+            let userId = JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId;
+
+            // qs.stringify(data)
+            axios.patch(`/api/user/${userId}`, data)
                 .then((res) => {
                     // if (res == 'success') {
                     //     $router.push('/');
                     // }
                     console.log(JSON.stringify(res));
+                    alert('회원정보 수정 완료');
+                    this.$router.push('/vue');
                 }).catch((res)=> {
                     console.log('fail:' + JSON.stringify(res));
                 });

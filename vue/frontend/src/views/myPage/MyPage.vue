@@ -13,76 +13,78 @@
           <div class="text">
             <span>내지갑</span>
             <span class="smallLight">
-            <span>|</span>
-            <span>보유 적립금</span>
-          </span>
+              <span>|</span>
+              <span>보유 적립금</span>
+            </span>
           </div>
           <div class="right">
             <span class="blct">175 BLCT</span>
-            > </div>
+            >
+          </div>
         </a>
       </div>
       <div class="shippingStatusContainer">
         <div class="listContainer">
-          <a href="/updateUserInfo" class="item">
+          <a @click="$router.push('/updateUserInfo')" href="#" class="item">
             <div class="icon">ii</div>
             <div class="text">
               <span>내 정보</span>
             </div>
             <div class="right">
               <span class="blct">수정하러 가기</span>
-              > </div>
+              >
+            </div>
           </a>
         </div>
         <hr>
         <div class="smallContainer">
-        <div class="item">
-          <div class="icon">ii</div>
-          <div class="text">사용자 이름<span class="circle"></span></div>
-          <div class="right"> ddd </div>
-        </div>
-        </div>
-        <div class="smallContainer">
-        <div class="item">
-          <div class="icon">ii</div>
-          <div class="text">사용자 닉네임</div>
-          <div class="right"> dd </div>
-        </div>
+          <div class="item">
+            <div class="icon">ii</div>
+            <div class="text">사용자 이름<span class="circle"></span></div>
+            <div class="right"> {{ userData.userName }} </div>
+          </div>
         </div>
         <div class="smallContainer">
-        <div class="item">
-          <div class="icon">ii</div>
-          <div class="text">사용자 이메일</div>
-          <div class="right"> dd@naver.com </div>
-        </div>
-        </div>
-        <div class="smallContainer">
-        <div class="item">
-          <div class="icon">ii</div>
-          <div class="text">사용자 전화번호</div>
-          <div class="right"> 010-4848-1234 </div>
-        </div>
+          <div class="item">
+            <div class="icon">ii</div>
+            <div class="text">사용자 닉네임</div>
+            <div class="right"> {{ userData.userNickname }} </div>
+          </div>
         </div>
         <div class="smallContainer">
-        <div class="item">
-          <div class="icon">ii</div>
-          <div class="text">사용자 생년월일</div>
-          <div class="right"> 1234.12.34 </div>
-        </div>
-        </div>
-        <div class="smallContainer">
-        <div class="item">
-          <div class="icon">ii</div>
-          <div class="text">재학중인 학교</div>
-          <div class="right"> dd대학교 </div>
-        </div>
+          <div class="item">
+            <div class="icon">ii</div>
+            <div class="text">사용자 이메일</div>
+            <div class="right"> {{ userData.email }} </div>
+          </div>
         </div>
         <div class="smallContainer">
-        <div class="item">
-          <div class="icon">ii</div>
-          <div class="text">주소</div>
-          <div class="right"> ㅇㅇ시 </div>
+          <div class="item">
+            <div class="icon">ii</div>
+            <div class="text">사용자 전화번호</div>
+            <div class="right"> {{ userData.phoneNumber }} </div>
+          </div>
         </div>
+        <div class="smallContainer">
+          <div class="item">
+            <div class="icon">ii</div>
+            <div class="text">사용자 생년월일</div>
+            <div class="right"> {{ userData.birth }} </div>
+          </div>
+        </div>
+        <div class="smallContainer">
+          <div class="item">
+            <div class="icon">ii</div>
+            <div class="text">재학중인 학교</div>
+            <div class="right"> {{ userData.schoolName }} </div>
+          </div>
+        </div>
+        <div class="smallContainer">
+          <div class="item">
+            <div class="icon">ii</div>
+            <div class="text">주소</div>
+            <div class="right"> {{ userData.address }} </div>
+          </div>
         </div>
       </div>
 
@@ -105,22 +107,52 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: 'myPage'
+  name: 'myPage',
+  data() {
+    return {
+      userData: {
+        userName: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userName,
+        userNickname: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userNickname,
+        email: '',
+        phoneNumber: '',
+        birth: '1999-10-13',
+        schoolName: '경기대학교',
+        address: '',
+      }
+    }
+  },
+  beforeMount() {
+    axios.get('/api/session-check').
+      then((res) => {
+        console.log("session-check success: " + JSON.stringify(res.data));
+        this.$store.commit('setSessionData', res.data);
+        console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
+        
+        this.userData.email = this.$store.state.sessionData.email;
+        this.userData.phoneNumber = this.$store.state.sessionData.phoneNumber;
+        this.userData.address = this.$store.state.sessionData.address;
+      }).catch((res) => {
+        console.log('session-check fail:' + res);
+      });
+  },
 }
 </script>
 
 <style>
-body{
+body {
   padding: 0;
   margin: 0;
 }
-div{
+
+div {
   box-sizing: border-box;
 }
 
 /* alert badge */
-.circle{
+.circle {
   display: inline-block;
   width: 5px;
   height: 5px;
@@ -132,15 +164,16 @@ div{
 }
 
 /* 녹색 텍스트 */
-.gray{
+.gray {
   color: gray;
 }
 
-.wrap{
+.wrap {
   background-color: #F8F8F8;
 }
+
 /* 녹색배경 */
-.grayContainer{
+.grayContainer {
   height: 100px;
   background-color: gray;
 
@@ -149,98 +182,107 @@ div{
   padding: 16px;
 }
 
-.grayContainer .name{
+.grayContainer .name {
   font-size: 20px;
   font-weight: bold;
   color: #ffffff;
 }
-.grayContainer .modify{
+
+.grayContainer .modify {
   margin-left: auto;
 }
 
 /* 단골상점 , 상품후기 , 적립금 박스 */
-.summaryContainer{
+.summaryContainer {
   background-color: white;
   display: flex;
   padding: 21px 16px;
   height: 90px;
   margin-bottom: 10px;
 }
+
 /* 단골상점 , 상품후기 , 적립금 */
-.summaryContainer .item{
+.summaryContainer .item {
   flex-grow: 1
 }
+
 /* 녹색 숫자 */
-.summaryContainer .number{
+.summaryContainer .number {
   font-size: 19px;
   font-weight: bold;
-  color: black
-;
+  color: black;
 }
+
 /* 텍스트 */
-.summaryContainer .item > div:nth-child(2){
+.summaryContainer .item>div:nth-child(2) {
   font-size: 13px;
 }
-.small{
+
+.small {
   font-size: 10px;
 }
 
 /* ================== 주문/배송조회 박스 시작 ==================== */
-.shippingStatusContainer{
+.shippingStatusContainer {
   padding: 21px 16px;
   background-color: white;
   margin-bottom: 10px;
 }
 
 /* 주문/배송조회 타이틀 */
-.shippingStatusContainer .title{
+.shippingStatusContainer .title {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 15px;
 }
 
 /* 장바구니 결제완료 배송중 구매확정 [로우] */
-.shippingStatusContainer .status{
+.shippingStatusContainer .status {
   display: flex;
   justify-content: space-between;
   margin-bottom: 21px;
 }
+
 /* 장바구니 결제완료 배송중 구매확정 [아이템]  */
-.shippingStatusContainer .item{
+.shippingStatusContainer .item {
   display: flex;
 }
 
-.shippingStatusContainer .number{
+.shippingStatusContainer .number {
   font-size: 31px;
   font-weight: 500;
   text-align: right;
 }
-.shippingStatusContainer .text{
+
+.shippingStatusContainer .text {
   font-size: 12px;
   font-weight: normal;
   color: #c2c2c2;
   text-align: center;
 }
-.shippingStatusContainer .icon{
+
+.shippingStatusContainer .icon {
   display: flex;
   align-items: center;
   padding: 20px;
   width: 16px;
   height: 16px;
 }
-.shippingStatusContainer .right{
+
+.shippingStatusContainer .right {
   padding: 1px;
   text-align: center;
 }
 
 
 /*=================== 주문목록 ~ 찜한상품 리스트 ==================*/
-.listContainer{
+.listContainer {
   padding: 0;
   background-color: #ffffff;
   margin-bottom: 10px;
 }
-.listContainer .item{
+
+.listContainer .item {
   display: flex;
   align-items: center;
   padding: 16px;
@@ -249,28 +291,32 @@ div{
   height: 56px;
   box-sizing: border-box;
 }
-.listContainer .icon{
+
+.listContainer .icon {
   margin-right: 14px;
 }
-.listContainer .text{
+
+.listContainer .text {
   font-size: 16px;
   position: relative;
 }
-.listContainer .right{
+
+.listContainer .right {
   margin-left: auto;
 }
 
 
 /*=================== 내지갑의 보유 적립금 들어가는 부분 ================*/
-.listContainer .smallLight{
+.listContainer .smallLight {
   font-size: 14px;
   color: #c2c2c2;
 }
-.listContainer .smallLight > span{
+
+.listContainer .smallLight>span {
   margin-left: 10px;
 }
 
-.listContainer .right .blct{
+.listContainer .right .blct {
   font-size: 14px;
   font-weight: bold;
   margin-right: 5px;
@@ -279,14 +325,14 @@ div{
 
 
 /* 공지사항 이용안내 고객센터 */
-.infoContainer{
+.infoContainer {
   background-color: white;
   display: flex;
   height: 100px;
   margin-bottom: 10px;
 }
 
-.infoContainer .item{
+.infoContainer .item {
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -296,15 +342,17 @@ div{
   text-decoration: none;
   color: black;
 }
-.infoContainer .item > div:first-child{
+
+.infoContainer .item>div:first-child {
   margin-bottom: 2px;
 }
 
-.smallContainer{
+.smallContainer {
   padding: 0;
   background-color: #ffffff;
 }
-.smallContainer .item{
+
+.smallContainer .item {
   display: flex;
   align-items: center;
   padding: 16px;
@@ -313,23 +361,27 @@ div{
   height: 56px;
   box-sizing: border-box;
 }
-.smallContainer .icon{
+
+.smallContainer .icon {
   margin-right: 13px;
 }
-.smallContainer .text{
+
+.smallContainer .text {
   font-size: 13px;
   position: relative;
 }
-.smallContainer .right{
+
+.smallContainer .right {
   margin-left: auto;
   font-size: 15px
 }
 
 /*  */
-.listContainer .item:hover{
+.listContainer .item:hover {
   /*   background-color: #f8f8f8; */
 }
-.infoContainer .item:hover{
+
+.infoContainer .item:hover {
   /*   background-color: #f8f8f8; */
 }
 </style>
