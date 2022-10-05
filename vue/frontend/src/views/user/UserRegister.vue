@@ -187,6 +187,8 @@ export default {
             axios.post('/api/user', data)
                 .then((res) => {
                     console.log(res);
+                    this.$store.commit("setSessionData", JSON.stringify(res.data));
+                    console.log(this.$store.state.sessionData);
                 }).catch((res)=> {
                     console.log('fail:' + res);
                 });

@@ -3,7 +3,10 @@
 <!--정렬-->
 <div>
     <div class="mb-3">
-      <button @click="$router.push('/updateUserInfo')" class="btn btn-primary">updateUserInfo</button>
+      <button @click="$router.push('/updateUserInfo')" class="btn btn-outline-primary">updateUserInfo</button>
+    </div>
+    <div class="mb-3">
+      <button @click="test" class="btn btn-outline-primary">timeCheck</button>
     </div>
     <p>This is home</p>
   </div>
@@ -67,6 +70,17 @@ export default {
     window.removeEventListener('scroll',this.handleScroll)
   },
   methods: {
+    test() {
+      let today = new Date();
+    let endDate = new Date(this.$store.state.selectedArt.auctionArt.auctionEndDate);
+    let remainTime = endDate.getTime() - today.getTime();
+
+    console.log('현재시간 함수: ' + today);
+    console.log('종료시간 데이터: ' + endDate);
+    console.log('두 날짜의 차 ' + remainTime);
+    console.log('종료까지 남은 시간 ' + Math.trunc((remainTime) / 1000) / 3600);
+    console.log('종료까지 남은 일 수 ' + Math.trunc((remainTime) / 1000) / 3600 / 24);
+    },
     fetchData() {
       axios.post(`api/main/arts`, this.artRequest)
           .then(res => {

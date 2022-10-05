@@ -76,27 +76,6 @@
                 </div>
             </div>
         </div>
-        <!-- auctionMoadl -->
-        <div class="modal fade" id="auctionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">경매 응찰</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group rounded">
-                            <input v-model="bidData.bidPrice" type="search" class="form-control rounded" placeholder="응찰금액"
-                                aria-label="Search" aria-describedby="search-addon" autofucus/>
-                        </div>
-                        <div class="text-center mt-4">
-                            <button type="button" @click="bidArt" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">응찰하기</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -127,12 +106,6 @@ export default {
             univSearchKeyword: '',
             univInfoList: [],
             buttonDisable: true,
-            bidData: {
-                auctionId: 73,
-                bidPrice: 0,
-                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
-            },
-
         }
     },
     methods: {
@@ -170,16 +143,7 @@ export default {
                     alert('이미 존재하는 아이디입니다');
                 })
         },
-        bidArt() {
-            axios.post(`/api/bid`, this.bidData).then((res) => {
-                    console.log('this.bidData ' + JSON.stringify(this.bidData));
-                    console.log('success ' + JSON.stringify(res));
-                    console.log('응찰완료');
-                    
-                }).catch((res) => {
-                    console.log('fail: ' + JSON.stringify(res));
-                })
-        },
+
     },
 }
 </script>

@@ -10,26 +10,30 @@
         </div>
         <div class="row g-3">
             <div class="col-md-6 offset-md-3">
-                <input type="text" v-model="loginData.loginId" class="form-control form-control-lg p-3" id="loginId"
+                <input type="text" v-model="loginData.loginId" class="form-control form-control-lg p-2" id="loginId"
                     name="loginId" placeholder="아이디" required>
             </div>
 
             <div class="col-md-6 offset-md-3">
-                <input type="text" v-model="loginData.loginPassword" class="form-control form-control-lg p-3"
+                <input type="text" v-model="loginData.loginPassword" class="form-control form-control-lg p-2"
                     id="loginPassword" name="loginPassword" placeholder="비밀번호" required>
             </div>
 
             <div class="col-md-6 offset-md-3">
-                <button @click="login" class="btn btn-outline-primary btn-lg col-md-12 p-3">로그인</button>
+                <button @click="login" class="btn btn-outline-primary btn-lg col-md-12 p-2">로그인</button>
             </div>
-
-            <div class="text-center">
-                <a href="">아이디/비밀번호 찾기 </a>
-                <a href="#"> | </a>
-                <a href="/createAccount/userRegister">회원가입</a>
-            </div>
-
         </div>
+
+        <div class="row">
+            <hr class="my-4 col-md-12 offset-md-0 border border-1 border-dark" style="opacity: 0.1;">
+        </div>
+
+        <div class="text-center">
+            <a @click="$router.push('/idFind')" href="#">아이디 / </a>
+            <a @click="$router.push('/passwordFind')" href="#">비밀번호 찾기 </a>
+            <a @click="$router.push('/createAccount/userRegister')" class="mx-5" href="#">회원가입</a>
+        </div>
+
     </div>
 </template>
 
@@ -47,11 +51,11 @@ export default {
             },
             // 로그인한 유저 정보
             loginedData: {
-            userId: '50',
-            userName: 'user50',
-            userNickname: 'user50-Nickname',
-            loginId: 'user50-Id',
-        }
+                userId: '50',
+                userName: 'user50',
+                userNickname: 'user50-Nickname',
+                loginId: 'user50-Id',
+            }
         }
     },
     methods: {
@@ -80,7 +84,7 @@ export default {
         // 로그인 중인 유저 정보가 존재할 떄
         if (this.$store.state.loginData != null) {
             this.$store.state.isLogined = true;
-        // 로그인 중인 유저 정보가 존재하지 않을 때
+            // 로그인 중인 유저 정보가 존재하지 않을 때
         } else {
             this.$store.state.isLogined = false;
         }
@@ -89,4 +93,5 @@ export default {
 </script>
 
 <style>
+
 </style>

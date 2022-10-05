@@ -3,7 +3,7 @@
     <!-- 경매 검색결과 -->
     <div v-if="searchType == 'auction'" className="product_container">
       <div className="product" v-for="(art,i) in searchData.artList" :key="i">
-        <div>
+        <div style="height: 462px;">
           <a @click="goPurchasePage(art)" href="#"><img
               :src="require(`../../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
               style="width: 100%;"></a>
@@ -11,7 +11,7 @@
             <h5 className="product_title"> {{art.auctionArt.artName}}</h5>
           </a>
           <p className="product_des"> {{art.auctionArt.artDescription}}</p>
-          <p className="product_des"> 작품 등록 시간 : {{art.auctionArt.registerDate}}</p>
+          <p className="product_des"> 작품 등록 시간 : {{art.auctionArt.artRegisterDate}}</p>
           <p className="product_des"> 시작 경매가 : {{art.auctionArt.artInitPrice}}원</p>
           <p className="product_des"> 현재 경매가 : {{art.auctionArt.highestBidPrice}}원</p>
           <p className="product_des"> 경매 기간 : {{art.auctionArt.auctionStartDate}} ~ {{art.auctionArt.auctionEndDate}}
@@ -29,7 +29,7 @@
     <!-- 일반 검색결과 -->
     <div v-if="searchType == 'general'" className="product_container">
       <div className="product" v-for="(art,i) in searchData.artList" :key="i">
-        <div>
+        <div style="height: 400px;">
           <a @click="goPurchasePage(art)" href="#"><img
               :src="require(`../../../../../src/main/resources/images/${art.generalArt.artStorageName}`)" alt=""
               style="width: 100%;"></a>

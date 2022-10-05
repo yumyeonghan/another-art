@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="listContainer">
-        <a href="/userPointCharge" class="item">
+        <a @click="$router.push('/userPointCharge')" href="#" class="item">
           <div class="icon">ii</div>
           <div class="text">
             <span>내지갑</span>

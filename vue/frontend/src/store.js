@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 
 const store = createStore({
-   state() {
+  state() {
     return {
       count: 0,
       // 회원가입
@@ -12,6 +12,8 @@ const store = createStore({
       // 로그인
       isLogined: false,
       loginData: JSON.parse(sessionStorage.getItem("loginData")),
+      // 세션 정보
+      sessionData: {},
       // 검색 결과
       searchData: {
         count: 0,
@@ -42,7 +44,7 @@ const store = createStore({
       // 검색 유형
       searchType: 'auction',
       // 구매할 작품
-        // 경매 작품
+      // 경매 작품
       selectedArt: {
         auctionArtBidCount: 13,
         auctionArt: {
@@ -101,6 +103,9 @@ const store = createStore({
     },
     setIsLogined(state, payload) {
       state.isLogined = payload;
+    },
+    setSessionData(state, payload) {
+      state.sessionData = {...payload};
     },
     setUnivName(state, payload) {
       state.univName = payload;

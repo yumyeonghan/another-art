@@ -34,8 +34,9 @@
                             </div>
 
                             <div class="col-md-6 offset-md-3">
-                                <input type="number" v-model="userPoint" class="form-control form-control-lg p-3"
-                                    id="userPoint" name="userPoint" placeholder="금액을 입력해주세요." required>
+                                <input type="number" v-model="IMPRequestData.amount"
+                                    class="form-control form-control-lg p-3" id="userPoint" name="userPoint"
+                                    placeholder="금액을 입력해주세요." required>
                             </div>
 
                             <div class="col-md-6 offset-md-3">
@@ -74,7 +75,7 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 const { IMP } = window;
 
 export default {
@@ -83,6 +84,18 @@ export default {
         return {
             totalPoint: 5000,
             userPoint: 0,
+            IMPRequestData: { // param
+                pg: "kakaopay.TC0ONETIME",
+                pay_method: "card",
+                merchant_uid: 'merchant_' + new Date().getTime(),
+                name: '포인트 충전',
+                amount: 0,
+                buyer_email: this.$store.state.sessionData.email,
+                buyer_name: this.$store.state.sessionData.name,
+                buyer_tel: this.$store.state.sessionData.phoneNumber,
+                buyer_addr: this.$store.state.sessionData.address,
+                buyer_postcode: this.$store.state.sessionData.address
+            },
         }
     },
     created() {
@@ -92,101 +105,54 @@ export default {
     },
     computed: {
         sumPoint() {
-            return this.totalPoint + this.userPoint;
-        }
+            return this.totalPoint + this.IMPRequestData.amount;
+        },
     },
     methods: {
         clear() {
             this.userPoint = 0;
         },
         pointIncrease(num) {
-            this.userPoint += num;
-            return this.userPoint;
+            this.IMPRequestData.amount += num;
+            return this.IMPRequestData.amount;
         },
-        // purchase() {
-
-        // },
-        // requestPay() {
-        //     // IMP.request_pay(param, callback) 결제창 호출
-        //     const IMP = window.IMP; 
-        //     // 생략 가능
-        //     IMP.init("{imp43261534}");
-        //     // Example: imp00000000
-
-        //     IMP.request_pay({ // param
-        //         pg: "html5_inicis",
-        //         pay_method: "card",
-        //         merchant_uid: "ORD20180131-0000011",
-        //         name: "노르웨이 회전 의자",
-        //         amount: this.userPoint,
-        //         buyer_email: "gildong@gmail.com",
-        //         buyer_name: "홍길동",
-        //         buyer_tel: "010-4242-4242",
-        //         buyer_addr: "서울특별시 강남구 신사동",
-        //         buyer_postcode: "01181"
-        //     }, rsp => { // callback
-        //         if (rsp.success) {
-
-        //             // 결제 성공 시 로직,
-
-        //         } else {
-
-        //             // 결제 실패 시 로직,
-
-        //         }
-        //     });
-        // },
         requestPay() {
             window.IMP.init("imp43261534");
 
-            IMP.request_pay({ // param
-                pg: "kakaopay.TC0ONETIME",
-                pay_method: "card",
-                merchant_uid: 'merchant_' + new Date().getTime(),
-                name: "테스터",
-                amount: this.userPoint,
-                buyer_email: "funidea_woo@naver.com",
-                buyer_name: "테스터",
-                buyer_tel: "010-8832-4280",
-                buyer_addr: "서울특별시 영등포구 당산동",
-                buyer_postcode: "07222"
-            }, (rsp) => { // callback
+            IMP.request_pay(this.IMPRequestData, (rsp) => { // callback
                 console.log(rsp);
                 if (rsp.success) {
                     console.log("결제 성공");
+                    axios.post('/api/point/charge', {
+                        dealAmount: this.IMPRequestData.amount,
+                        loginId: this.$store.state.sessionData.loginId,
+                    }).then(() => {
+                        console.log('포인트 충전 완료');
+                        this.$router.push('/myPage');
+                    }).catch(() => {
+                        console.log('point charge fail');
+                    })
+
                 } else {
                     console.log("결제 실패");
                 }
             });
         },
-        // cancelPay() {
-        //     jQuery.ajax({
-        //         "url": "{환불요청을 받을 서비스 URL}", // 예: http://www.myservice.com/payments/cancel
-        //         "type": "POST",
-        //         "contentType": "application/json",
-        //         "data": JSON.stringify({
-        //             "merchant_uid": "{결제건의 주문번호}", // 예: ORD20180131-0000011
-        //             "cancel_request_amount": 2000, // 환불금액
-        //             "reason": "테스트 결제 환불", // 환불사유
-        //             "refund_holder": "홍길동", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
-        //             "refund_bank": "88", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
-        //             "refund_account": "56211105948400" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
-        //         }),
-        //         "dataType": "json"
-        //     });
-        // }
-        // getToken() {
-        //     axios({
-        //         url: "https://api.iamport.kr/users/getToken",
-        //         method: "post", // POST method
-        //         headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-        //         data: {
-        //             imp_key: "imp_apikey", // REST API키
-        //             imp_secret: "ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW3ZGseDA6bkA5lamv9OqDMnxyeB9wqOsuO9W3Mx9YSJ4dTqJ3f" // REST API Secret
-        //         }
-        //     });
-        // }
-    }
+        productName() {
+            return this.IMPRequestData.amount + '포인트';
+        }
+    },
+    beforeMount() {
+        axios.get('/api/session-check').
+            then((res) => {
+                console.log("session-check success: " + JSON.stringify(res.data));
+                this.$store.commit('setSessionData', res.data);
+                console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
+            }).catch((res) => {
+                console.log('session-check fail:' + res);
+            });
+    },
+
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 442px;">
+  <div style="height: 448px;">
     <a @click="goPurchasePage(art)" href="#"><img
               :src="require(`../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
               style="width: 100%;"></a>

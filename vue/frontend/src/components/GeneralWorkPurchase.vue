@@ -53,10 +53,6 @@
                                     <a> {{ art.generalArt.artRegisterDate }}</a>
                                 </li>
                             </ul>
-
-
-
-
                         </div>
 
 
@@ -72,13 +68,13 @@
                     <div class="card_area">
                         <div class="row g-3">
                             <div class="col-md-3">
-                                <a href="#" class="btn btn-lg btn-outline-danger"
+                                <a href="#" @click="likeArtControl" :class="likeButtonStyle"
                                     style="border-radius: 6px; width: 120px;">
                                     <font-awesome-icon icon="fa-regular fa-heart" /> 찜
                                 </a>
                             </div>
                             <div class="col-md-3">
-                                <a @click="artPurchase" href="#" class="btn btn-lg btn-outline-primary"
+                                <a @click="purchaseArt" href="#" class="btn btn-lg btn-outline-primary"
                                     style="border-radius: 6px; width: 120px;">구매하기</a>
                             </div>
                         </div>
@@ -120,20 +116,52 @@ export default {
             purchaseData: {
                 artId: this.$store.state.selectedArt.generalArt.artId,
                 userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
-            }
+            },
+            likeData: {
+                artId: this.$store.state.selectedArt.generalArt.artId,
+                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+            },
+            isLiked: false,
+            likeButtonStyle: 'btn btn-lg btn-outline-danger',
+
+
         }
     },
     methods: {
-        artPurchase() {
+        purchaseArt() {
             axios.post('/api/purchase/general', this.purchaseData).then((res) => {
                 console.log("req: " + JSON.stringify(this.purchaseData));
                 console.log("res: " + JSON.stringify(res.data));
                 if (res.data.purchaseId) {
                     alert('구매완료');
+                    this.$router.push('/vue');
                 }
-            }).catch((res) =>{
+            }).catch((res) => {
                 console.log("catch: " + JSON.stringify(res.data));
             })
+        },
+        likeArtControl() {
+            // 작품 좋아요
+            if (!this.isLiked) {
+                axios.post('/api/art/like', this.likeData).then((res) => {
+                    console.log("req: " + JSON.stringify(this.likeData));
+                    console.log("res: " + JSON.stringify(res.data));
+                    this.isLiked = true;
+                    this.likeButtonStyle = 'btn btn-lg btn-danger';
+                }).catch((res) => {
+                    console.log("catch: " + JSON.stringify(res.data));
+                })
+                // 작품 좋아요 취소
+            } else if (this.isLiked) {
+                axios.post('/api/art/cancel', this.likeData).then((res) => {
+                    console.log("req: " + JSON.stringify(this.likeData));
+                    console.log("res: " + JSON.stringify(res.data));
+                    this.isLiked = false;
+                    this.likeButtonStyle = 'btn btn-lg btn-outline-danger';
+                }).catch((res) => {
+                    console.log("catch: " + JSON.stringify(res.data));
+                });
+            }
         },
     },
     beforeMount() {

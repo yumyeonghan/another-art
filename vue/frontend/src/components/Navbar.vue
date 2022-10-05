@@ -145,7 +145,7 @@ export default {
                 console.log("then " + JSON.stringify(res.data));
                 this.$store.commit("setSearchType", this.searchData.type);
                 this.$store.commit("setSearchData", JSON.stringify(res.data));
-                this.$router.push('/searchResults');
+                this.$router.push(`/searchResults?${this.searchData.keyword}`);
             }).catch((res) => {
                 console.log("catch " + JSON.stringify(res));
             })
