@@ -1,108 +1,108 @@
 <template>
   <div>
     <router-view></router-view>
-    <div class="wrap">
-      <div class="grayContainer">
-        <div>
-          <div class="name">닉네임</div>
-        </div>
-      </div>
-      <div class="listContainer">
-        <a @click="$router.push('/userPointCharge')" href="#" class="item">
-          <div class="icon">ii</div>
-          <div class="text">
-            <span>내지갑</span>
-            <span class="smallLight">
-              <span>|</span>
-              <span>보유 적립금</span>
-            </span>
-          </div>
-          <div class="right">
-            <span class="blct">175 BLCT</span>
-            >
-          </div>
-        </a>
-      </div>
-      <div class="shippingStatusContainer">
-        <div class="listContainer">
-          <a @click="$router.push('/updateUserInfo')" href="#" class="item">
-            <div class="icon">ii</div>
-            <div class="text">
-              <span>내 정보</span>
-            </div>
-            <div class="right">
-              <span class="blct">수정하러 가기</span>
-              >
-            </div>
-          </a>
-        </div>
+    <div class="container py-3">
+      <div class="p-4 mb-2 bg-light rounded-3">
+        <h1 class="name">{{ userData.userNickname }}</h1>
         <hr>
-        <div class="smallContainer">
-          <div class="item">
-            <div class="icon">ii</div>
-            <div class="text">사용자 이름<span class="circle"></span></div>
-            <div class="right"> {{ userData.userName }} </div>
+        <div class="listContainer rounded-3">
+          <h3 class="text-center p-3">포인트 내역</h3>
+          <div class="listContainer">
+            <div class="item">
+              <div class="text">전체 포인트</div>
+              <div class="right"> {axios get 전체 포인트} </div>
+            </div>
           </div>
-        </div>
-        <div class="smallContainer">
-          <div class="item">
-            <div class="icon">ii</div>
-            <div class="text">사용자 닉네임</div>
-            <div class="right"> {{ userData.userNickname }} </div>
+          <div class="listContainer">
+            <div class="item">
+              <div class="smallLight">사용 가능 포인트</div>
+              <div class="right smallLight"> {axios get 사용 가능 포인트} </div>
+            </div>
           </div>
+
         </div>
-        <div class="smallContainer">
-          <div class="item">
-            <div class="icon">ii</div>
-            <div class="text">사용자 이메일</div>
-            <div class="right"> {{ userData.email }} </div>
+
+        <div class="listContainer rounded-3">
+          <div class="smallContainer">
+            <div class="item">
+              <div class="text">이름</div>
+              <div class="right"> {{ userData.userName }} </div>
+            </div>
           </div>
-        </div>
-        <div class="smallContainer">
-          <div class="item">
-            <div class="icon">ii</div>
-            <div class="text">사용자 전화번호</div>
-            <div class="right"> {{ userData.phoneNumber }} </div>
+          <div class="smallContainer">
+            <div class="item">
+              <div class="text">닉네임</div>
+              <div class="right"> {{ userData.userNickname }} </div>
+            </div>
           </div>
-        </div>
-        <div class="smallContainer">
-          <div class="item">
-            <div class="icon">ii</div>
-            <div class="text">사용자 생년월일</div>
-            <div class="right"> {{ userData.birth }} </div>
+          <div class="smallContainer">
+            <div class="item">
+              <div class="text">이메일</div>
+              <div class="right"> {{ userData.email }} </div>
+            </div>
           </div>
-        </div>
-        <div class="smallContainer">
-          <div class="item">
-            <div class="icon">ii</div>
-            <div class="text">재학중인 학교</div>
-            <div class="right"> {{ userData.schoolName }} </div>
+          <div class="smallContainer">
+            <div class="item">
+              <div class="text">전화번호</div>
+              <div class="right"> {{ userData.phoneNumber }} </div>
+            </div>
           </div>
-        </div>
-        <div class="smallContainer">
-          <div class="item">
-            <div class="icon">ii</div>
-            <div class="text">주소</div>
-            <div class="right"> {{ userData.address }} </div>
+          <div class="smallContainer">
+            <div class="item">
+              <div class="text">생년월일</div>
+              <div class="right"> {{ userData.birth }} </div>
+            </div>
+          </div>
+          <div class="smallContainer">
+            <div class="item">
+              <div class="text">재학중인 학교</div>
+              <div class="right"> {{ userData.schoolName }} </div>
+            </div>
+          </div>
+          <div class="smallContainer">
+            <div class="item">
+              <div class="text">주소</div>
+              <div class="right"> {{ userData.address }} </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="infoContainer">
-        <a href="#" class="item">
-          <div>icon</div>
-          <div>공지사항</div>
-        </a>
-        <a href="#" class="item">
-          <div>icos</div>
-          <div>이용안내</div>
-        </a>
-        <a href="#" class="item">
-          <div>icon</div>
-          <div>고객센터</div>
-        </a>
+      <div class="row align-items-md-stretch">
+        <div class="col-md-6 p-3">
+          <div class="h-100 p-3 text-bg-light rounded-3">
+            <a @click="$router.push('/userPointCharge')" href="#" class="item" style="color: black; text-decoration: none;">
+              <h4 class="text-center">포인트 충전 ></h4>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-6 p-3">
+          <div class="h-100 p-3 text-bg-light rounded-3">
+            <a @click="$router.push('/updateUserInfo')" href="#" class="item" style="color: black; text-decoration: none;">
+              <h4 class="text-center">회원정보 수정 ></h4>
+            </a>
+          </div>
+        </div>
+
+        <div class="infoContainer">
+          <a href="#" class="item">
+            <div>icon</div>
+            <div>공지사항</div>
+          </a>
+          <a href="#" class="item">
+            <div>icos</div>
+            <div>이용안내</div>
+          </a>
+          <a href="#" class="item">
+            <div>icon</div>
+            <div>고객센터</div>
+          </a>
+        </div>
+
       </div>
     </div>
+
   </div>
 </template>
 
@@ -126,17 +126,17 @@ export default {
   },
   beforeMount() {
     axios.get('/api/session-check').
-      then((res) => {
-        console.log("session-check success: " + JSON.stringify(res.data));
-        this.$store.commit('setSessionData', res.data);
-        console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
-        
-        this.userData.email = this.$store.state.sessionData.email;
-        this.userData.phoneNumber = this.$store.state.sessionData.phoneNumber;
-        this.userData.address = this.$store.state.sessionData.address;
-      }).catch((res) => {
-        console.log('session-check fail:' + res);
-      });
+    then((res) => {
+      console.log("session-check success: " + JSON.stringify(res.data));
+      this.$store.commit('setSessionData', res.data);
+      console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
+
+      this.userData.email = this.$store.state.sessionData.email;
+      this.userData.phoneNumber = this.$store.state.sessionData.phoneNumber;
+      this.userData.address = this.$store.state.sessionData.address;
+    }).catch((res) => {
+      console.log('session-check fail:' + res);
+    });
   },
 }
 </script>
