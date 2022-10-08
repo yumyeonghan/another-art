@@ -1,8 +1,10 @@
 package com.imagine.another_arts.web.user;
 
+import com.imagine.another_arts.domain.login.dto.UserSessionDto;
 import com.imagine.another_arts.domain.user.service.UserService;
 import com.imagine.another_arts.domain.user.service.dto.response.MyPageUserResponse;
 import com.imagine.another_arts.exception.AnotherArtException;
+import com.imagine.another_arts.web.SessionFactory;
 import com.imagine.another_arts.web.user.dto.request.DuplicateCheckRequest;
 import com.imagine.another_arts.web.user.dto.request.UserEditRequest;
 import com.imagine.another_arts.web.user.dto.request.UserJoinRequest;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.AUTHENTICATION_USER;
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL_REQUEST;
 
 @RestController
@@ -74,7 +77,19 @@ public class UserController {
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "마이페이지 사용자 정보 API", notes = "마이페이지에서 사용자에 관한 정보를 응답하는 API")
-    public MyPageUserResponse getUserInformation (@PathVariable Long userId, HttpServletRequest request) {
+    public MyPageUserResponse getUserInformation(@PathVariable Long userId, HttpServletRequest request) {
         return userService.getUserInformation(request, userId);
+    }
+
+    @GetMapping("/session-check")
+    @ApiOperation(value = "사용자 세션 체크 API", notes = "Request를 보낸 사용자가 Session을 보유하고 있는지 체크하는 API")
+    public UserSessionDto sessionCheck(HttpServletRequest request) {
+        UserSessionDto currentUserSession = (UserSessionDto) request.getSession(false).getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
+
+        if (currentUserSession == null) {
+            throw AnotherArtException.type(AUTHENTICATION_USER);
+        }
+
+        return currentUserSession;
     }
 }
