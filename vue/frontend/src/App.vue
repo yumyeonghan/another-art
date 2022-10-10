@@ -19,14 +19,17 @@
       
       <!-- :key="$route.fullPath" -->
       <router-view></router-view>
+      
     </div>
   </div>
+  <Footer></Footer>
 </div>
 </template>
 
 <script>
 import RegisterModals from './components/RegisterModals.vue'
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   name: 'App',
@@ -40,6 +43,7 @@ export default {
   components: {
     RegisterModals,
     Navbar,
+    Footer
 }
 }
 </script>

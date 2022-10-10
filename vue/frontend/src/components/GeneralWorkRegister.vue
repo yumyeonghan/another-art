@@ -19,7 +19,7 @@
                             </span>
                         </div>
                         <div class="text-center mt-4">
-                            <button type="button" @click="bidArt" class="btn btn-outline-primary"
+                            <button type="button" class="btn btn-outline-primary"
                                 data-bs-dismiss="modal" aria-label="Close">사용하기</button>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                                 <h6>경매 작품</h6>
                             </button>
                             <button type="button" @click="$emit('setSaleType', 'general')" id="artworkType"
-                                class="btn btn-outline-secondary">
+                                class="btn btn-secondary">
                                 <div class="mb-2">
                                     <font-awesome-icon icon="fa-solid fa-won-sign" style="height: 40px;" />
                                 </div>
@@ -55,8 +55,8 @@
                     <div class="row g-3">
                         <div :class="col_style" class="mb-2">
                             <label for="name" class="form-label">작품명</label>
-                            <input type="text" class="form-control form-control-lg p-3" id="name" name="name"
-                                placeholder="" value="" required>
+                            <input type="text" v-model="artData.name" class="form-control form-control-lg p-3" id="name"
+                                name="name" required>
                         </div>
 
                         <div :class="col_style" class="mb-2">
@@ -65,8 +65,8 @@
                                     <label for="tag" class="form-label">해시태그</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control form-control-lg p-3" id="tag" name="tag"
-                                        value="" required>
+                                    <input type="text" :value="hashtagList"
+                                        class="form-control form-control-lg p-3" id="tag" name="tag" disabled required>
                                 </div>
                                 <div class="col-md-4">
                                     <button class="form-control btn btn-outline-secondary p-3" data-bs-toggle="modal"
@@ -84,8 +84,9 @@
                                     <h4 class="fw-lighter">₩</h4>
                                 </div>
                                 <div class="col-md-11">
-                                    <input type="number" class="form-control form-control-lg p-3" id="price"
-                                        name="price" placeholder="" value="" required>
+                                    <input type="number" v-model="artData.initPrice"
+                                        class="form-control form-control-lg p-3" id="price" name="initPrice"
+                                        placeholder="" required>
                                 </div>
                                 <div class="col-md-4">
                                 </div>
@@ -97,9 +98,9 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating">
-                                        <textarea class="form-control p-3" style="height: 145px; resize: none;"
-                                            placeholder="Leave a comment here" id="description" name="description"
-                                            required></textarea>
+                                        <textarea v-model="artData.description" class="form-control p-3"
+                                            style="height: 145px; resize: none;" placeholder="Leave a comment here"
+                                            id="description" name="description" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -113,13 +114,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card mt-3 mb-5">
-                            <label for="image" class="input-button" style="cursor: pointer;">
+                            <label for="imageFile" class="input-button" style="cursor: pointer;">
                                 <button type="button" class="btn btn-outline-dark importar">
                                     <h5 style="position: relative; top: 30%;">이미지 등록</h5>
                                 </button>
                             </label>
                             <input type="file" @change="upload" accept="image/*" enctype="multipart/form-data"
-                                id="image" name="image" class="inputfile" style="display: none;" multiple />
+                            id="imageFile" name="file" class="inputfile" style="display: none;" />
                             <div class="card-body pt-4">
                                 <!-- <h2 class="card-title"></h2> -->
                                 <p class="card-text">이미지 파일을 추가하면 오른쪽 공간에 이미지가 표시됩니다.</p>
@@ -146,7 +147,7 @@
             </div>
 
             <div class="row">
-                <button type="submit" class="btn btn-outline-dark btn-lg col-md-4 offset-md-4 mt-3 p-3"
+                <button @click="registerArt" class="btn btn-outline-dark btn-lg col-md-4 offset-md-4 mt-3 p-3"
                     style="opacity: 0.7;" id="signup">완료</button>
             </div>
         </div>
@@ -154,6 +155,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'generalWorkRegister',
     data() {
@@ -164,18 +167,51 @@ export default {
                 name: '',
                 initPrice: '',
                 description: '',
-                userId: JSON.parse(sessionStorage.getItem("loginData")),
+                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
             },
-            hashtagListData: {
-                hashtagList: [],
-            },
+            hashtagList: [],
+            hashtagIndex: 0,
             hashtagKeyword: '',
         }
     },
     props: {
         col_style: String,
         saleType: String,
-    }
+    },
+    methods: {
+        addHashtag(hashtag) {
+            this.hashtagList.push(hashtag);
+            this.hashtagKeyword = '';
+            console.log(this.hashtagList);
+        },
+        registerArt() {
+            let formData = new FormData();
+            let file = document.getElementById("imageFile");
+            // var startDate = new Date(this.artData.startDate).toLocaleDateString()
+            // var endDate = new Date(this.artData.startDate).toLocaleDateString()
+            // var startDate = new Intl.DateTimeFormat('kr').format(new Date(this.artData.startDate));
+            // var endDate = new Intl.DateTimeFormat('kr').format(new Date(this.artData.endDate));
+
+
+            formData.append('file', file.files[0]);
+            formData.append('saleType', this.artData.saleType);
+            formData.append('name', this.artData.name);
+            formData.append('initPrice', this.artData.initPrice);
+            formData.append('description', this.artData.description);
+            formData.append('userId', this.artData.userId);
+            formData.append('hashtagList', this.hashtagList);
+            console.log("formdata: " + JSON.stringify(formData));
+
+            axios.post('/api/art', formData, {
+                headers:
+                    { 'Content-Type': 'multipart/form-data' }
+            }).then((res) => {
+                console.log("then res: " + JSON.stringify(res.data));
+            }).catch((res) => {
+                console.log("catch res: " + JSON.stringify(res.data));
+            })
+        },
+    },
 }
 </script>
 

@@ -19,23 +19,23 @@
                             </span>
                         </div>
                         <div class="text-center mt-4">
-                            <button type="button" @click="bidArt" class="btn btn-outline-primary"
+                            <button type="button" class="btn btn-outline-primary"
                                 data-bs-dismiss="modal" aria-label="Close">사용하기</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="row gx-4 m-auto p-2">
             <div class="col-md-6 position-static d-block p-3 text-black">
-
                 <div class="row g-3">
                     <div :class="col_style" class="mb-4">
                         <label for="artworkType" class="form-label">작품유형</label>
                         <div class="btn-group form-control" style="height: 120px; border: none;" role="group"
                             aria-label="Basic example">
                             <button type="button" @click="$emit('setSaleType', 'auction')"
-                                class="btn btn-outline-secondary">
+                                class="btn btn-secondary">
                                 <div class="mb-2">
                                     <font-awesome-icon icon="fa-solid fa-gavel" style="height: 40px;" />
                                 </div>
@@ -65,8 +65,8 @@
                                     <label for="tag" class="form-label">해시태그</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="hashtagListData.hashtagList"
-                                        class="form-control form-control-lg p-3" id="tag" name="tag" required>
+                                    <input type="text" :value="hashtagList"
+                                        class="form-control form-control-lg p-3" id="tag" name="tag" disabled required>
                                 </div>
                                 <div class="col-md-4">
                                     <button class="form-control btn btn-outline-secondary p-3" data-bs-toggle="modal"
@@ -135,13 +135,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card mt-3 mb-5">
-                            <label for="image" class="input-button" style="cursor: pointer;">
+                            <label for="imageFile" class="input-button" style="cursor: pointer;">
                                 <button type="button" class="btn btn-outline-dark importar">
                                     <h5 style="position: relative; top: 30%;">이미지 등록</h5>
                                 </button>
                             </label>
                             <input type="file" @change="upload" accept="image/*" enctype="multipart/form-data"
-                                id="imageFile" name="file" class="inputfile" style="display: none;" multiple />
+                            id="imageFile" name="file" class="inputfile" style="display: none;" />
                             <div class="card-body pt-4">
                                 <!-- <h2 class="card-title"></h2> -->
                                 <p class="card-text">이미지 파일을 추가하면 오른쪽 공간에 이미지가 표시됩니다.</p>
@@ -173,7 +173,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -190,12 +189,11 @@ export default {
                 name: '',
                 initPrice: '',
                 description: '',
-                userId: JSON.parse(sessionStorage.getItem("loginData")).userId,
+                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
                 startDate: '',
             },
-            hashtagListData: {
-                hashtagList: [],
-            },
+            hashtagList: [],
+            hashtagIndex: 0,
             hashtagKeyword: '',
         }
     },
@@ -204,30 +202,59 @@ export default {
         saleType: String,
     },
     methods: {
+        // test() {
+        //     let formData = new FormData();
+        //     let file = document.getElementById("imageFile");
+
+        //     formData.append('file', file.files[0]);
+        //     formData.append('endDate', this.artData.endDate + " 00:00:00");
+        //     formData.append('saleType', this.artData.saleType);
+        //     formData.append('name', this.artData.name);
+        //     formData.append('initPrice', this.artData.initPrice);
+        //     formData.append('description', this.artData.description);
+        //     formData.append('userId', this.artData.userId);
+        //     formData.append('startDate', this.artData.startDate + " 00:00:00");
+        //     formData.append('hashtagList', this.hashtagList);
+        //     console.log("formdata: " + formData);
+
+        //     console.log("2" + new Date(this.artData.startDate).toLocaleDateString());
+            
+        //     for (let obj of formData) {
+        //         console.log(obj);
+        //     }
+        // },
         addHashtag(hashtag) {
-            this.hashtagListData.hashtagList.push(hashtag);
-            console.log(this.hashtagListData.hashtagList);
+            this.hashtagList.push(hashtag);
+            this.hashtagKeyword = '';
+            console.log(this.hashtagList);
         },
         registerArt() {
             let formData = new FormData();
             let file = document.getElementById("imageFile");
+            // var startDate = new Date(this.artData.startDate).toLocaleDateString()
+            // var endDate = new Date(this.artData.startDate).toLocaleDateString()
+            // var startDate = new Intl.DateTimeFormat('kr').format(new Date(this.artData.startDate));
+            // var endDate = new Intl.DateTimeFormat('kr').format(new Date(this.artData.endDate));
+
+
             formData.append('file', file.files[0]);
-            formData.append('endDate', this.artData.endDate);
+            formData.append('endDate', this.artData.endDate + " 00:00:00");
             formData.append('saleType', this.artData.saleType);
             formData.append('name', this.artData.name);
             formData.append('initPrice', this.artData.initPrice);
             formData.append('description', this.artData.description);
             formData.append('userId', this.artData.userId);
-            formData.append('startDate', this.artData.startDate);
-            console.log(formData);
+            formData.append('startDate', this.artData.startDate + " 00:00:00");
+            formData.append('hashtagList', this.hashtagList);
+            console.log("formdata: " + JSON.stringify(formData));
 
             axios.post('/api/art', formData, {
                 headers:
                     { 'Content-Type': 'multipart/form-data' }
             }).then((res) => {
-                console.log("then res: " + res);
+                console.log("then res: " + JSON.stringify(res.data));
             }).catch((res) => {
-                console.log("catch res: " + res)
+                console.log("catch res: " + JSON.stringify(res.data));
             })
         },
     },

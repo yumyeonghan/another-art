@@ -44,7 +44,7 @@ const store = createStore({
       // 검색 유형
       searchType: 'auction',
       // 구매할 작품
-      // 경매 작품
+        // 경매 작품
       selectedArt: {
         auctionArtBidCount: 13,
         auctionArt: {
