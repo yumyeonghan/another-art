@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HashtagSearchArtRequest {
+public class ArtHashtagSearchRequest {
     @NotBlank(message = "검색할 해시태그는 필수입니다")
     @ApiModelProperty(name = "hashtag", value = "검색 해시태그", required = true)
     private String hashtag;

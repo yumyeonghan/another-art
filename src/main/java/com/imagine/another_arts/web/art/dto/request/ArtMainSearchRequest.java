@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MainArtSortRequest {
+public class ArtMainSearchRequest {
     @NotBlank(message = "정렬 기준은 필수입니다")
     @ApiModelProperty(value = "정렬 기준 [date, rdate, price, rprice, count, rcount]", required = true, example = "date")
     private String sort;

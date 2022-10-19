@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CancelArtRequest {
+public class ArtLikeCancelRequest {
     @NotNull(message = "작품 ID는 필수입니다")
     @ApiModelProperty(value = "좋아요를 취소할 작품 ID", required = true)
     private Long artId;
