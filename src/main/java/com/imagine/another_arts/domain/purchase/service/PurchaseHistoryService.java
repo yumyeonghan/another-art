@@ -10,8 +10,6 @@ import com.imagine.another_arts.domain.point.enums.PointType;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.purchase.PurchaseHistory;
 import com.imagine.another_arts.domain.purchase.repository.PurchaseHistoryRepository;
-import com.imagine.another_arts.domain.purchase.service.dto.request.PurchaseAuctionArtRequestDto;
-import com.imagine.another_arts.domain.purchase.service.dto.request.PurchaseGeneralArtRequestDto;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.exception.AnotherArtException;
@@ -37,17 +35,17 @@ public class PurchaseHistoryService {
 
     // 경매 작품 구매
     @Transactional
-    public Long purchaseAuctionArt(PurchaseAuctionArtRequestDto purchaseAuctionArtRequest) {
-        Auction auction = auctionRepository.findAuctionByAuctionId(purchaseAuctionArtRequest.getAuctionId())
+    public Long purchaseAuctionArt(Long auctionId, Long userId) {
+        Auction auction = auctionRepository.findAuctionByAuctionId(auctionId)
                 .orElseThrow(() -> AnotherArtException.type(AUCTION_NOT_FOUND));
-        isAuctionInProgress(auction); // Validation
+        isAuctionPeriodFinished(auction);
 
         Art targetArt = auction.getArt();
-        isAlreadySoldOut(targetArt); // Validation
+        isAlreadySoldOut(targetArt);
 
-        User purchaseUser = userRepository.findById(purchaseAuctionArtRequest.getUserId())
+        User purchaseUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-        isQualifiedUser(auction.getUser(), purchaseUser); // Validation
+        isQualifiedUser(auction.getUser(), purchaseUser);
 
         // PointHistory & PurchaseHistory Process
         return applyPurchaseHistoryAndPointHistory(targetArt, purchaseUser, auction);
@@ -55,27 +53,26 @@ public class PurchaseHistoryService {
 
     // 일반 작품 구매
     @Transactional
-    public Long purchaseGeneralArt(PurchaseGeneralArtRequestDto purchaseGeneralArtRequest) {
-        Art targetArt = artRepository.findArtByArtId(purchaseGeneralArtRequest.getArtId())
+    public Long purchaseGeneralArt(Long artId, Long userId) {
+        Art targetArt = artRepository.findArtByArtId(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
-        isAlreadySoldOut(targetArt); // Validation
+        isAlreadySoldOut(targetArt);
 
-        User purchaseUser = userRepository.findById(purchaseGeneralArtRequest.getUserId())
+        User purchaseUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-        hasSufficientPoint(purchaseUser, targetArt.getInitPrice()); // Validation
+        hasSufficientPoint(purchaseUser, targetArt.getInitPrice());
 
-        // PointHistory & PurchaseHistory Process
+        // PointHistory & PurchaseHistory Save Process
         return applyPurchaseHistoryAndPointHistory(targetArt, purchaseUser, null);
     }
 
-    @Transactional
-    protected Long applyPurchaseHistoryAndPointHistory(Art targetArt, User purchaseUser, @Nullable Auction auction) {
+    private Long applyPurchaseHistoryAndPointHistory(Art targetArt, User purchaseUser, @Nullable Auction auction) {
         // PurchaseHistory
         PurchaseHistory savePurchaseHistory = purchaseHistoryRepository.save(createPurchaseHistory(targetArt, purchaseUser, auction));
         targetArt.changeSaleStatus(SaleStatus.SOLD_OUT);
 
         // PointHistory
-        pointHistoryGenerateProcess(targetArt, targetArt.getUser(), purchaseUser, auction);
+        savePointHistoryProcess(targetArt, targetArt.getUser(), purchaseUser, auction);
 
         return savePurchaseHistory.getId();
     }
@@ -86,13 +83,11 @@ public class PurchaseHistoryService {
                 : PurchaseHistory.createPurchaseHistoryByAuction(purchaseUser, targetArt, auction, auction.getBidPrice());
     }
 
-    @Transactional
-    protected void pointHistoryGenerateProcess(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
+    private void savePointHistoryProcess(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
         // PointHistory Generate & SaveAll
         List<PointHistory> pointHistoryList = createPointHistory(targetArt, artOwner, purchaseUser, auction);
         pointHistoryRepository.saveAll(pointHistoryList);
 
-        // availablePoint Update
         updateAvailablePoint(targetArt, artOwner, purchaseUser, auction);
     }
 
@@ -112,8 +107,7 @@ public class PurchaseHistoryService {
         );
     }
 
-    @Transactional
-    protected void updateAvailablePoint(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
+    private void updateAvailablePoint(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
         if (auction == null) {
             artOwner.updateAvailablePoint(artOwner.getAvailablePoint() + targetArt.getInitPrice());
             purchaseUser.updateAvailablePoint(purchaseUser.getAvailablePoint() - targetArt.getInitPrice());
@@ -130,7 +124,7 @@ public class PurchaseHistoryService {
                 .orElse(0L);
     }
 
-    private void isAuctionInProgress(Auction auction) {
+    private void isAuctionPeriodFinished(Auction auction) {
         if (auction.getEndDate().isAfter(LocalDateTime.now())) {
             throw AnotherArtException.type(NOT_CLOSED_AUCTION);
         }

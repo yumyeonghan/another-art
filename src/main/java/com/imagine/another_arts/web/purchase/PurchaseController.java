@@ -21,15 +21,13 @@ public class PurchaseController {
 
     @PostMapping("/purchase/auction")
     @ApiOperation(value = "경매 작품 구매 API", notes = "경매 ID, 사용자 ID를 통한 낙찰된 경매 작품 구매 API")
-    public PurchaseArtResponse purchaseAuctionArt(@Valid @RequestBody PurchaseAuctionArtRequest purchaseAuctionArtRequest) {
-        Long purchaseHistoryId = purchaseHistoryService.purchaseAuctionArt(purchaseAuctionArtRequest.toServiceDto());
-        return new PurchaseArtResponse(purchaseHistoryId);
+    public PurchaseArtResponse purchaseAuctionArt(@Valid @RequestBody PurchaseAuctionArtRequest auctionArtRequest) {
+        return new PurchaseArtResponse(purchaseHistoryService.purchaseAuctionArt(auctionArtRequest.getAuctionId(), auctionArtRequest.getUserId()));
     }
 
     @PostMapping("/purchase/general")
     @ApiOperation(value = "일반 작품 구매 API", notes = "작품 ID, 사용자 ID를 통한 일반 작품 구매 API")
-    public PurchaseArtResponse purchaseGeneralArt(@Valid @RequestBody PurchaseGeneralArtRequest purchaseGeneralArtRequest) {
-        Long purchaseHistoryId = purchaseHistoryService.purchaseGeneralArt(purchaseGeneralArtRequest.toServiceDto());
-        return new PurchaseArtResponse(purchaseHistoryId);
+    public PurchaseArtResponse purchaseGeneralArt(@Valid @RequestBody PurchaseGeneralArtRequest generalArtRequest) {
+        return new PurchaseArtResponse(purchaseHistoryService.purchaseGeneralArt(generalArtRequest.getArtId(), generalArtRequest.getUserId()));
     }
 }

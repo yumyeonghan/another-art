@@ -1,6 +1,5 @@
 package com.imagine.another_arts.web.purchase.dto.request;
 
-import com.imagine.another_arts.domain.purchase.service.dto.request.PurchaseGeneralArtRequestDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +18,4 @@ public class PurchaseGeneralArtRequest {
     @NotNull(message = "사용자 ID는 필수입니다")
     @ApiModelProperty(value = "사용자 ID", required = true, example = "1")
     private Long userId;
-
-    public PurchaseGeneralArtRequestDto toServiceDto() {
-        return new PurchaseGeneralArtRequestDto(this.artId, this.userId);
-    }
 }
