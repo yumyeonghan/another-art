@@ -11,13 +11,13 @@ import com.imagine.another_arts.web.user.dto.request.UserJoinRequest;
 import com.imagine.another_arts.web.user.dto.response.SimpleUserSuccessResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.AUTHENTICATION_USER;
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL_REQUEST;
@@ -33,11 +33,9 @@ public class UserController {
     @ApiOperation(value = "회원가입 API", notes = "Form 데이터 정보들을 서버로 전달함에 따라 회원가입 진행")
     public ResponseEntity<SimpleUserSuccessResponse> joinUser(@Valid @RequestBody UserJoinRequest userJoinRequest) {
         Long saveUserId = userService.saveUser(userJoinRequest.toServiceDto());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Location", "/api/user/" + saveUserId);
-
-        return new ResponseEntity<>(new SimpleUserSuccessResponse(saveUserId), headers, HttpStatus.CREATED);
+        return ResponseEntity
+                .created(URI.create("/api/user/" + saveUserId))
+                .body(new SimpleUserSuccessResponse(saveUserId));
     }
 
     @PatchMapping("/user/{userId}")

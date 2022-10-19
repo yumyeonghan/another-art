@@ -29,20 +29,8 @@ public class UserService {
 
     @Transactional
     public Long saveUser(UserJoinRequestDto userJoinRequest) {
-        User user = User.createUser(
-                userJoinRequest.getName(),
-                userJoinRequest.getNickname(),
-                userJoinRequest.getLoginId(),
-                userJoinRequest.getLoginPassword(),
-                userJoinRequest.getEmail(),
-                userJoinRequest.getSchoolName(),
-                userJoinRequest.getPhoneNumber(),
-                userJoinRequest.getAddress(),
-                userJoinRequest.getBirth()
-        );
-        User saveUser = userRepository.save(user);
-        pointHistoryRepository.save(PointHistory.createPointHistory(user));
-
+        User saveUser = userRepository.save(userJoinRequest.toEntity());
+        pointHistoryRepository.save(PointHistory.createPointHistory(saveUser));
         return saveUser.getId();
     }
 
