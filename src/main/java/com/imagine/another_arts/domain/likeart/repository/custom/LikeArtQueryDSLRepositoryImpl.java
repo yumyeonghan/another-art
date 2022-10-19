@@ -38,6 +38,7 @@ public class LikeArtQueryDSLRepositoryImpl implements LikeArtQueryDSLRepository 
     }
 
     @Override
+    @Transactional
     public Long deleteByArtAndUser(Long artId, Long userId) {
         return query
                 .delete(likeArt)

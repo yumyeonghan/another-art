@@ -12,13 +12,12 @@ import com.imagine.another_arts.web.art.dto.response.SortedArtResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL_REQUEST;
@@ -38,10 +37,9 @@ public class ArtController {
                 ? artService.registerArt(artRegisterRequest.toAuctioArtDto())
                 : artService.registerArt(artRegisterRequest.toGeneralArtDto());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Location", "/api/art/" + saveArtId);
-
-        return new ResponseEntity<>(new SimpleArtSuccessResponse(saveArtId), headers, HttpStatus.CREATED);
+        return ResponseEntity
+                .created(URI.create("/api/art/" + saveArtId))
+                .body(new SimpleArtSuccessResponse(saveArtId));
     }
 
     @GetMapping("/art/{artId}")
@@ -52,8 +50,8 @@ public class ArtController {
 
     @PatchMapping("/art/{artId}")
     @ApiOperation(value = "작품 정보 수정 API", notes = "작품명, 작품 설명을 변경하는 API")
-    public ResponseEntity<Void> editArt(@PathVariable Long artId, @RequestBody ArtEditRequest artEditRequest) {
-        artService.editArt(artId, artEditRequest.toServiceDto());
+    public ResponseEntity<Void> editArt(@PathVariable Long artId, @RequestBody ArtEditRequest editRequest) {
+        artService.editArt(artId, editRequest.getUpdateName(), editRequest.getUpdateDescription());
         return ResponseEntity.noContent().build();
     }
 
@@ -138,15 +136,15 @@ public class ArtController {
 
     @PostMapping("/art/like")
     @ApiOperation(value = "작품 좋아요 API", notes = "사용자가 작품에 좋아요 마킹을 하기 위한 API")
-    public ResponseEntity<Void> likeArt(@Valid @RequestBody ArtLikeRequest artLikeRequest) {
-        artService.likeArt(artLikeRequest.getArtId(), artLikeRequest.getUserId());
+    public ResponseEntity<Void> artLikeMarking(@Valid @RequestBody ArtLikeMarkingRequest artLikeMarkingRequest) {
+        artService.likeArt(artLikeMarkingRequest.getArtId(), artLikeMarkingRequest.getUserId());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/art/cancel")
     @ApiOperation(value = "작품 좋아요 취소 API", notes = "이전에 좋아요 버튼을 누른 작품에 대해서 좋아요 취소")
-    public ResponseEntity<Void> cancelArt(@Valid @RequestBody ArtLikeCancelRequest artLikeCancelRequest) {
-        artService.cancelArt(artLikeCancelRequest.getArtId(), artLikeCancelRequest.getUserId());
+    public ResponseEntity<Void> artLikeMarkingCancel(@Valid @RequestBody ArtLikeMarkingCancelRequest artLikeMarkingCancelRequest) {
+        artService.cancelArt(artLikeMarkingCancelRequest.getArtId(), artLikeMarkingCancelRequest.getUserId());
         return ResponseEntity.noContent().build();
     }
 }

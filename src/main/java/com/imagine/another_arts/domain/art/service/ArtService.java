@@ -4,7 +4,6 @@ import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.art.enums.SaleType;
 import com.imagine.another_arts.domain.art.repository.ArtRepository;
 import com.imagine.another_arts.domain.art.service.dto.UploadArtImageInfo;
-import com.imagine.another_arts.domain.art.service.dto.request.ArtEditRequestDto;
 import com.imagine.another_arts.domain.art.service.dto.request.ArtRegisterRequestDto;
 import com.imagine.another_arts.domain.art.service.dto.response.ArtResponse;
 import com.imagine.another_arts.domain.art.service.dto.response.AuctionArtResponse;
@@ -55,34 +54,24 @@ public class ArtService {
 
     // 작품 등록
     @Transactional
-    public Long registerArt(ArtRegisterRequestDto artRegisterRequest) {
+    public Long registerArt(ArtRegisterRequestDto registerRequest) {
         try {
-            User artOwner = userRepository.findById(artRegisterRequest.getUserId())
+            User artOwner = userRepository.findById(registerRequest.getUserId())
                     .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
-            MultipartFile uploadFile = artRegisterRequest.getFile();
+            MultipartFile uploadFile = registerRequest.getFile();
             UploadArtImageInfo fileInfo = getUploadArtImageInfo(uploadFile);
 
             Art art = Art.createArt(
-                    artOwner,
-                    artRegisterRequest.getName(),
-                    artRegisterRequest.getDescription(),
-                    artRegisterRequest.getInitPrice(),
-                    fileInfo.getUploadName(),
-                    fileInfo.getStoregeName()
+                    artOwner, registerRequest.getName(), registerRequest.getDescription(),
+                    registerRequest.getInitPrice(), fileInfo.getUploadName(), fileInfo.getStoregeName()
             );
-            art.chooseSaleType(artRegisterRequest.getSaleType());
+            art.chooseSaleType(registerRequest.getSaleType());
             artRepository.save(art);
-            insertHashtagList(artRegisterRequest.getHashtagList(), art);
+            insertHashtagList(registerRequest.getHashtagList(), art);
 
-            if (artRegisterRequest.getSaleType().equals("auction")) {
-                Auction auction = Auction.createAuction(
-                        artRegisterRequest.getInitPrice(),
-                        artRegisterRequest.getStartDate(),
-                        artRegisterRequest.getEndDate(),
-                        art
-                );
-                auctionRepository.save(auction);
+            if (registerRequest.getSaleType().equals("auction")) {
+                auctionRepository.save(Auction.createAuction(registerRequest.getInitPrice(), registerRequest.getStartDate(), registerRequest.getEndDate(), art));
             }
 
             uploadFile.transferTo(new File(fileDir + fileInfo.getStoregeName())); // 파일 저장
@@ -111,8 +100,7 @@ public class ArtService {
     }
 
     // 작품 등록간 해시태그 등록
-    @Transactional
-    protected void insertHashtagList(List<String> hashtagNameList, Art saveArt) {
+    private void insertHashtagList(List<String> hashtagNameList, Art saveArt) {
         if (hashtagNameList == null || hashtagNameList.size() == 0) {
             return;
         }
@@ -141,17 +129,17 @@ public class ArtService {
 
     // 작품 정보 변경
     @Transactional
-    public void editArt(Long artId, ArtEditRequestDto artEditRequest) {
+    public void editArt(Long artId, String updateName, String updateDescription) {
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
 
-        if (StringUtils.hasText(artEditRequest.getUpdateName())) {
-            hasDuplicateArtNameInModification(artId, artEditRequest.getUpdateName());
-            findArt.changeArtName(artEditRequest.getUpdateName());
+        if (StringUtils.hasText(updateName)) {
+            hasDuplicateArtNameInModification(artId, updateName);
+            findArt.changeArtName(updateName);
         }
 
-        if (StringUtils.hasText(artEditRequest.getUpdateDescription())) {
-            findArt.changeDescription(artEditRequest.getUpdateDescription());
+        if (StringUtils.hasText(updateDescription)) {
+            findArt.changeDescription(updateDescription);
         }
     }
 
@@ -175,8 +163,7 @@ public class ArtService {
             auctionRepository.delete(auction);
         }
 
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagListByArtId(artId);
-        artHashtagRepository.deleteAllInBatch(artHashtagList);
+        artHashtagRepository.deleteInBatchByArtId(artId);
         artRepository.delete(findArt);
     }
 
@@ -201,18 +188,17 @@ public class ArtService {
 
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagListByArtId(findArt.getId());
+        List<String> hashtagList = artHashtagRepository.findHashtagListByArtId(artId);
 
         hashtagNameList.forEach(name -> {
-            if(isNotDuplicateHashtagName(artHashtagList, name)) {
+            if(isNotContainsNewHashtag(hashtagList, name)) {
                 artHashtagRepository.save(ArtHashtag.insertArtHashtag(findArt, name));
             }
         });
     }
 
-    private boolean isNotDuplicateHashtagName(List<ArtHashtag> artHashtagList, String hashtagName) {
-        return artHashtagList.stream()
-                .noneMatch(artHashtag -> artHashtag.getName().equals(hashtagName));
+    private boolean isNotContainsNewHashtag(List<String> hashtagList, String hashtagName) {
+        return !hashtagList.contains(hashtagName);
     }
 
     // 해시태그 삭제
@@ -221,7 +207,7 @@ public class ArtService {
         if (hashtagList == null || hashtagList.size() == 0) {
             return;
         }
-        artHashtagRepository.deleteByArtIdAndHashtagNameIn(artId, hashtagList);
+        artHashtagRepository.deleteInBatchByArtIdAndHashtagIn(artId, hashtagList);
     }
 
     // 메인페이지 정렬 기준에 따른 "경매 작품"
@@ -294,6 +280,7 @@ public class ArtService {
                 )).collect(Collectors.toList());
     }
 
+    // 작품 좋아요
     @Transactional
     public void likeArt(Long artId, Long userId) {
         Art findArt = artRepository.findArtByArtId(artId)
@@ -306,6 +293,7 @@ public class ArtService {
         likeArtRepository.save(LikeArt.insertLikeArt(findArt, findUser));
     }
 
+    // 작품 좋아요 취소
     @Transactional
     public void cancelArt(Long artId, Long userId) {
         Art findArt = artRepository.findById(artId)
@@ -313,7 +301,7 @@ public class ArtService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
-        isAlreadyCancelMarked(findArt, findUser);
+        isAlreadyCancel(findArt, findUser);
         likeArtRepository.deleteByArtAndUser(findArt.getId(), findUser.getId());
     }
 
@@ -329,7 +317,7 @@ public class ArtService {
         }
     }
 
-    private void isAlreadyCancelMarked(Art art, User user) {
+    private void isAlreadyCancel(Art art, User user) {
         if (!likeArtRepository.existsByArtAndUser(art, user)) {
             throw AnotherArtException.type(ILLEGAL_LIKE_MARKING_CANCEL);
         }
