@@ -66,39 +66,39 @@ public class ArtController {
 
     @PatchMapping("/hashtag/{artId}")
     @ApiOperation(value = "작품 해시태그 추가 API", notes = "artId에 매핑되는 작품에 해시태그를 추가하는 API")
-    public ResponseEntity<Void> addHashtag(@PathVariable Long artId, @Valid @RequestBody HashtagUpdateRequest hashtagUpdateRequest) {
-        artService.addHashtag(artId, hashtagUpdateRequest.getHashtagList());
+    public ResponseEntity<Void> addHashtag(@PathVariable Long artId, @Valid @RequestBody ArtHashtagUpdateRequest artHashtagUpdateRequest) {
+        artService.addHashtag(artId, artHashtagUpdateRequest.getHashtagList());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/hashtag/{artId}")
     @ApiOperation(value = "작품 해시태그 삭제 API", notes = "작품의 해시태그 리스트중에 삭제할 해시태그를 삭제 요청하는 API")
-    public ResponseEntity<Void> deleteHashtag(@PathVariable Long artId, @Valid @RequestBody HashtagDeleteRequest hashtagDeleteRequest) {
-        artService.deleteHashtag(artId, hashtagDeleteRequest.getHashtagList());
+    public ResponseEntity<Void> deleteHashtag(@PathVariable Long artId, @Valid @RequestBody ArtHashtagDeleteRequest artHashtagDeleteRequest) {
+        artService.deleteHashtag(artId, artHashtagDeleteRequest.getHashtagList());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/main/arts")
     @ApiOperation(value = "메인페이지 경매 작품 조회 API", notes = "경매 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public <T extends ArtResponse> SortedArtResponse<List<T>> mainSortArtList(@Valid @RequestBody MainArtSortRequest mainArtSortRequest) {
-        PageRequest pageRequest = PageRequest.of(mainArtSortRequest.getScroll(), SLICE_PER_PAGE);
-        List<AuctionArtResponse> sortedAuctionArtList = artService.getSortedAuctionArtList(mainArtSortRequest.getSort(), pageRequest);
+    public <T extends ArtResponse> SortedArtResponse<List<T>> mainSortArtList(@Valid @RequestBody ArtMainSearchRequest artMainSearchRequest) {
+        PageRequest pageRequest = PageRequest.of(artMainSearchRequest.getScroll(), SLICE_PER_PAGE);
+        List<AuctionArtResponse> sortedAuctionArtList = artService.getSortedAuctionArtList(artMainSearchRequest.getSort(), pageRequest);
         return new SortedArtResponse<>(sortedAuctionArtList.size(), (List<T>) sortedAuctionArtList);
     }
 
     @PostMapping("/hashtag/arts")
     @ApiOperation(value = "해시태그를 통한 작품 조회 API", notes = "해시태그로 검색된 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public <T extends ArtResponse> SortedArtResponse<List<T>> hashtagSearchArtList(@Valid @RequestBody HashtagSearchArtRequest hashtagSearchArtRequest) {
-        PageRequest pageRequest = PageRequest.of(hashtagSearchArtRequest.getScroll(), SLICE_PER_PAGE);
+    public <T extends ArtResponse> SortedArtResponse<List<T>> hashtagSearchArtList(@Valid @RequestBody ArtHashtagSearchRequest artHashtagSearchRequest) {
+        PageRequest pageRequest = PageRequest.of(artHashtagSearchRequest.getScroll(), SLICE_PER_PAGE);
 
-        if (hashtagSearchArtRequest.getType().equals("auction")) {
+        if (artHashtagSearchRequest.getType().equals("auction")) {
             List<AuctionArtResponse> auctionArtListSearchByHashtag = artService.getAuctionArtListSearchByHashtag(
-                    hashtagSearchArtRequest.getHashtag(), hashtagSearchArtRequest.getSort(), pageRequest
+                    artHashtagSearchRequest.getHashtag(), artHashtagSearchRequest.getSort(), pageRequest
             );
             return new SortedArtResponse<>(auctionArtListSearchByHashtag.size(), (List<T>) auctionArtListSearchByHashtag);
         } else {
             List<GeneralArtResponse> generalArtListSearchByHashtag = artService.getGeneralArtListSearchByHashtag(
-                    hashtagSearchArtRequest.getHashtag(), hashtagSearchArtRequest.getSort(), pageRequest
+                    artHashtagSearchRequest.getHashtag(), artHashtagSearchRequest.getSort(), pageRequest
             );
             return new SortedArtResponse<>(generalArtListSearchByHashtag.size(), (List<T>) generalArtListSearchByHashtag);
         }
@@ -106,17 +106,17 @@ public class ArtController {
 
     @PostMapping("/keyword/arts")
     @ApiOperation(value = "키워드를 통한 작품 조회 API", notes = "키워드로 검색된 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public <T extends ArtResponse> SortedArtResponse<List<T>> keywordSearchArtList(@Valid @RequestBody KeywordSearchArtRequest keywordSearchArtRequest) {
-        PageRequest pageRequest = PageRequest.of(keywordSearchArtRequest.getScroll(), SLICE_PER_PAGE);
+    public <T extends ArtResponse> SortedArtResponse<List<T>> keywordSearchArtList(@Valid @RequestBody ArtKeywordSearchRequest artKeywordSearchRequest) {
+        PageRequest pageRequest = PageRequest.of(artKeywordSearchRequest.getScroll(), SLICE_PER_PAGE);
 
-        if (keywordSearchArtRequest.getType().equals("auction")) {
+        if (artKeywordSearchRequest.getType().equals("auction")) {
             List<AuctionArtResponse> auctionArtListSearchByKeyword = artService.getAuctionArtListSearchByKeyword(
-                    keywordSearchArtRequest.getKeyword(), keywordSearchArtRequest.getSort(), pageRequest
+                    artKeywordSearchRequest.getKeyword(), artKeywordSearchRequest.getSort(), pageRequest
             );
             return new SortedArtResponse<>(auctionArtListSearchByKeyword.size(), (List<T>) auctionArtListSearchByKeyword);
         } else {
             List<GeneralArtResponse> generalArtListSearchByKeyword = artService.getGeneralArtListSearchByKeyword(
-                    keywordSearchArtRequest.getKeyword(), keywordSearchArtRequest.getSort(), pageRequest
+                    artKeywordSearchRequest.getKeyword(), artKeywordSearchRequest.getSort(), pageRequest
             );
             return new SortedArtResponse<>(generalArtListSearchByKeyword.size(), (List<T>) generalArtListSearchByKeyword);
         }
@@ -138,15 +138,15 @@ public class ArtController {
 
     @PostMapping("/art/like")
     @ApiOperation(value = "작품 좋아요 API", notes = "사용자가 작품에 좋아요 마킹을 하기 위한 API")
-    public ResponseEntity<Void> likeArt(@Valid @RequestBody LikeArtRequest likeArtRequest) {
-        artService.likeArt(likeArtRequest.getArtId(), likeArtRequest.getUserId());
+    public ResponseEntity<Void> likeArt(@Valid @RequestBody ArtLikeRequest artLikeRequest) {
+        artService.likeArt(artLikeRequest.getArtId(), artLikeRequest.getUserId());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/art/cancel")
     @ApiOperation(value = "작품 좋아요 취소 API", notes = "이전에 좋아요 버튼을 누른 작품에 대해서 좋아요 취소")
-    public ResponseEntity<Void> cancelArt(@Valid @RequestBody CancelArtRequest cancelArtRequest) {
-        artService.cancelArt(cancelArtRequest.getArtId(), cancelArtRequest.getUserId());
+    public ResponseEntity<Void> cancelArt(@Valid @RequestBody ArtLikeCancelRequest artLikeCancelRequest) {
+        artService.cancelArt(artLikeCancelRequest.getArtId(), artLikeCancelRequest.getUserId());
         return ResponseEntity.noContent().build();
     }
 }
