@@ -4,6 +4,7 @@ import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,7 @@ import static com.imagine.another_arts.domain.art.QArt.art;
 import static com.imagine.another_arts.domain.arthashtag.QArtHashtag.artHashtag;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArtHashtagQueryDSLRepositoryImpl implements ArtHashtagQueryDSLRepository {
     private final JPAQueryFactory query;
 

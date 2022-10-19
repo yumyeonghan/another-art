@@ -4,6 +4,7 @@ import com.imagine.another_arts.domain.auction.Auction;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import static com.imagine.another_arts.domain.auction.QAuction.auction;
 import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuctionQueryDSLRepositoryImpl implements AuctionQueryDSLRepository {
     private final JPAQueryFactory query;
 

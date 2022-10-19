@@ -4,6 +4,7 @@ import com.imagine.another_arts.domain.point.PointHistory;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,7 @@ import static com.imagine.another_arts.domain.point.QPointHistory.pointHistory;
 import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PointHistoryQueryDSLRepositoryImpl implements PointHistoryQueryDSLRepository {
     private final JPAQueryFactory query;
 

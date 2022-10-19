@@ -14,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import static com.imagine.another_arts.domain.likeart.QLikeArt.likeArt;
 import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArtQueryDSLRepositoryImpl implements ArtQueryDSLRepository {
     private final JPAQueryFactory query;
     private static QUser userA = new QUser("userA");
