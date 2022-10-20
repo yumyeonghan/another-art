@@ -4,6 +4,7 @@ import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,7 @@ import static com.imagine.another_arts.domain.art.QArt.art;
 import static com.imagine.another_arts.domain.arthashtag.QArtHashtag.artHashtag;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArtHashtagQueryDSLRepositoryImpl implements ArtHashtagQueryDSLRepository {
     private final JPAQueryFactory query;
 
@@ -35,20 +37,20 @@ public class ArtHashtagQueryDSLRepositoryImpl implements ArtHashtagQueryDSLRepos
     }
 
     @Override
-    public List<ArtHashtag> findArtHashtagListByArtId(Long artId) {
-        return query
-                .select(artHashtag)
-                .from(artHashtag)
-                .innerJoin(artHashtag.art, art).fetchJoin()
-                .where(artIdEq(artId))
-                .fetch();
-    }
-
-    @Override
-    public Long deleteByArtIdAndHashtagNameIn(Long artId, Collection<String> hashtagName) {
+    @Transactional
+    public Long deleteInBatchByArtIdAndHashtagIn(Long artId, Collection<String> hashtagName) {
         return query
                 .delete(artHashtag)
                 .where(artIdEq(artId), hashtagNameIn(hashtagName))
+                .execute();
+    }
+
+    @Override
+    @Transactional
+    public Long deleteInBatchByArtId(Long artId) {
+        return query
+                .delete(artHashtag)
+                .where(artIdEq(artId))
                 .execute();
     }
 

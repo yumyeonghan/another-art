@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HashtagDeleteRequest {
+public class ArtHashtagDeleteRequest {
     @ApiModelProperty(value = "삭제할 해시태그 리스트", required = true)
     private List<@NotBlank String> hashtagList;
 }

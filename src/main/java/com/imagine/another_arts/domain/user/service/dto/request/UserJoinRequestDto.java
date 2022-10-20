@@ -1,5 +1,6 @@
 package com.imagine.another_arts.domain.user.service.dto.request;
 
+import com.imagine.another_arts.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,4 +18,18 @@ public class UserJoinRequestDto {
     private String phoneNumber;
     private String address;
     private LocalDate birth;
+
+    public User toEntity() {
+        return User.createUser(
+                this.getName(),
+                this.getNickname(),
+                this.getLoginId(),
+                this.getLoginPassword(),
+                this.getEmail(),
+                this.getSchoolName(),
+                this.getPhoneNumber(),
+                this.getAddress(),
+                this.getBirth()
+        );
+    }
 }

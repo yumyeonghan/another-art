@@ -4,6 +4,7 @@ import com.imagine.another_arts.domain.likeart.LikeArt;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import static com.imagine.another_arts.domain.likeart.QLikeArt.likeArt;
 import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LikeArtQueryDSLRepositoryImpl implements LikeArtQueryDSLRepository {
     private final JPAQueryFactory query;
 
@@ -36,6 +38,7 @@ public class LikeArtQueryDSLRepositoryImpl implements LikeArtQueryDSLRepository 
     }
 
     @Override
+    @Transactional
     public Long deleteByArtAndUser(Long artId, Long userId) {
         return query
                 .delete(likeArt)

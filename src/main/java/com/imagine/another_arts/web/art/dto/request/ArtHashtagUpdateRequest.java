@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HashtagUpdateRequest {
+public class ArtHashtagUpdateRequest {
     @ApiModelProperty(value = "추가할 해시태그 리스트", required = true)
     private List<@NotBlank String> hashtagList;
 }

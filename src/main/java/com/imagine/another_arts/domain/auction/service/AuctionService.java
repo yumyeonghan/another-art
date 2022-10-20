@@ -2,7 +2,6 @@ package com.imagine.another_arts.domain.auction.service;
 
 import com.imagine.another_arts.domain.auction.Auction;
 import com.imagine.another_arts.domain.auction.repository.AuctionRepository;
-import com.imagine.another_arts.domain.auction.service.dto.request.BidAuctionRequestDto;
 import com.imagine.another_arts.domain.auctionhistory.AuctionHistory;
 import com.imagine.another_arts.domain.auctionhistory.repository.AuctionHistoryRepository;
 import com.imagine.another_arts.domain.user.User;
@@ -26,33 +25,28 @@ public class AuctionService {
     private final UserRepository userRepository;
 
     @Transactional
-    public synchronized void updateHighestBidDetails(BidAuctionRequestDto bidAuctionRequest) {
-        Auction currentAuction = auctionRepository.findAuctionByAuctionId(bidAuctionRequest.getAuctionId())
+    public synchronized void updateHighestBidDetails(Long auctionId, Long userId, Long newBidPrice) {
+        Auction currentAuction = auctionRepository.findAuctionByAuctionId(auctionId)
                 .orElseThrow(() -> AnotherArtException.type(AUCTION_NOT_FOUND));
 
         if (currentAuction.getEndDate().isBefore(LocalDateTime.now())) {
             throw AnotherArtException.type(CLOSED_AUCTION);
-        } else if (currentAuction.getBidPrice() >= bidAuctionRequest.getBidPrice()) {
+        } else if (currentAuction.getBidPrice() >= newBidPrice) {
             throw AnotherArtException.type(BID_AMOUNT_NOT_ENOUGH);
         }
 
-        User currentBidUser = userRepository.findById(bidAuctionRequest.getUserId())
+        User currentBidUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
-        if (currentBidUser.getAvailablePoint() < bidAuctionRequest.getBidPrice()) {
+        if (currentBidUser.getAvailablePoint() < newBidPrice) {
             throw AnotherArtException.type(POINT_NOT_ENOUGH);
         }
 
         Optional<User> previousBidUser = Optional.ofNullable(currentAuction.getUser());
         previousBidUser.ifPresent(users -> users.updateAvailablePoint(users.getAvailablePoint() + currentAuction.getBidPrice()));
-        currentBidUser.updateAvailablePoint(currentBidUser.getAvailablePoint() - bidAuctionRequest.getBidPrice());
-        currentAuction.applyNewBid(currentBidUser, bidAuctionRequest.getBidPrice());
+        currentBidUser.updateAvailablePoint(currentBidUser.getAvailablePoint() - newBidPrice);
+        currentAuction.applyNewBid(currentBidUser, newBidPrice);
 
-        auctionHistoryRepository.save(AuctionHistory.createAuctionHistory(
-                currentAuction,
-                currentAuction.getArt(),
-                currentBidUser,
-                bidAuctionRequest.getBidPrice()
-        ));
+        auctionHistoryRepository.save(AuctionHistory.createAuctionHistory(currentAuction, currentAuction.getArt(), currentBidUser, newBidPrice));
     }
 }

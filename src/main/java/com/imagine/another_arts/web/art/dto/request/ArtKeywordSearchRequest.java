@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class KeywordSearchArtRequest {
+public class ArtKeywordSearchRequest {
     @NotBlank(message = "검색 키워드(단어 하나)는 필수입니다")
     @ApiModelProperty(value = "검색 키워드 (단어 하나)", required = true)
     private String keyword;

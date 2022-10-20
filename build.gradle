@@ -44,7 +44,7 @@ dependencies {
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     // 접근 URL = localhost:8080/swagger-ui/index.html
 
-    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
 
     //Querydsl 추가
     implementation 'com.querydsl:querydsl-jpa'
