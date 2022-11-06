@@ -10,7 +10,7 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserQueryDSLRepositoryImpl implements UserQueryDSLRepository {
+public class UserQueryDslRepositoryImpl implements UserQueryDslRepository {
     private final JPAQueryFactory query;
 
     @Override

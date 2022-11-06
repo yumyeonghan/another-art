@@ -5,7 +5,7 @@ import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
 import java.util.Collection;
 import java.util.List;
 
-public interface ArtHashtagQueryDSLRepository {
+public interface ArtHashtagQueryDslRepository {
     List<String> findHashtagListByArtId(Long artId);
     List<ArtHashtag> findArtHashtagList();
     Long deleteInBatchByArtIdAndHashtagIn(Long artId, Collection<String> hashtagName);

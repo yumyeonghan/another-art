@@ -14,7 +14,7 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LikeArtQueryDSLRepositoryImpl implements LikeArtQueryDSLRepository {
+public class LikeArtQueryDslRepositoryImpl implements LikeArtQueryDslRepository {
     private final JPAQueryFactory query;
 
     @Override

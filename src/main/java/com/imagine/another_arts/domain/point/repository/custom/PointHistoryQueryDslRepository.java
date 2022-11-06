@@ -5,7 +5,7 @@ import com.imagine.another_arts.domain.point.PointHistory;
 import java.util.Collection;
 import java.util.List;
 
-public interface PointHistoryQueryDSLRepository {
+public interface PointHistoryQueryDslRepository {
     // [User]의 현재 포인트 보유 내역 조회 (비드 금액 포함)
     Long findLatestPointByUserId(Long userId);
 

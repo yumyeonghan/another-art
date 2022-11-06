@@ -13,7 +13,7 @@ import static com.imagine.another_arts.domain.auctionhistory.QAuctionHistory.auc
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AuctionHistoryQueryDSLRepositoryImpl implements AuctionHistoryQueryDSLRepository {
+public class AuctionHistoryQueryDslRepositoryImpl implements AuctionHistoryQueryDslRepository {
     private final JPAQueryFactory query;
 
     @Override

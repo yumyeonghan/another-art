@@ -4,6 +4,6 @@ import com.imagine.another_arts.domain.auction.Auction;
 
 import java.util.Optional;
 
-public interface AuctionQueryDSLRepository {
+public interface AuctionQueryDslRepository {
     Optional<Auction> findAuctionByAuctionId(Long auctionId);
 }

@@ -30,7 +30,7 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ArtQueryDSLRepositoryImpl implements ArtQueryDSLRepository {
+public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     private final JPAQueryFactory query;
     private static QUser userA = new QUser("userA");
     private static QUser userB = new QUser("userB");

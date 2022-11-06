@@ -14,7 +14,7 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AuctionQueryDSLRepositoryImpl implements AuctionQueryDSLRepository {
+public class AuctionQueryDslRepositoryImpl implements AuctionQueryDslRepository {
     private final JPAQueryFactory query;
 
     @Override

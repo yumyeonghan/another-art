@@ -4,7 +4,7 @@ import com.imagine.another_arts.domain.auctionhistory.AuctionHistory;
 
 import java.util.List;
 
-public interface AuctionHistoryQueryDSLRepository {
+public interface AuctionHistoryQueryDslRepository {
     List<AuctionHistory> findAuctionHistoryList();
     Long getAuctionHistoryCountByArtId(Long artId);
 }

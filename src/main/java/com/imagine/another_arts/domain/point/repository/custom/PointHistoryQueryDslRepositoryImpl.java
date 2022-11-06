@@ -14,7 +14,7 @@ import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PointHistoryQueryDSLRepositoryImpl implements PointHistoryQueryDSLRepository {
+public class PointHistoryQueryDslRepositoryImpl implements PointHistoryQueryDslRepository {
     private final JPAQueryFactory query;
 
     @Override

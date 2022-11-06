@@ -14,7 +14,7 @@ import static com.imagine.another_arts.domain.arthashtag.QArtHashtag.artHashtag;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ArtHashtagQueryDSLRepositoryImpl implements ArtHashtagQueryDSLRepository {
+public class ArtHashtagQueryDslRepositoryImpl implements ArtHashtagQueryDslRepository {
     private final JPAQueryFactory query;
 
     @Override
