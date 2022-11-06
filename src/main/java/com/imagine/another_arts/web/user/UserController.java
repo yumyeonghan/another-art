@@ -8,6 +8,7 @@ import com.imagine.another_arts.web.SessionFactory;
 import com.imagine.another_arts.web.user.dto.request.DuplicateCheckRequest;
 import com.imagine.another_arts.web.user.dto.request.UserEditRequest;
 import com.imagine.another_arts.web.user.dto.request.UserJoinRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Api(tags = "사용자 API")
 public class UserController {
     private final UserService userService;
 

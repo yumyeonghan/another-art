@@ -9,6 +9,7 @@ import com.imagine.another_arts.web.login.dto.request.ResetPasswordRequest;
 import com.imagine.another_arts.web.login.dto.response.FindIdResponse;
 import com.imagine.another_arts.web.login.dto.response.FindPasswordResponse;
 import com.imagine.another_arts.web.login.dto.response.LoginResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import static com.imagine.another_arts.web.SessionFactory.ANOTHER_ART_SESSION_KE
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Api(tags = "로그인/로그아웃/계정 관련 API")
 public class LoginController {
     private final LoginService loginService;
 

@@ -9,6 +9,7 @@ import com.imagine.another_arts.web.art.dto.Pagination;
 import com.imagine.another_arts.web.art.dto.request.*;
 import com.imagine.another_arts.web.art.dto.response.SingleArtResponse;
 import com.imagine.another_arts.web.art.dto.response.SortedArtResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@SuppressWarnings("unchecked")
+@Api(tags = "작품 API")
 public class ArtController {
     private final ArtService artService;
     private static final int SLICE_PER_PAGE = 20;

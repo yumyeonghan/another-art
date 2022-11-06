@@ -3,6 +3,7 @@ package com.imagine.another_arts.web.purchase;
 import com.imagine.another_arts.domain.purchase.service.PurchaseHistoryService;
 import com.imagine.another_arts.web.purchase.dto.request.PurchaseAuctionArtRequest;
 import com.imagine.another_arts.web.purchase.dto.request.PurchaseGeneralArtRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Api(tags = "구매 API")
 public class PurchaseController {
     private final PurchaseHistoryService purchaseHistoryService;
 

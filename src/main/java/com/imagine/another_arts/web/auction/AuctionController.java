@@ -2,6 +2,7 @@ package com.imagine.another_arts.web.auction;
 
 import com.imagine.another_arts.domain.auction.service.AuctionService;
 import com.imagine.another_arts.web.auction.dto.request.AuctionBidRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Api(tags = "경매 API")
 public class AuctionController {
     private final AuctionService auctionService;
 

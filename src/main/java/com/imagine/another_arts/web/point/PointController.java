@@ -2,6 +2,7 @@ package com.imagine.another_arts.web.point;
 
 import com.imagine.another_arts.domain.point.service.PointHistoryService;
 import com.imagine.another_arts.web.point.dto.request.PointUseRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Api(tags = "포인트 API")
 public class PointController {
     private final PointHistoryService pointHistoryService;
 
