@@ -3,20 +3,20 @@
     <router-view></router-view>
     <div class="container py-3">
       <div class="p-4 mb-2 bg-light rounded-3">
-        <h1 class="name">{{ userData.userNickname }}</h1>
+        <h1 class="name">{{ userInfo.nickname }}</h1>
         <hr>
         <div class="listContainer rounded-3">
           <h3 class="text-center p-3">포인트 내역</h3>
           <div class="listContainer">
             <div class="item">
               <div class="text">전체 포인트</div>
-              <div class="right"> {axios get 전체 포인트} </div>
+              <div class="right"> {{ userInfo.totalPoint }}원 </div>
             </div>
           </div>
           <div class="listContainer">
             <div class="item">
               <div class="smallLight">사용 가능 포인트</div>
-              <div class="right smallLight"> {axios get 사용 가능 포인트} </div>
+              <div class="right smallLight"> {{ userInfo.availablePoint }}원 </div>
             </div>
           </div>
 
@@ -26,43 +26,43 @@
           <div class="smallContainer">
             <div class="item">
               <div class="text">이름</div>
-              <div class="right"> {{ userData.userName }} </div>
+              <div class="right"> {{ userInfo.name }}</div>
             </div>
           </div>
           <div class="smallContainer">
             <div class="item">
               <div class="text">닉네임</div>
-              <div class="right"> {{ userData.userNickname }} </div>
+              <div class="right"> {{ userInfo.nickname }}</div>
             </div>
           </div>
           <div class="smallContainer">
             <div class="item">
               <div class="text">이메일</div>
-              <div class="right"> {{ userData.email }} </div>
+              <div class="right"> {{ userInfo.email }}</div>
             </div>
           </div>
           <div class="smallContainer">
             <div class="item">
               <div class="text">전화번호</div>
-              <div class="right"> {{ userData.phoneNumber }} </div>
+              <div class="right"> {{ userInfo.phoneNumber }}</div>
             </div>
           </div>
           <div class="smallContainer">
             <div class="item">
               <div class="text">생년월일</div>
-              <div class="right"> {{ userData.birth }} </div>
+              <div class="right"> {{ userInfo.birth }}</div>
             </div>
           </div>
           <div class="smallContainer">
             <div class="item">
               <div class="text">재학중인 학교</div>
-              <div class="right"> {{ userData.schoolName }} </div>
+              <div class="right"> {{ userInfo.schoolName }}</div>
             </div>
           </div>
           <div class="smallContainer">
             <div class="item">
               <div class="text">주소</div>
-              <div class="right"> {{ userData.address }} </div>
+              <div class="right"> {{ userInfo.address }}</div>
             </div>
           </div>
         </div>
@@ -84,23 +84,6 @@
             </a>
           </div>
         </div>
-
-        <!--        <div class="row align-items-md-stretch">-->
-        <!--          <div class="col-md-6">-->
-        <!--            <div class="h-100 p-5 text-bg-dark rounded-3">-->
-        <!--              <h2>Change the background</h2>-->
-        <!--              <p>Swap the background-color utility and add a `.text-*` color utility to mix up the jumbotron look. Then, mix and match with additional component themes and more.</p>-->
-        <!--              <button class="btn btn-outline-light" type="button">Example button</button>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--          <div class="col-md-6">-->
-        <!--            <div class="h-100 p-5 bg-light border rounded-3">-->
-        <!--              <h2>Add borders</h2>-->
-        <!--              <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>-->
-        <!--              <button class="btn btn-outline-secondary" type="button">Example button</button>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </div>-->
 
         <div class="infoContainer">
           <a href="#" class="item">
@@ -130,9 +113,10 @@ export default {
   name: 'myPage',
   data() {
     return {
+      userInfo: {},
       userData: {
-        userName: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userName,
-        userNickname: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userNickname,
+        name: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).name,
+        nickname: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).nickname,
         email: '',
         phoneNumber: '',
         birth: '1999-10-13',
@@ -142,18 +126,26 @@ export default {
     }
   },
   beforeMount() {
-    axios.get('/api/session-check').
-    then((res) => {
-      console.log("session-check success: " + JSON.stringify(res.data));
-      this.$store.commit('setSessionData', res.data);
-      console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
+    axios.get('/api/session-check')
+        .then((res) => {
+          let result = res.data;
+          console.log("session-check success: " + JSON.stringify(res.data));
+          this.$store.commit('setSessionData', res.data);
+          console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
 
-      this.userData.email = this.$store.state.sessionData.email;
-      this.userData.phoneNumber = this.$store.state.sessionData.phoneNumber;
-      this.userData.address = this.$store.state.sessionData.address;
-    }).catch((res) => {
-      console.log('session-check fail:' + res);
-    });
+          this.userData.email = this.$store.state.sessionData.email;
+          this.userData.phoneNumber = this.$store.state.sessionData.phoneNumber;
+          this.userData.address = this.$store.state.sessionData.address;
+
+          axios.get('/api/user/' + result['id'])
+              .then((res) => {
+                console.log("--> " + JSON.stringify(res, null, 2));
+                this.userInfo = res.data;
+              })
+        })
+        .catch((res) => {
+          console.log('session-check fail:' + res);
+        });
   },
 }
 </script>
@@ -231,7 +223,7 @@ div {
 }
 
 /* 텍스트 */
-.summaryContainer .item>div:nth-child(2) {
+.summaryContainer .item > div:nth-child(2) {
   font-size: 13px;
 }
 
@@ -329,7 +321,7 @@ div {
   color: #c2c2c2;
 }
 
-.listContainer .smallLight>span {
+.listContainer .smallLight > span {
   margin-left: 10px;
 }
 
@@ -338,7 +330,6 @@ div {
   font-weight: bold;
   margin-right: 5px;
 }
-
 
 
 /* 공지사항 이용안내 고객센터 */
@@ -360,7 +351,7 @@ div {
   color: black;
 }
 
-.infoContainer .item>div:first-child {
+.infoContainer .item > div:first-child {
   margin-bottom: 2px;
 }
 

@@ -1,21 +1,27 @@
 <template>
-  <div style="height: 448px;">
-    <a @click="goPurchasePage(art)" href="#"><img
-              :src="require(`../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
-              style="width: 100%;"></a>
-      <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
-            <h5 className="product_title"> {{art.auctionArt.artName}}</h5>
-          </a>
-    <p className="product_des"> {{art.auctionArt.artDescription}}</p>
-    <p className="product_des"> 작품 등록 시간 : {{art.auctionArt.registerDate}}</p>
-    <p className="product_des"> 시작 경매가 : {{art.auctionArt.artInitPrice}}원</p>
-    <p className="product_des"> 현재 경매가 : {{art.auctionArt.highestBidPrice}}원</p>
-    <p className="product_des"> 경매 기간 : {{art.auctionArt.auctionStartDate.split("T")[0]}} ~ {{art.auctionArt.auctionEndDate.split("T")[0]}}
-    </p>
-    <p className="product_des"> 현재 경매횟수 : {{art.auctionArtBidCount}}회</p>
-    <p className="product_des"> 작가 : {{art.auctionArt.artOwnerNickname}}</p>
-    <div className="product_hash">
-      <div className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small label>#{{tag}}</div>
+  <div class="col">
+    <div class="card" style="border: 3px solid cornflowerblue;">
+      <div class="card-header" style="background-color: white;">
+        <a @click="goPurchasePage(art)" href="#"><img
+            :src="require(`../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
+            style="width: 100%;"></a>
+        <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
+          <h3> {{ art.auctionArt.artName }}</h3>
+          <p> {{ art.auctionArt.artDescription }}</p>
+        </a>
+      </div>
+      <div class="card-body" style="background-color: white;">
+        <p><b>작가</b><br><small>{{ art.auctionArt.artOwnerNickname }}</small></p>
+        <p><b>작품 등록 시간</b><br><small>{{ art.auctionArt.artRegisterDate }}</small></p>
+        <p><b>시작 경매가</b><br><small>{{ art.auctionArt.artInitPrice }}원</small></p>
+        <p><b>현재 경매가</b><br><small>{{ art.auctionArt.highestBidPrice }}원</small></p>
+        <p><b>경매 시작 날짜</b><br><small>{{ art.auctionArt.auctionStartDate }}</small></p>
+        <p><b>경매 종료 날짜</b><br><small>{{ art.auctionArt.auctionEndDate }}</small></p>
+        <p><b>현재 경매횟수</b><br><small>{{ art.auctionArtBidCount }}회</small></p>
+      </div>
+      <div class="card-footer" style="background-color: white;">
+        <span className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small label>#{{ tag }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -89,5 +95,7 @@ export default {
   padding-left: 7px;
   padding-right: 7px;
   font-size: 0.8rem;
+  font-style: italic;
+  font-weight: bold;
 }
 </style>

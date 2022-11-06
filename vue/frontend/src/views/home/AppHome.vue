@@ -1,45 +1,61 @@
 <template>
-  <div id="wrapper" class="container-fluid">
-<!--정렬-->
-<div>
-    <div class="mb-3">
-      <button @click="$router.push('/updateUserInfo')" class="btn btn-outline-primary">updateUserInfo</button>
-    </div>
-    <div class="mb-3">
-      <button @click="test" class="btn btn-outline-primary">timeCheck</button>
-    </div>
-    <p>This is home</p>
-  </div>
+  <div id="wrapper" class="container">
+    <!--정렬-->
     <div>
-      <li class="dropdown">
-        <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          작품 정렬
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#" @click="clickrRD">나중에 등록된순</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="#" @click="clickBP">비드 가격 높은순</a></li>
-          <li><a class="dropdown-item" href="#" @click="clickrBP">비드 가격 낮은순</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="#" @click="clickBC">비드 횟수 많은순</a></li>
-          <li><a class="dropdown-item" href="#" @click="clickrBC">비드 횟수 적은순</a></li>
-        </ul>
+    </div>
+    <div class="d-flex justify-content-center align-items-center flex-row">
+      <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">정렬 기준</button>
+      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li>
+          <button class="dropdown-item" href="#" @click="clickRD">등록날짜 내림차순</button>
+        </li>
+        <li>
+          <button class="dropdown-item" href="#" @click="clickrRD">등록날짜 오름차순</button>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+          <button class="dropdown-item" href="#" @click="clickBP">비드 가격 내림차순</button>
+        </li>
+        <li>
+          <button class="dropdown-item" href="#" @click="clickrBP">비드 가격 오름차순</button>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+          <button class="dropdown-item" href="#" @click="clickBC">비드 횟수 내림차순</button>
+        </li>
+        <li>
+          <button class="dropdown-item" href="#" @click="clickrBC">비드 횟수 오름차순</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 작품 리스트-->
+    <div class="album py-5">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+          <div v-for="(art,i) in contents" :key="i">
+            <ArtList :art="art"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <ul class="pagination justify-content-center pagination-circle">
+      <li v-if="pagination.prev === true" class="page-item">
+        <button class="page-link" type="button">Previous</button>
       </li>
-    </div>
-
-<!-- 작품 리스트-->
-    <div className="product_container" >
-      <div className="product" v-for="(art,i) in contents" :key="i">
-        <ArtList :art="art"/>
-      </div>
-    </div>
-
-<!-- top 버튼-->
-    <div id="container">
-      <div class="btnArea">
-        <button type="button" id="topBtn"  @click="ScrollToTop">top버튼</button>
-      </div>
-    </div>
+      <li v-for="(idx) in this.range" :key="idx" v-bind:class="checkActive(this.pagination.currentPage, idx)" class="page-item">
+        <button class="page-link" type="button">{{ idx }}</button>
+      </li>
+      <li v-if="pagination.next === true" class="page-item">
+        <button class="page-link" type="button">Next</button>
+      </li>
+    </ul>
   </div>
 
 </template>
@@ -50,106 +66,70 @@ import axios from 'axios'
 import ArtList from "@/components/ArtList";
 
 export default {
-    name: 'appHome',
+  name: 'appHome',
   components: {ArtList},
-  data:()=>({
-        scroll:0,
-        contents : [],
-        scrollCheck:0,
-        img : '',
-        artRequest: {
-          scroll: 0,
-          sort: "date",
-        }
+  data: () => ({
+    page: 1,
+    contents: [],
+    pagination: {},
+    range: [],
+    img: '',
+    artRequest: {
+      page: 1,
+      sort: "date",
+    }
   }),
-  created: function(){
-      this.fetchData(),
-    window.addEventListener('scroll',this.handleScroll)
-  },
-  beforeUnmount: function(){
-    window.removeEventListener('scroll',this.handleScroll)
+  created: function () {
+    this.fetchData()
   },
   methods: {
-    test() {
-      let today = new Date();
-    let endDate = new Date(this.$store.state.selectedArt.auctionArt.auctionEndDate);
-    let remainTime = endDate.getTime() - today.getTime();
-
-    console.log('현재시간 함수: ' + today);
-    console.log('종료시간 데이터: ' + endDate);
-    console.log('두 날짜의 차 ' + remainTime);
-    console.log('종료까지 남은 시간 ' + Math.trunc((remainTime) / 1000) / 3600);
-    console.log('종료까지 남은 일 수 ' + Math.trunc((remainTime) / 1000) / 3600 / 24);
+    checkActive(currentPage, idx) {
+      if (currentPage === idx) {
+        return 'active';
+      } else {
+        return '';
+      }
     },
     fetchData() {
       axios.post(`api/main/arts`, this.artRequest)
           .then(res => {
             console.log("res.data.artList" + res.data.artList);
             this.contents = [...res.data.artList];
+            this.pagination = res.data.pagination;
+            this.page = res.data.pagination.currentPage;
+            for (let i = this.pagination.rangeStartNumber; i <= this.pagination.rangeEndNumber; i++) {
+              this.range.push(i);
+            }
+            console.log('Hello --> ' + JSON.stringify(this.contents, null, 2));
+            console.log('Hello --> ' + JSON.stringify(this.pagination, null, 2));
           })
-          .catch(function (error) {
+          .catch(error => {
             console.log(error);
           });
     },
-    clickrRD(){
-      this.scrollCheck = 0;
-      this.$router.push({Path:'/', query: {sort:'rdate',scroll:this.scroll}})
-
+    clickRD() {
+      this.$router.push({Path: '/', query: {sort: 'date', page: this.page}})
     },
-    clickBP(){
-      this.scrollCheck = 0;
-      this.$router.push({Path:'/', query: {sort:'price', scroll:this.scroll}})
-
+    clickrRD() {
+      this.$router.push({Path: '/', query: {sort: 'rdate', page: this.page}})
     },
-    clickrBP(){
-      this.scrollCheck = 0;
-      this.$router.push({Path:'/', query: {sort:'rprice', scroll:this.scroll}})
-
+    clickBP() {
+      this.$router.push({Path: '/', query: {sort: 'price', page: this.page}})
     },
-    clickBC(){
-      this.scrollCheck = 0;
-      this.$router.push({Path:'/', query: {sort:'count', scroll:this.scroll}})
+    clickrBP() {
+      this.$router.push({Path: '/', query: {sort: 'rprice', page: this.page}})
     },
-    clickrBC(){
-      this.scrollCheck = 0;
-      this.$router.push({Path:'/', query: {sort:'rcount', scroll:this.scroll}})
+    clickBC() {
+      this.$router.push({Path: '/', query: {sort: 'count', page: this.page}})
     },
-
-    handleScroll(){
-      if((window.scrollY+document.documentElement.clientHeight)==document.documentElement.scrollHeight)
-        console.log(this.scrollCheck+=1)
-        this.$router.replace({query: { sort:this.$route.query.sort ,scroll: this.scrollCheck}})},
-    ScrollToTop(){
-      var body = document.getElementsByTagName("body")[0];
-      window.scroll({
-        behavior: 'smooth',
-        left: 0,
-        top:body.offsetTop});
+    clickrBC() {
+      this.$router.push({Path: '/', query: {sort: 'rcount', page: this.page}})
     },
-    test1() {
-      console.log("contents: " + this.contents);
-    },
-}}
+  }
+}
 
 </script>
 
 <style>
-.product_container{
-  display:flex;
-  flex-direction: row;
-  flex-wrap : wrap;
-  width: 100%;
-}
-
-.product{
-  width:23%;
-  height: 20%;
-  margin-bottom : 4%;
-  margin: 5px;
-  padding: 0.5%;
-  border: 1px solid black;
-  border-radius: 10px;
-}
-
 
 </style>

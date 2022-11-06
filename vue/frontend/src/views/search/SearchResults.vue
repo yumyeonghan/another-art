@@ -1,58 +1,76 @@
 <template>
   <div id="searchpage">
     <!-- 경매 검색결과 -->
-    <div v-if="searchType == 'auction'" className="product_container">
-      <div className="product" v-for="(art,i) in searchData.artList" :key="i">
-        <div style="height: 462px;">
-          <a @click="goPurchasePage(art)" href="#"><img
-              :src="require(`../../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
-              style="width: 100%;"></a>
-          <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
-            <h5 className="product_title"> {{art.auctionArt.artName}}</h5>
-          </a>
-          <p className="product_des"> {{art.auctionArt.artDescription}}</p>
-          <p className="product_des"> 작품 등록 시간 : {{art.auctionArt.artRegisterDate}}</p>
-          <p className="product_des"> 시작 경매가 : {{art.auctionArt.artInitPrice}}원</p>
-          <p className="product_des"> 현재 경매가 : {{art.auctionArt.highestBidPrice}}원</p>
-          <p className="product_des"> 경매 기간 : {{art.auctionArt.auctionStartDate}} ~ {{art.auctionArt.auctionEndDate}}
-          </p>
-          <p className="product_des"> 현재 경매횟수 : {{art.auctionArtBidCount}}회</p>
-          <p className="product_des"> 작가 : {{art.auctionArt.artOwnerNickname}}</p>
-          <div className="product_hash">
-            <div className="product_tag" v-for="(tag, index) in art.artHashtagList" :key="index" small label>
-              #{{tag}}
+    <div v-if="searchType === 'auction'">
+      <div class="album py-5">
+        <div class="container">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+            <div v-for="(art,i) in searchData.artList" :key="i">
+              <div class="col">
+                <div class="card" style="border: 3px solid cornflowerblue;">
+                  <div class="card-header" style="background-color: white;">
+                    <a @click="goPurchasePage(art)" href="#"><img
+                        :src="require(`../../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
+                        style="width: 100%;"></a>
+                    <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
+                      <h3> {{art.auctionArt.artName}}</h3>
+                      <p> {{art.auctionArt.artDescription}}</p>
+                    </a>
+                  </div>
+                  <div class="card-body" style="background-color: white;">
+                    <p><b>작가</b><br><small>{{ art.auctionArt.artOwnerNickname }}</small></p>
+                    <p><b>작품 등록 시간</b><br><small>{{ art.auctionArt.artRegisterDate }}</small></p>
+                    <p><b>시작 경매가</b><br><small>{{ art.auctionArt.artInitPrice }}원</small></p>
+                    <p><b>현재 경매가</b><br><small>{{ art.auctionArt.highestBidPrice }}원</small></p>
+                    <p><b>경매 시작 날짜</b><br><small>{{ art.auctionArt.auctionStartDate }}</small></p>
+                    <p><b>경매 종료 날짜</b><br><small>{{ art.auctionArt.auctionEndDate }}</small></p>
+                    <p><b>현재 경매횟수</b><br><small>{{ art.auctionArtBidCount }}회</small></p>
+                  </div>
+                  <div class="card-footer" style="background-color: white;">
+                    <span className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small label>#{{tag}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <!-- 일반 검색결과 -->
-    <div v-if="searchType == 'general'" className="product_container">
-      <div className="product" v-for="(art,i) in searchData.artList" :key="i">
-        <div style="height: 400px;">
-          <a @click="goPurchasePage(art)" href="#"><img
-              :src="require(`../../../../../src/main/resources/images/${art.generalArt.artStorageName}`)" alt=""
-              style="width: 100%;"></a>
-          <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
-            <h5 className="product_title"> {{art.generalArt.artName}}</h5>
-          </a>
-          <p className="product_des"> {{art.generalArt.artDescription}}</p>
-          <p className="product_des"> 작품 등록 시간 : {{art.generalArt.artRegisterDate}}</p>
-          <p className="product_des"> 현재 판매가 : {{art.generalArt.artInitPrice}}원</p>
-          <p className="product_des"> 작가 : {{art.generalArt.artOwnerNickname}}</p>
-          <div className="product_hash">
-            <div className="product_tag" v-for="(tag, index) in art.artHashtagList" :key="index" small label>
-              #{{tag}}
+    <div v-if="searchType === 'general'">
+      <div class="album py-5">
+        <div class="container">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+            <div v-for="(art,i) in searchData.artList" :key="i">
+              <div class="col">
+                <div class="card" style="border: 3px solid cornflowerblue;">
+                  <div class="card-header" style="background-color: white;">
+                    <a @click="goPurchasePage(art)" href="#"><img
+                        :src="require(`../../../../../src/main/resources/images/${art.generalArt.artStorageName}`)" alt=""
+                        style="width: 100%;"></a>
+                    <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
+                      <h3> {{art.generalArt.artName}}</h3>
+                      <p> {{art.generalArt.artDescription}}</p>
+                    </a>
+                  </div>
+                  <div class="card-body" style="background-color: white;">
+                    <p><b>작가</b><br><small>{{art.generalArt.artOwnerNickname}}</small></p>
+                    <p><b>현재 판매가</b><br><small>{{art.generalArt.artInitPrice}}원</small></p>
+                    <p><b>작품 등록 시간</b><br><small>{{art.generalArt.artRegisterDate}}</small></p>
+                    <p><b>좋아요 횟수</b><br><small>{{art.artLikeCount}}회</small></p>
+                  </div>
+                  <div class="card-footer" style="background-color: white;">
+                    <span className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small label>#{{tag}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-
-
-
 </template>
 
 <script>
@@ -61,37 +79,6 @@ export default {
   data: () => ({
     searchType: '',
     searchData: {},
-    auctionArtData: [{
-      auctionArtBidCount: 13,
-      auctionArt: {
-        auctionId: 4,
-        highestBidUserId: 24,
-        highestBidUserNickname: "user24-Nickname",
-        highestBidUserSchoolName: "고려대학교",
-        highestBidPrice: 75000,
-        auctionStartDate: "2022-09-26T00:00:00",
-        auctionEndDate: "2022-09-28T00:00:00",
-        artId: 5,
-        artName: "art5",
-        artDescription: "이 작품은 작품입니다 - 5",
-        artInitPrice: 30000,
-        artRegisterDate: "2022-07-10 09:00:03",
-        artStorageName: "c53403583c.png",
-        artOwnerId: 5,
-        artOwnerNickname: "user5-Nickname",
-        artOwnerSchoolName: "수원대학교"
-      },
-      artHashtagList: [
-        "고양이",
-        "반려견",
-        "음식",
-        "산",
-        "삶",
-        "게임",
-        "개",
-        "진돗개"
-      ]
-    }],
   }),
   beforeMount() {
     this.searchData = { ...this.$store.state.searchData };
@@ -105,8 +92,6 @@ export default {
       this.$router.push('/artworkPurchase');
     }
   }
-
-
 }
 </script>
 
