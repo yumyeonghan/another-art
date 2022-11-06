@@ -6,5 +6,5 @@ import com.imagine.another_arts.domain.auction.repository.custom.AuctionQueryDsl
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuctionRepository extends JpaRepository<Auction, Long>, AuctionQueryDslRepository {
-    Auction findAuctionByArt(Art art);
+    Auction findByArt(Art art);
 }

@@ -18,7 +18,7 @@ public class LikeArtQueryDslRepositoryImpl implements LikeArtQueryDslRepository 
     private final JPAQueryFactory query;
 
     @Override
-    public List<LikeArt> findLikeArtList() {
+    public List<LikeArt> findAllWithFetchArt() {
         return query
                 .select(likeArt)
                 .from(likeArt)

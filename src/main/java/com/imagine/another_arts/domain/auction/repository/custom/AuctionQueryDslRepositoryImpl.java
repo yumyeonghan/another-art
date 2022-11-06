@@ -18,7 +18,7 @@ public class AuctionQueryDslRepositoryImpl implements AuctionQueryDslRepository 
     private final JPAQueryFactory query;
 
     @Override
-    public Optional<Auction> findAuctionByAuctionId(Long auctionId) {
+    public Optional<Auction> findByAuctionId(Long auctionId) {
         return Optional.ofNullable(
                 query
                         .select(auction)

@@ -2,10 +2,10 @@ package com.imagine.another_arts.domain.art.repository.custom;
 
 import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.art.enums.SaleType;
-import com.imagine.another_arts.domain.art.service.dto.response.BasicAuctionArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.response.BasicGeneralArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.response.QBasicAuctionArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.response.QBasicGeneralArtResponse;
+import com.imagine.another_arts.domain.art.repository.dto.response.BasicAuctionArt;
+import com.imagine.another_arts.domain.art.repository.dto.response.BasicGeneralArt;
+import com.imagine.another_arts.domain.art.repository.dto.response.QBasicAuctionArt;
+import com.imagine.another_arts.domain.art.repository.dto.response.QBasicGeneralArt;
 import com.imagine.another_arts.domain.user.QUser;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -13,7 +13,9 @@ import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -35,21 +37,21 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     private static QUser userA = new QUser("userA");
     private static QUser userB = new QUser("userB");
 
-    private static final SimpleExpression<QBasicGeneralArtResponse> LIKE_GROUP_BY_EXPRESSION = Expressions.list(
-            QBasicGeneralArtResponse.class,
+    private static final SimpleExpression<QBasicGeneralArt> LIKE_GROUP_BY_EXPRESSION = Expressions.list(
+            QBasicGeneralArt.class,
             art.id, art.name, art.description, art.initPrice, art.registerDate, art.storageName,
             user.id, user.nickname, user.schoolName
     );
 
-    private static final SimpleExpression<QBasicAuctionArtResponse> COUNT_GROUP_BY_EXPRESSION = Expressions.list(
-            QBasicAuctionArtResponse.class,
+    private static final SimpleExpression<QBasicAuctionArt> COUNT_GROUP_BY_EXPRESSION = Expressions.list(
+            QBasicAuctionArt.class,
             auction.id, userB.id, userB.nickname, userB.schoolName, auction.bidPrice, auction.startDate,
             auction.endDate, art.id, art.name, art.description, art.initPrice, art.registerDate,
             art.storageName, userA.id, userA.nickname, userA.schoolName
     );
 
     @Override
-    public Optional<Art> findArtByArtId(Long artId) {
+    public Optional<Art> findByArtId(Long artId) {
         return Optional.ofNullable(
                 query
                         .select(art)
@@ -61,9 +63,9 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     @Override
-    public BasicGeneralArtResponse findSingleGeneralArtByArtId(Long artId) {
+    public BasicGeneralArt findSingleGeneralArtByArtId(Long artId) {
         return query
-                .select(new QBasicGeneralArtResponse(
+                .select(new QBasicGeneralArt(
                         art.id, art.name, art.description, art.initPrice, art.registerDate, art.storageName,
                         user.id, user.nickname, user.schoolName))
                 .from(art)
@@ -73,9 +75,9 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     @Override
-    public BasicAuctionArtResponse findSingleAuctionArtByArtId(Long artId) {
+    public BasicAuctionArt findSingleAuctionArtByArtId(Long artId) {
         return query
-                .select(new QBasicAuctionArtResponse(
+                .select(new QBasicAuctionArt(
                         auction.id, userB.id, userB.nickname, userB.schoolName, auction.bidPrice, auction.startDate,
                         auction.endDate, art.id, art.name, art.description, art.initPrice, art.registerDate,
                         art.storageName, userA.id, userA.nickname, userA.schoolName))
@@ -88,9 +90,9 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     @Override
-    public List<BasicGeneralArtResponse> findGeneralArtHashtagSearch(String givenHashtag, String sortType, Pageable pageRequest) {
-        JPAQuery<BasicGeneralArtResponse> basicQuery = query
-                .selectDistinct(new QBasicGeneralArtResponse(
+    public Page<BasicGeneralArt> findGeneralArtListWithHashtag(String givenHashtag, String sortType, Pageable pageRequest) {
+        JPAQuery<BasicGeneralArt> basicQuery = query
+                .selectDistinct(new QBasicGeneralArt(
                         art.id, art.name, art.description, art.initPrice, art.registerDate, art.storageName,
                         user.id, user.nickname, user.schoolName))
                 .from(art)
@@ -101,50 +103,66 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
                 .limit(pageRequest.getPageSize());
 
         // date, rdate, price, rprice, like, rlike
+        List<BasicGeneralArt> content;
         switch (sortType) {
             case "date":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.desc())
                         .fetch();
+                break;
 
             case "rdate":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.asc())
                         .fetch();
+                break;
 
             case "price":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.initPrice.desc())
                         .fetch();
+                break;
 
             case "rprice":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.initPrice.asc())
                         .fetch();
+                break;
 
             case "like":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(art.likeArtList, likeArt)
                         .groupBy(LIKE_GROUP_BY_EXPRESSION)
                         .orderBy(likeArt.count().desc())
                         .fetch();
+                break;
 
             case "rlike":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(art.likeArtList, likeArt)
                         .groupBy(LIKE_GROUP_BY_EXPRESSION)
                         .orderBy(likeArt.count().asc())
                         .fetch();
+                break;
 
             default:
-                return new ArrayList<>(); // return empty list
+                content = new ArrayList<>();
         }
+
+        List<Long> countQuery = query
+                .select(art.id)
+                .from(art)
+                .innerJoin(art.artHashtagList, artHashtag)
+                .where(saleTypeEq(SaleType.GENERAL), hashtagEq(givenHashtag))
+                .fetch();
+
+        return PageableExecutionUtils.getPage(content, pageRequest, countQuery::size);
     }
 
     @Override
-    public List<BasicGeneralArtResponse> findGeneralArtKeywordSearch(String givenKeyword, String sortType, Pageable pageRequest) {
-        JPAQuery<BasicGeneralArtResponse> basicQuery = query
-                .selectDistinct(new QBasicGeneralArtResponse(
+    public Page<BasicGeneralArt> findGeneralArtListWithKeyword(String givenKeyword, String sortType, Pageable pageRequest) {
+        JPAQuery<BasicGeneralArt> basicQuery = query
+                .selectDistinct(new QBasicGeneralArt(
                         art.id, art.name, art.description, art.initPrice, art.registerDate, art.storageName,
                         user.id, user.nickname, user.schoolName))
                 .from(art)
@@ -154,50 +172,65 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
                 .limit(pageRequest.getPageSize());
 
         // date, rdate, price, rprice, like, rlike
+        List<BasicGeneralArt> content;
         switch (sortType) {
             case "date":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.desc())
                         .fetch();
+                break;
 
             case "rdate":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.asc())
                         .fetch();
+                break;
 
             case "price":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.initPrice.desc())
                         .fetch();
+                break;
 
             case "rprice":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.initPrice.asc())
                         .fetch();
+                break;
 
             case "like":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(art.likeArtList, likeArt)
                         .groupBy(LIKE_GROUP_BY_EXPRESSION)
                         .orderBy(likeArt.count().desc())
                         .fetch();
+                break;
 
             case "rlike":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(art.likeArtList, likeArt)
                         .groupBy(LIKE_GROUP_BY_EXPRESSION)
                         .orderBy(likeArt.count().asc())
                         .fetch();
+                break;
 
             default:
-                return new ArrayList<>(); // return empty list
+                content = new ArrayList<>(); // return empty list
         }
+
+        List<Long> countQuery = query
+                .select(art.id)
+                .from(art)
+                .where(saleTypeEq(SaleType.GENERAL), keywordContains(givenKeyword))
+                .fetch();
+
+        return PageableExecutionUtils.getPage(content, pageRequest, countQuery::size);
     }
 
     @Override
-    public List<BasicAuctionArtResponse> findAuctionArt(String sortType, Pageable pageRequest) {
-        JPAQuery<BasicAuctionArtResponse> basicQuery = query
-                .selectDistinct(new QBasicAuctionArtResponse(
+    public Page<BasicAuctionArt> findAuctionArtList(String sortType, Pageable pageRequest) {
+        JPAQuery<BasicAuctionArt> basicQuery = query
+                .selectDistinct(new QBasicAuctionArt(
                         auction.id, userB.id, userB.nickname, userB.schoolName, auction.bidPrice, auction.startDate,
                         auction.endDate, art.id, art.name, art.description, art.initPrice, art.registerDate,
                         art.storageName, userA.id, userA.nickname, userA.schoolName))
@@ -210,50 +243,66 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
                 .limit(pageRequest.getPageSize());
 
         // date, rdate, price, rprice, count, rcount
+        List<BasicAuctionArt> content;
         switch (sortType) {
             case "date":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.desc())
                         .fetch();
+                break;
 
             case "rdate":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.asc())
                         .fetch();
+                break;
 
             case "price":
-                return basicQuery
+                content = basicQuery
                         .orderBy(auction.bidPrice.desc())
                         .fetch();
+                break;
 
             case "rprice":
-                return basicQuery
+                content = basicQuery
                         .orderBy(auction.bidPrice.asc())
                         .fetch();
+                break;
 
             case "count":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(auction.auctionHistoryList, auctionHistory)
                         .groupBy(COUNT_GROUP_BY_EXPRESSION)
                         .orderBy(auctionHistory.count().desc())
                         .fetch();
+                break;
 
             case "rcount":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(auction.auctionHistoryList, auctionHistory)
                         .groupBy(COUNT_GROUP_BY_EXPRESSION)
                         .orderBy(auctionHistory.count().asc())
                         .fetch();
+                break;
 
             default:
-                return new ArrayList<>(); // return empty list
+                content = new ArrayList<>(); // return empty list
         }
+
+        List<Long> countQuery = query
+                .select(art.id)
+                .from(auction)
+                .innerJoin(auction.art, art)
+                .where(saleTypeEq(SaleType.AUCTION), currentDateBetween(LocalDateTime.now()))
+                .fetch();
+
+        return PageableExecutionUtils.getPage(content, pageRequest, countQuery::size);
     }
 
     @Override
-    public List<BasicAuctionArtResponse> findAuctionArtHashtagSearch(String givenHashtag, String sortType, Pageable pageRequest) {
-        JPAQuery<BasicAuctionArtResponse> basicQuery = query
-                .selectDistinct(new QBasicAuctionArtResponse(
+    public Page<BasicAuctionArt> findAuctionArtListWithHashtag(String givenHashtag, String sortType, Pageable pageRequest) {
+        JPAQuery<BasicAuctionArt> basicQuery = query
+                .selectDistinct(new QBasicAuctionArt(
                         auction.id, userB.id, userB.nickname, userB.schoolName, auction.bidPrice, auction.startDate,
                         auction.endDate, art.id, art.name, art.description, art.initPrice, art.registerDate,
                         art.storageName, userA.id, userA.nickname, userA.schoolName))
@@ -267,50 +316,67 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
                 .limit(pageRequest.getPageSize());
 
         // date, rdate, price, rprice, count, rcount
+        List<BasicAuctionArt> content;
         switch (sortType) {
             case "date":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.desc())
                         .fetch();
+                break;
 
             case "rdate":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.asc())
                         .fetch();
+                break;
 
             case "price":
-                return basicQuery
+                content = basicQuery
                         .orderBy(auction.bidPrice.desc())
                         .fetch();
+                break;
 
             case "rprice":
-                return basicQuery
+                content = basicQuery
                         .orderBy(auction.bidPrice.asc())
                         .fetch();
+                break;
 
             case "count":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(auction.auctionHistoryList, auctionHistory)
                         .groupBy(COUNT_GROUP_BY_EXPRESSION)
                         .orderBy(auctionHistory.count().desc())
                         .fetch();
+                break;
 
             case "rcount":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(auction.auctionHistoryList, auctionHistory)
                         .groupBy(COUNT_GROUP_BY_EXPRESSION)
                         .orderBy(auctionHistory.count().asc())
                         .fetch();
+                break;
 
             default:
-                return new ArrayList<>(); // return empty list
+                content = new ArrayList<>(); // return empty list
         }
+
+        List<Long> countQuery = query
+                .select(auction.id)
+                .from(auction)
+                .innerJoin(auction.art, art)
+                .innerJoin(art.artHashtagList, artHashtag)
+                .where(saleTypeEq(SaleType.AUCTION), currentDateBetween(LocalDateTime.now()), hashtagEq(givenHashtag))
+                .fetch();
+
+        return PageableExecutionUtils.getPage(content, pageRequest, countQuery::size);
     }
 
     @Override
-    public List<BasicAuctionArtResponse> findAuctionArtKeywordSearch(String givenKeyword, String sortType, Pageable pageRequest) {
-        JPAQuery<BasicAuctionArtResponse> basicQuery = query
-                .selectDistinct(new QBasicAuctionArtResponse(
+    public Page<BasicAuctionArt> findAuctionArtListWithKeyword(String givenKeyword, String sortType, Pageable pageRequest) {
+        JPAQuery<BasicAuctionArt> basicQuery = query
+                .selectDistinct(new QBasicAuctionArt(
                         auction.id, userB.id, userB.nickname, userB.schoolName, auction.bidPrice, auction.startDate,
                         auction.endDate, art.id, art.name, art.description, art.initPrice, art.registerDate,
                         art.storageName, userA.id, userA.nickname, userA.schoolName))
@@ -323,44 +389,60 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
                 .limit(pageRequest.getPageSize());
 
         // date, rdate, price, rprice, count, rcount
+        List<BasicAuctionArt> content;
         switch (sortType) {
             case "date":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.desc())
                         .fetch();
+                break;
 
             case "rdate":
-                return basicQuery
+                content = basicQuery
                         .orderBy(art.registerDate.asc())
                         .fetch();
+                break;
 
             case "price":
-                return basicQuery
+                content = basicQuery
                         .orderBy(auction.bidPrice.desc())
                         .fetch();
+                break;
 
             case "rprice":
-                return basicQuery
+                content = basicQuery
                         .orderBy(auction.bidPrice.asc())
                         .fetch();
+                break;
 
             case "count":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(auction.auctionHistoryList, auctionHistory)
                         .groupBy(COUNT_GROUP_BY_EXPRESSION)
                         .orderBy(auctionHistory.count().desc())
                         .fetch();
+                break;
 
             case "rcount":
-                return basicQuery
+                content = basicQuery
                         .leftJoin(auction.auctionHistoryList, auctionHistory)
                         .groupBy(COUNT_GROUP_BY_EXPRESSION)
                         .orderBy(auctionHistory.count().asc())
                         .fetch();
+                break;
 
             default:
-                return new ArrayList<>(); // return empty list
+                content = new ArrayList<>(); // return empty list
         }
+
+        List<Long> countQuery = query
+                .select(auction.id)
+                .from(auction)
+                .innerJoin(auction.art, art)
+                .where(saleTypeEq(SaleType.AUCTION), currentDateBetween(LocalDateTime.now()), keywordContains(givenKeyword))
+                .fetch();
+
+        return PageableExecutionUtils.getPage(content, pageRequest, countQuery::size);
     }
 
     private BooleanExpression saleTypeEq(SaleType saleType) {

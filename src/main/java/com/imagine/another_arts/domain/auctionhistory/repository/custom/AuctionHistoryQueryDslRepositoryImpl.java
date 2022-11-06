@@ -17,7 +17,7 @@ public class AuctionHistoryQueryDslRepositoryImpl implements AuctionHistoryQuery
     private final JPAQueryFactory query;
 
     @Override
-    public List<AuctionHistory> findAuctionHistoryList() {
+    public List<AuctionHistory> findAllWithFetchArt() {
         return query
                 .select(auctionHistory)
                 .from(auctionHistory)

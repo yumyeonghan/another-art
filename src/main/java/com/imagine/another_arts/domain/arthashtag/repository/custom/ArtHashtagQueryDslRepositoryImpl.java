@@ -28,7 +28,7 @@ public class ArtHashtagQueryDslRepositoryImpl implements ArtHashtagQueryDslRepos
     }
 
     @Override
-    public List<ArtHashtag> findArtHashtagList() {
+    public List<ArtHashtag> findAllWithFetchArt() {
         return query
                 .select(artHashtag)
                 .from(artHashtag)
@@ -37,20 +37,21 @@ public class ArtHashtagQueryDslRepositoryImpl implements ArtHashtagQueryDslRepos
     }
 
     @Override
-    @Transactional
-    public Long deleteInBatchByArtIdAndHashtagIn(Long artId, Collection<String> hashtagName) {
+    public List<ArtHashtag> findAllByArtId(Long artId) {
         return query
-                .delete(artHashtag)
-                .where(artIdEq(artId), hashtagNameIn(hashtagName))
-                .execute();
+                .select(artHashtag)
+                .from(artHashtag)
+                .innerJoin(artHashtag.art, art).fetchJoin()
+                .where(artIdEq(artId))
+                .fetch();
     }
 
     @Override
     @Transactional
-    public Long deleteInBatchByArtId(Long artId) {
+    public Long deleteByArtIdAndHashtagNameIn(Long artId, Collection<String> hashtagName) {
         return query
                 .delete(artHashtag)
-                .where(artIdEq(artId))
+                .where(artIdEq(artId), hashtagNameIn(hashtagName))
                 .execute();
     }
 
