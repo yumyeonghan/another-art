@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Objects;
 
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.AUTHENTICATION_USER;
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL_REQUEST;
@@ -83,7 +84,7 @@ public class UserController {
     public UserSessionDto sessionCheck(HttpServletRequest request) {
         UserSessionDto currentUserSession = (UserSessionDto) request.getSession(false).getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
 
-        if (currentUserSession == null) {
+        if (Objects.isNull(currentUserSession)) {
             throw AnotherArtException.type(AUTHENTICATION_USER);
         }
 

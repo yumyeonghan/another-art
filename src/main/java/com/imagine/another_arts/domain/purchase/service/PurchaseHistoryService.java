@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.*;
 
@@ -77,7 +78,7 @@ public class PurchaseHistoryService {
     }
 
     private PurchaseHistory createPurchaseHistory(Art targetArt, User purchaseUser, @Nullable Auction auction) {
-        return (auction == null)
+        return (Objects.isNull(auction))
                 ? PurchaseHistory.createPurchaseHistoryByGeneral(purchaseUser, targetArt, targetArt.getInitPrice())
                 : PurchaseHistory.createPurchaseHistoryByAuction(purchaseUser, targetArt, auction, auction.getBidPrice());
     }
@@ -97,7 +98,7 @@ public class PurchaseHistoryService {
         Long artOwnerPoint = getLatestPointByUserId(pointHistoryList, artOwner.getId());
         Long purchaseUserPoint = getLatestPointByUserId(pointHistoryList, purchaseUser.getId());
 
-        return (auction == null)
+        return (Objects.isNull(auction))
                 ? List.of(
                 PointHistory.insertPointHistory(artOwner, PointType.SOLD, targetArt.getInitPrice(), artOwnerPoint + targetArt.getInitPrice()),
                 PointHistory.insertPointHistory(purchaseUser, PointType.USE, targetArt.getInitPrice(), purchaseUserPoint - targetArt.getInitPrice())
@@ -110,7 +111,7 @@ public class PurchaseHistoryService {
 
     @Transactional
     protected void updateAvailablePoint(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
-        if (auction == null) {
+        if (Objects.isNull(auction)) {
             artOwner.updateAvailablePoint(artOwner.getAvailablePoint() + targetArt.getInitPrice());
             purchaseUser.updateAvailablePoint(purchaseUser.getAvailablePoint() - targetArt.getInitPrice());
         } else {

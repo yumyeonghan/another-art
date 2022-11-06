@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -95,12 +96,11 @@ public class ArtService {
     }
 
     private UploadArtImageInfo getUploadArtImageInfo(MultipartFile file) {
-        if (file == null) {
+        if (Objects.isNull(file)) {
             throw AnotherArtException.type(ILLEGAL_ART_UPLOAD);
         }
 
         String uploadName = file.getOriginalFilename();
-        assert uploadName != null;
         String storageName = generateServerStorageName(uploadName);
 
         return new UploadArtImageInfo(uploadName, storageName);
@@ -115,7 +115,7 @@ public class ArtService {
     // 작품 등록간 해시태그 등록
     @Transactional
     protected void insertHashtagList(List<String> hashtagNameList, Art saveArt) {
-        if (hashtagNameList == null || hashtagNameList.size() == 0) {
+        if (Objects.isNull(hashtagNameList) || hashtagNameList.size() == 0) {
             return;
         }
 
@@ -200,7 +200,7 @@ public class ArtService {
     // 해시태그 추가
     @Transactional
     public void addHashtag(Long artId, List<String> hashtagNameList) {
-        if (hashtagNameList == null || hashtagNameList.size() == 0) {
+        if (Objects.isNull(hashtagNameList) || hashtagNameList.size() == 0) {
             return;
         }
 
@@ -224,7 +224,7 @@ public class ArtService {
     // 해시태그 삭제
     @Transactional
     public void deleteHashtag(Long artId, List<String> hashtagList) {
-        if (hashtagList == null || hashtagList.size() == 0) {
+        if (Objects.isNull(hashtagList) || hashtagList.size() == 0) {
             return;
         }
         artHashtagRepository.deleteByArtIdAndHashtagNameIn(artId, hashtagList);

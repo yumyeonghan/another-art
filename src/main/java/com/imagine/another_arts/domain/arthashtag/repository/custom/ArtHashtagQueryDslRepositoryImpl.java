@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static com.imagine.another_arts.domain.art.QArt.art;
 import static com.imagine.another_arts.domain.arthashtag.QArtHashtag.artHashtag;
@@ -56,7 +57,7 @@ public class ArtHashtagQueryDslRepositoryImpl implements ArtHashtagQueryDslRepos
     }
 
     private BooleanExpression artIdEq(Long artId) {
-        if (artId == null) {
+        if (Objects.isNull(artId)) {
             return null;
         }
 
@@ -64,7 +65,7 @@ public class ArtHashtagQueryDslRepositoryImpl implements ArtHashtagQueryDslRepos
     }
 
     private BooleanExpression hashtagNameIn(Collection<String> hashtagName) {
-        if (hashtagName == null) {
+        if (Objects.isNull(hashtagName)) {
             return null;
         }
 

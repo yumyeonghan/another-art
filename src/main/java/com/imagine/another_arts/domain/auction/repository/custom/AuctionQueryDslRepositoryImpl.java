@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.imagine.another_arts.domain.art.QArt.art;
@@ -31,7 +32,7 @@ public class AuctionQueryDslRepositoryImpl implements AuctionQueryDslRepository 
     }
 
     private BooleanExpression auctionIdEq(Long auctionId) {
-        if (auctionId == null) {
+        if (Objects.isNull(auctionId)) {
             return null;
         }
 

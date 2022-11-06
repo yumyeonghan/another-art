@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Objects;
 
 import static com.imagine.another_arts.web.SessionFactory.ANOTHER_ART_SESSION_KEY;
 
@@ -49,7 +50,7 @@ public class LoginController {
     public ResponseEntity<Void> userLogout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
-        if (session != null) {
+        if (Objects.nonNull(session)) {
             session.invalidate();
         }
 

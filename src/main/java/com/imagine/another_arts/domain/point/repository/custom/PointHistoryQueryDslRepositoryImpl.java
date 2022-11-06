@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static com.imagine.another_arts.domain.point.QPointHistory.pointHistory;
 import static com.imagine.another_arts.domain.user.QUser.user;
@@ -39,7 +40,7 @@ public class PointHistoryQueryDslRepositoryImpl implements PointHistoryQueryDslR
     }
 
     private BooleanExpression userIdEq(Long userId) {
-        if (userId == null) {
+        if (Objects.isNull(userId)) {
             return null;
         }
 
@@ -47,7 +48,7 @@ public class PointHistoryQueryDslRepositoryImpl implements PointHistoryQueryDslR
     }
 
     private BooleanExpression userIdIn(Collection<Long> userIdList) {
-        if (userIdList == null) {
+        if (Objects.isNull(userIdList)) {
             return null;
         }
 

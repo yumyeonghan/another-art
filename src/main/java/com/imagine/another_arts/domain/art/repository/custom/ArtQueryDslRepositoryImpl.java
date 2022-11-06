@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.imagine.another_arts.domain.art.QArt.art;
@@ -446,7 +447,7 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     private BooleanExpression saleTypeEq(SaleType saleType) {
-        if (saleType == null) {
+        if (Objects.isNull(saleType)) {
             return null;
         }
 
@@ -454,7 +455,7 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     private BooleanExpression artIdEq(Long artId) {
-        if (artId == null) {
+        if (Objects.isNull(artId)) {
             return null;
         }
 
@@ -462,7 +463,7 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     private BooleanExpression currentDateBetween(LocalDateTime curretDateTime) {
-        if (curretDateTime == null) {
+        if (Objects.isNull(curretDateTime)) {
             return null;
         }
 
@@ -470,7 +471,7 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     private BooleanExpression hashtagEq(String givenHashtag) {
-        if (givenHashtag == null) {
+        if (Objects.isNull(givenHashtag)) {
             return null;
         }
 
@@ -478,7 +479,7 @@ public class ArtQueryDslRepositoryImpl implements ArtQueryDslRepository {
     }
 
     private BooleanExpression keywordContains(String givenKeyword) {
-        if (givenKeyword == null) {
+        if (Objects.isNull(givenKeyword)) {
             return null;
         }
 

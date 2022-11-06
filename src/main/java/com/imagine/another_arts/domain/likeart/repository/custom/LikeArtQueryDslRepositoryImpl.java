@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.imagine.another_arts.domain.art.QArt.art;
 import static com.imagine.another_arts.domain.likeart.QLikeArt.likeArt;
@@ -47,7 +48,7 @@ public class LikeArtQueryDslRepositoryImpl implements LikeArtQueryDslRepository 
     }
 
     private BooleanExpression artIdEq(Long artId) {
-        if (artId == null) {
+        if (Objects.isNull(artId)) {
             return null;
         }
 
@@ -55,7 +56,7 @@ public class LikeArtQueryDslRepositoryImpl implements LikeArtQueryDslRepository 
     }
 
     private BooleanExpression userIdEq(Long userId) {
-        if (userId == null) {
+        if (Objects.isNull(userId)) {
             return null;
         }
 

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.imagine.another_arts.domain.art.QArt.art;
 import static com.imagine.another_arts.domain.auctionhistory.QAuctionHistory.auctionHistory;
@@ -36,7 +37,7 @@ public class AuctionHistoryQueryDslRepositoryImpl implements AuctionHistoryQuery
     }
 
     private BooleanExpression artIdEq(Long artId) {
-        if (artId == null) {
+        if (Objects.isNull(artId)) {
             return null;
         }
 

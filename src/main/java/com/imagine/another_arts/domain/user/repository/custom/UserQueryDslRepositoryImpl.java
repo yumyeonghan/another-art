@@ -6,6 +6,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 import static com.imagine.another_arts.domain.user.QUser.user;
 
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class UserQueryDslRepositoryImpl implements UserQueryDslRepository {
     }
 
     private BooleanExpression loginIdEq(String loginId) {
-        if (loginId == null) {
+        if (Objects.isNull(loginId)) {
             return null;
         }
 
