@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class AuctionArtResponse extends ArtResponse {
+public class AuctionArt extends AbstractArt {
     private Long auctionArtBidCount;
-    private BasicAuctionArtResponse auctionArt;
+    private BasicAuctionArtTranslator auctionArt;
     private List<String> artHashtagList;
 }

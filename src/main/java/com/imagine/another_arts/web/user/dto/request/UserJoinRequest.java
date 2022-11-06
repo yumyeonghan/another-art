@@ -1,6 +1,5 @@
 package com.imagine.another_arts.web.user.dto.request;
 
-import com.imagine.another_arts.domain.user.service.dto.request.UserJoinRequestDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

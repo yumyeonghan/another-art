@@ -1,9 +1,6 @@
 package com.imagine.another_arts.web.art;
 
 import com.imagine.another_arts.domain.art.service.ArtService;
-import com.imagine.another_arts.domain.art.service.dto.response.ArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.response.AuctionArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.response.GeneralArtResponse;
 import com.imagine.another_arts.exception.AnotherArtException;
 import com.imagine.another_arts.web.art.dto.request.*;
 import com.imagine.another_arts.web.art.dto.response.SimpleArtSuccessResponse;
@@ -78,7 +75,7 @@ public class ArtController {
 
     @PostMapping("/main/arts")
     @ApiOperation(value = "메인페이지 경매 작품 조회 API", notes = "경매 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public <T extends ArtResponse> SortedArtResponse<List<T>> mainSortArtList(@Valid @RequestBody ArtMainSearchRequest artMainSearchRequest) {
+    public <T> SortedArtResponse<List<T>> mainSortArtList(@Valid @RequestBody ArtMainSearchRequest artMainSearchRequest) {
         PageRequest pageRequest = PageRequest.of(artMainSearchRequest.getScroll(), SLICE_PER_PAGE);
         List<AuctionArtResponse> sortedAuctionArtList = artService.getSortedAuctionArtList(artMainSearchRequest.getSort(), pageRequest);
         return new SortedArtResponse<>(sortedAuctionArtList.size(), (List<T>) sortedAuctionArtList);
@@ -86,7 +83,7 @@ public class ArtController {
 
     @PostMapping("/hashtag/arts")
     @ApiOperation(value = "해시태그를 통한 작품 조회 API", notes = "해시태그로 검색된 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public <T extends ArtResponse> SortedArtResponse<List<T>> hashtagSearchArtList(@Valid @RequestBody ArtHashtagSearchRequest artHashtagSearchRequest) {
+    public <T> SortedArtResponse<List<T>> hashtagSearchArtList(@Valid @RequestBody ArtHashtagSearchRequest artHashtagSearchRequest) {
         PageRequest pageRequest = PageRequest.of(artHashtagSearchRequest.getScroll(), SLICE_PER_PAGE);
 
         if (artHashtagSearchRequest.getType().equals("auction")) {
@@ -104,7 +101,7 @@ public class ArtController {
 
     @PostMapping("/keyword/arts")
     @ApiOperation(value = "키워드를 통한 작품 조회 API", notes = "키워드로 검색된 작품 데이터들을 페이징 개수만큼 응답 (정렬 기준 존재)")
-    public <T extends ArtResponse> SortedArtResponse<List<T>> keywordSearchArtList(@Valid @RequestBody ArtKeywordSearchRequest artKeywordSearchRequest) {
+    public <T> SortedArtResponse<List<T>> keywordSearchArtList(@Valid @RequestBody ArtKeywordSearchRequest artKeywordSearchRequest) {
         PageRequest pageRequest = PageRequest.of(artKeywordSearchRequest.getScroll(), SLICE_PER_PAGE);
 
         if (artKeywordSearchRequest.getType().equals("auction")) {

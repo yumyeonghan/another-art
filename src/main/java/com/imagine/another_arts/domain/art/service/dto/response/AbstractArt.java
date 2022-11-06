@@ -1,4 +1,4 @@
 package com.imagine.another_arts.domain.art.service.dto.response;
 
-public abstract class ArtResponse {
+public abstract class AbstractArt {
 }

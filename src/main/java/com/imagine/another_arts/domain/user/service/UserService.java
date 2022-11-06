@@ -6,7 +6,6 @@ import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.domain.user.service.dto.request.UserEditRequestDto;
-import com.imagine.another_arts.domain.user.service.dto.request.UserJoinRequestDto;
 import com.imagine.another_arts.domain.user.service.dto.response.MyPageUserResponse;
 import com.imagine.another_arts.exception.AnotherArtException;
 import com.imagine.another_arts.web.SessionFactory;
@@ -28,9 +27,9 @@ public class UserService {
     private final PointHistoryRepository pointHistoryRepository;
 
     @Transactional
-    public Long saveUser(UserJoinRequestDto userJoinRequest) {
-        User saveUser = userRepository.save(userJoinRequest.toEntity());
-        pointHistoryRepository.save(PointHistory.createPointHistory(saveUser));
+    public Long saveUser(User user) {
+        User saveUser = userRepository.save(user);
+        pointHistoryRepository.save(PointHistory.createPointHistory(user));
         return saveUser.getId();
     }
 
