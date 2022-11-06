@@ -9,6 +9,7 @@ import com.imagine.another_arts.web.login.dto.request.ResetPasswordRequest;
 import com.imagine.another_arts.web.login.dto.response.FindIdResponse;
 import com.imagine.another_arts.web.login.dto.response.FindPasswordResponse;
 import com.imagine.another_arts.web.login.dto.response.LoginResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Objects;
 
 import static com.imagine.another_arts.web.SessionFactory.ANOTHER_ART_SESSION_KEY;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Api(tags = "로그인/로그아웃/계정 관련 API")
 public class LoginController {
     private final LoginService loginService;
 
@@ -49,7 +52,7 @@ public class LoginController {
     public ResponseEntity<Void> userLogout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
-        if (session != null) {
+        if (Objects.nonNull(session)) {
             session.invalidate();
         }
 

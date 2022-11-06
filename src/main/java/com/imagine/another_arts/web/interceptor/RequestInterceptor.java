@@ -10,6 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.AUTHENTICATION_USER;
 
@@ -23,7 +24,7 @@ public class RequestInterceptor implements HandlerInterceptor{
         log.info("요청 URI : {}", requestURI);
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY) == null) {
+        if (Objects.isNull(session) || Objects.isNull(session.getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY))) {
             log.info("미인증 사용자 요청");
             String errorResponseToJSON = objectMapper.writeValueAsString(ErrorResponse.of(AUTHENTICATION_USER));
 

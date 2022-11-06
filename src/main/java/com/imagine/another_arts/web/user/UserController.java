@@ -8,7 +8,7 @@ import com.imagine.another_arts.web.SessionFactory;
 import com.imagine.another_arts.web.user.dto.request.DuplicateCheckRequest;
 import com.imagine.another_arts.web.user.dto.request.UserEditRequest;
 import com.imagine.another_arts.web.user.dto.request.UserJoinRequest;
-import com.imagine.another_arts.web.user.dto.response.SimpleUserSuccessResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Objects;
 
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.AUTHENTICATION_USER;
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL_REQUEST;
@@ -25,23 +26,24 @@ import static com.imagine.another_arts.exception.AnotherArtErrorCode.ILLEGAL_URL
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Api(tags = "사용자 API")
 public class UserController {
     private final UserService userService;
 
     @PostMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "회원가입 API", notes = "Form 데이터 정보들을 서버로 전달함에 따라 회원가입 진행")
-    public ResponseEntity<SimpleUserSuccessResponse> joinUser(@Valid @RequestBody UserJoinRequest userJoinRequest) {
-        Long saveUserId = userService.saveUser(userJoinRequest.toServiceDto());
+    public ResponseEntity<Void> joinUser(@Valid @RequestBody UserJoinRequest joinRequest) {
+        Long saveUserId = userService.saveUser(joinRequest.toEntity());
         return ResponseEntity
                 .created(URI.create("/api/user/" + saveUserId))
-                .body(new SimpleUserSuccessResponse(saveUserId));
+                .build();
     }
 
     @PatchMapping("/user/{userId}")
     @ApiOperation(value = "회원수정 API", notes = "수정할 회원 정보들을 서버에 전달함에 따라 회원 수정 진행")
-    public ResponseEntity<Void> editUser(@PathVariable Long userId, @RequestBody UserEditRequest userEditRequest) {
-        userService.editUser(userId, userEditRequest.toServiceDto());
+    public ResponseEntity<Void> editUser(@PathVariable Long userId, @RequestBody UserEditRequest editRequest) {
+        userService.editUser(userId, editRequest.toServiceDto());
         return ResponseEntity.noContent().build();
     }
 
@@ -84,7 +86,7 @@ public class UserController {
     public UserSessionDto sessionCheck(HttpServletRequest request) {
         UserSessionDto currentUserSession = (UserSessionDto) request.getSession(false).getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
 
-        if (currentUserSession == null) {
+        if (Objects.isNull(currentUserSession)) {
             throw AnotherArtException.type(AUTHENTICATION_USER);
         }
 

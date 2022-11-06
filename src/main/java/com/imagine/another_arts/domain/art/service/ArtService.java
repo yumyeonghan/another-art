@@ -3,11 +3,11 @@ package com.imagine.another_arts.domain.art.service;
 import com.imagine.another_arts.domain.art.Art;
 import com.imagine.another_arts.domain.art.enums.SaleType;
 import com.imagine.another_arts.domain.art.repository.ArtRepository;
+import com.imagine.another_arts.domain.art.repository.dto.response.BasicAuctionArt;
+import com.imagine.another_arts.domain.art.repository.dto.response.BasicGeneralArt;
 import com.imagine.another_arts.domain.art.service.dto.UploadArtImageInfo;
 import com.imagine.another_arts.domain.art.service.dto.request.ArtRegisterRequestDto;
-import com.imagine.another_arts.domain.art.service.dto.response.ArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.response.AuctionArtResponse;
-import com.imagine.another_arts.domain.art.service.dto.response.GeneralArtResponse;
+import com.imagine.another_arts.domain.art.service.dto.response.*;
 import com.imagine.another_arts.domain.arthashtag.ArtHashtag;
 import com.imagine.another_arts.domain.arthashtag.repository.ArtHashtagRepository;
 import com.imagine.another_arts.domain.auction.Auction;
@@ -22,7 +22,9 @@ import com.imagine.another_arts.domain.user.repository.UserRepository;
 import com.imagine.another_arts.exception.AnotherArtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -31,7 +33,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -63,15 +67,25 @@ public class ArtService {
             UploadArtImageInfo fileInfo = getUploadArtImageInfo(uploadFile);
 
             Art art = Art.createArt(
-                    artOwner, registerRequest.getName(), registerRequest.getDescription(),
-                    registerRequest.getInitPrice(), fileInfo.getUploadName(), fileInfo.getStoregeName()
+                    artOwner,
+                    registerRequest.getName(),
+                    registerRequest.getDescription(),
+                    registerRequest.getInitPrice(),
+                    fileInfo.getUploadName(),
+                    fileInfo.getStoregeName()
             );
             art.chooseSaleType(registerRequest.getSaleType());
             artRepository.save(art);
             insertHashtagList(registerRequest.getHashtagList(), art);
 
             if (registerRequest.getSaleType().equals("auction")) {
-                auctionRepository.save(Auction.createAuction(registerRequest.getInitPrice(), registerRequest.getStartDate(), registerRequest.getEndDate(), art));
+                Auction auction = Auction.createAuction(
+                        registerRequest.getInitPrice(),
+                        registerRequest.getStartDate(),
+                        registerRequest.getEndDate(),
+                        art
+                );
+                auctionRepository.save(auction);
             }
 
             uploadFile.transferTo(new File(fileDir + fileInfo.getStoregeName())); // 파일 저장
@@ -82,12 +96,11 @@ public class ArtService {
     }
 
     private UploadArtImageInfo getUploadArtImageInfo(MultipartFile file) {
-        if (file == null) {
+        if (Objects.isNull(file)) {
             throw AnotherArtException.type(ILLEGAL_ART_UPLOAD);
         }
 
         String uploadName = file.getOriginalFilename();
-        assert uploadName != null;
         String storageName = generateServerStorageName(uploadName);
 
         return new UploadArtImageInfo(uploadName, storageName);
@@ -100,28 +113,32 @@ public class ArtService {
     }
 
     // 작품 등록간 해시태그 등록
-    private void insertHashtagList(List<String> hashtagNameList, Art saveArt) {
-        if (hashtagNameList == null || hashtagNameList.size() == 0) {
+    @Transactional
+    protected void insertHashtagList(List<String> hashtagNameList, Art saveArt) {
+        if (Objects.isNull(hashtagNameList) || hashtagNameList.size() == 0) {
             return;
         }
-        hashtagNameList.forEach(name -> artHashtagRepository.save(ArtHashtag.insertArtHashtag(saveArt, name)));
+
+        List<ArtHashtag> artHashtagList = new ArrayList<>();
+        hashtagNameList.forEach(name -> artHashtagList.add(ArtHashtag.insertArtHashtag(saveArt, name)));
+        artHashtagRepository.saveAll(artHashtagList);
     }
 
     // 작품 단건 조회
-    public <T extends ArtResponse> T getSingleArt(Long artId) {
-        Art findArt = artRepository.findArtByArtId(artId)
+    public <T extends AbstractArt> T getSingleArt(Long artId) {
+        Art findArt = artRepository.findByArtId(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
 
         if (findArt.getSaleType().equals(SaleType.AUCTION)) {
-            return (T) new AuctionArtResponse(
+            return (T) new AuctionArt(
                     auctionHistoryRepository.getAuctionHistoryCountByArtId(artId),
-                    artRepository.findSingleAuctionArtByArtId(findArt.getId()),
+                    new BasicAuctionArtTranslator(artRepository.findSingleAuctionArtByArtId(findArt.getId())),
                     artHashtagRepository.findHashtagListByArtId(artId)
             );
         } else {
-            return (T) new GeneralArtResponse(
+            return (T) new GeneralArt(
                     likeArtRepository.getLikeArtCountByArtId(artId),
-                    artRepository.findSingleGeneralArtByArtId(findArt.getId()),
+                    new BasicGeneralArtTranslator(artRepository.findSingleGeneralArtByArtId(findArt.getId())),
                     artHashtagRepository.findHashtagListByArtId(artId)
             );
         }
@@ -129,17 +146,17 @@ public class ArtService {
 
     // 작품 정보 변경
     @Transactional
-    public void editArt(Long artId, String updateName, String updateDescription) {
+    public void editArt(Long artId, String changeName, String changeDescription) {
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
 
-        if (StringUtils.hasText(updateName)) {
-            hasDuplicateArtNameInModification(artId, updateName);
-            findArt.changeArtName(updateName);
+        if (StringUtils.hasText(changeName)) {
+            hasDuplicateArtNameInModification(artId, changeName);
+            findArt.changeArtName(changeName);
         }
 
-        if (StringUtils.hasText(updateDescription)) {
-            findArt.changeDescription(updateDescription);
+        if (StringUtils.hasText(changeDescription)) {
+            findArt.changeDescription(changeDescription);
         }
     }
 
@@ -159,11 +176,12 @@ public class ArtService {
         if (findArt.getSaleType().equals(SaleType.AUCTION)) {
             hasAtLeastOneBid(findArt);
 
-            Auction auction = auctionRepository.findAuctionByArt(findArt);
+            Auction auction = auctionRepository.findByArt(findArt);
             auctionRepository.delete(auction);
         }
 
-        artHashtagRepository.deleteInBatchByArtId(artId);
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllByArtId(artId);
+        artHashtagRepository.deleteAllInBatch(artHashtagList);
         artRepository.delete(findArt);
     }
 
@@ -182,108 +200,119 @@ public class ArtService {
     // 해시태그 추가
     @Transactional
     public void addHashtag(Long artId, List<String> hashtagNameList) {
-        if (hashtagNameList == null || hashtagNameList.size() == 0) {
+        if (Objects.isNull(hashtagNameList) || hashtagNameList.size() == 0) {
             return;
         }
 
         Art findArt = artRepository.findById(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
-        List<String> hashtagList = artHashtagRepository.findHashtagListByArtId(artId);
-
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllByArtId(findArt.getId());
+        List<ArtHashtag> newHashtag = new ArrayList<>();
         hashtagNameList.forEach(name -> {
-            if(isNotContainsNewHashtag(hashtagList, name)) {
-                artHashtagRepository.save(ArtHashtag.insertArtHashtag(findArt, name));
+            if(isNotDuplicateHashtagName(artHashtagList, name)) {
+                newHashtag.add(ArtHashtag.insertArtHashtag(findArt, name));
             }
         });
+        artHashtagRepository.saveAll(newHashtag);
     }
 
-    private boolean isNotContainsNewHashtag(List<String> hashtagList, String hashtagName) {
-        return !hashtagList.contains(hashtagName);
+    private boolean isNotDuplicateHashtagName(List<ArtHashtag> artHashtagList, String hashtagName) {
+        return artHashtagList.stream()
+                .noneMatch(artHashtag -> artHashtag.getName().equals(hashtagName));
     }
 
     // 해시태그 삭제
     @Transactional
     public void deleteHashtag(Long artId, List<String> hashtagList) {
-        if (hashtagList == null || hashtagList.size() == 0) {
+        if (Objects.isNull(hashtagList) || hashtagList.size() == 0) {
             return;
         }
-        artHashtagRepository.deleteInBatchByArtIdAndHashtagIn(artId, hashtagList);
+        artHashtagRepository.deleteByArtIdAndHashtagNameIn(artId, hashtagList);
     }
 
     // 메인페이지 정렬 기준에 따른 "경매 작품"
-    public List<AuctionArtResponse> getSortedAuctionArtList(String sortType, Pageable pageRequest) {
-        List<AuctionHistory> auctionHistoryList = auctionHistoryRepository.findAuctionHistoryList();
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagList();
-
-        return artRepository.findAuctionArt(sortType, pageRequest)
+    public Page<AuctionArt> getSortedAuctionArtList(String sortType, Pageable pageRequest) {
+        Page<BasicAuctionArt> pagingAuctionArtList = artRepository.findAuctionArtList(sortType, pageRequest);
+        List<AuctionHistory> auctionHistoryList = auctionHistoryRepository.findAllWithFetchArt();
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllWithFetchArt();
+        List<AuctionArt> auctionArts = pagingAuctionArtList
                 .stream()
-                .map(basicAuctionArtResponse -> new AuctionArtResponse(
-                        getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArtResponse.getArtId()),
-                        basicAuctionArtResponse,
-                        getHashtagListByArtId(artHashtagList, basicAuctionArtResponse.getArtId())
+                .map(basicAuctionArt -> new AuctionArt(
+                        getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArt.getArtId()),
+                        new BasicAuctionArtTranslator(basicAuctionArt),
+                        getHashtagListByArtId(artHashtagList, basicAuctionArt.getArtId())
                 )).collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(auctionArts, pageRequest, pagingAuctionArtList::getTotalElements);
     }
 
     // 해시태그 기반 "경매 작품" 검색
-    public List<AuctionArtResponse> getAuctionArtListSearchByHashtag(String hashtag, String sortType, Pageable pageRequest) {
-        List<AuctionHistory> auctionHistoryList = auctionHistoryRepository.findAuctionHistoryList();
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagList();
-
-        return artRepository.findAuctionArtHashtagSearch(hashtag, sortType, pageRequest)
+    public Page<AuctionArt> getAuctionArtListSearchByHashtag(String hashtag, String sortType, Pageable pageRequest) {
+        Page<BasicAuctionArt> pagingAuctionArtListWithHashtag = artRepository.findAuctionArtListWithHashtag(hashtag, sortType, pageRequest);
+        List<AuctionHistory> auctionHistoryList = auctionHistoryRepository.findAllWithFetchArt();
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllWithFetchArt();
+        List<AuctionArt> auctionArts = pagingAuctionArtListWithHashtag
                 .stream()
-                .map(basicAuctionArtResponse -> new AuctionArtResponse(
-                        getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArtResponse.getArtId()),
-                        basicAuctionArtResponse,
-                        getHashtagListByArtId(artHashtagList, basicAuctionArtResponse.getArtId())
+                .map(basicAuctionArt -> new AuctionArt(
+                        getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArt.getArtId()),
+                        new BasicAuctionArtTranslator(basicAuctionArt),
+                        getHashtagListByArtId(artHashtagList, basicAuctionArt.getArtId())
                 )).collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(auctionArts, pageRequest, pagingAuctionArtListWithHashtag::getTotalElements);
     }
 
     // 해시태그 기반 "일반 작품" 검색
-    public List<GeneralArtResponse> getGeneralArtListSearchByHashtag(String hashtag, String sortType, Pageable pageRequest) {
-        List<LikeArt> likeArtList = likeArtRepository.findLikeArtList();
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagList();
-
-        return artRepository.findGeneralArtHashtagSearch(hashtag, sortType, pageRequest)
+    public Page<GeneralArt> getGeneralArtListSearchByHashtag(String hashtag, String sortType, Pageable pageRequest) {
+        Page<BasicGeneralArt> pagingGeneralArtListWithHashtag = artRepository.findGeneralArtListWithHashtag(hashtag, sortType, pageRequest);
+        List<LikeArt> likeArtList = likeArtRepository.findAllWithFetchArt();
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllWithFetchArt();
+        List<GeneralArt> generalArts = pagingGeneralArtListWithHashtag
                 .stream()
-                .map(basicGeneralArtResponse -> new GeneralArtResponse(
-                        getLikeArtCountByArtId(likeArtList, basicGeneralArtResponse.getArtId()),
-                        basicGeneralArtResponse,
-                        getHashtagListByArtId(artHashtagList, basicGeneralArtResponse.getArtId())
+                .map(basicGeneralArt -> new GeneralArt(
+                        getLikeArtCountByArtId(likeArtList, basicGeneralArt.getArtId()),
+                        new BasicGeneralArtTranslator(basicGeneralArt),
+                        getHashtagListByArtId(artHashtagList, basicGeneralArt.getArtId())
                 )).collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(generalArts, pageRequest, pagingGeneralArtListWithHashtag::getTotalElements);
     }
 
     // 키워드 기반 "경매 작품" 검색
-    public List<AuctionArtResponse> getAuctionArtListSearchByKeyword(String keyword, String sortType, Pageable pageRequest) {
-        List<AuctionHistory> auctionHistoryList = auctionHistoryRepository.findAuctionHistoryList();
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagList();
-
-        return artRepository.findAuctionArtKeywordSearch(keyword, sortType, pageRequest)
+    public Page<AuctionArt> getAuctionArtListSearchByKeyword(String keyword, String sortType, Pageable pageRequest) {
+        Page<BasicAuctionArt> pagingAuctionArtListWithKeyword = artRepository.findAuctionArtListWithKeyword(keyword, sortType, pageRequest);
+        List<AuctionHistory> auctionHistoryList = auctionHistoryRepository.findAllWithFetchArt();
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllWithFetchArt();
+        List<AuctionArt> auctionArts = pagingAuctionArtListWithKeyword
                 .stream()
-                .map(basicAuctionArtResponse -> new AuctionArtResponse(
-                        getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArtResponse.getArtId()),
-                        basicAuctionArtResponse,
-                        getHashtagListByArtId(artHashtagList, basicAuctionArtResponse.getArtId())
+                .map(basicAuctionArt -> new AuctionArt(
+                        getAuctionBidCountByArtId(auctionHistoryList, basicAuctionArt.getArtId()),
+                        new BasicAuctionArtTranslator(basicAuctionArt),
+                        getHashtagListByArtId(artHashtagList, basicAuctionArt.getArtId())
                 )).collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(auctionArts, pageRequest, pagingAuctionArtListWithKeyword::getTotalElements);
     }
 
     // 키워드 기반 "일반 작품" 검색
-    public List<GeneralArtResponse> getGeneralArtListSearchByKeyword(String keyword, String sortType, Pageable pageRequest) {
-        List<LikeArt> likeArtList = likeArtRepository.findLikeArtList();
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findArtHashtagList();
-
-        return artRepository.findGeneralArtKeywordSearch(keyword, sortType, pageRequest)
+    public Page<GeneralArt> getGeneralArtListSearchByKeyword(String keyword, String sortType, Pageable pageRequest) {
+        Page<BasicGeneralArt> pagingGeneralArtListWithKeyword = artRepository.findGeneralArtListWithKeyword(keyword, sortType, pageRequest);
+        List<LikeArt> likeArtList = likeArtRepository.findAllWithFetchArt();
+        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllWithFetchArt();
+        List<GeneralArt> generalArts = pagingGeneralArtListWithKeyword
                 .stream()
-                .map(basicGeneralArtResponse -> new GeneralArtResponse(
-                        getLikeArtCountByArtId(likeArtList, basicGeneralArtResponse.getArtId()),
-                        basicGeneralArtResponse,
-                        getHashtagListByArtId(artHashtagList, basicGeneralArtResponse.getArtId())
+                .map(basicGeneralArt -> new GeneralArt(
+                        getLikeArtCountByArtId(likeArtList, basicGeneralArt.getArtId()),
+                        new BasicGeneralArtTranslator(basicGeneralArt),
+                        getHashtagListByArtId(artHashtagList, basicGeneralArt.getArtId())
                 )).collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(generalArts, pageRequest, pagingGeneralArtListWithKeyword::getTotalElements);
     }
 
-    // 작품 좋아요
     @Transactional
     public void likeArt(Long artId, Long userId) {
-        Art findArt = artRepository.findArtByArtId(artId)
+        Art findArt = artRepository.findByArtId(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
@@ -293,7 +322,6 @@ public class ArtService {
         likeArtRepository.save(LikeArt.insertLikeArt(findArt, findUser));
     }
 
-    // 작품 좋아요 취소
     @Transactional
     public void cancelArt(Long artId, Long userId) {
         Art findArt = artRepository.findById(artId)
@@ -301,7 +329,7 @@ public class ArtService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
 
-        isAlreadyCancel(findArt, findUser);
+        isAlreadyCancelMarked(findArt, findUser);
         likeArtRepository.deleteByArtAndUser(findArt.getId(), findUser.getId());
     }
 
@@ -317,7 +345,7 @@ public class ArtService {
         }
     }
 
-    private void isAlreadyCancel(Art art, User user) {
+    private void isAlreadyCancelMarked(Art art, User user) {
         if (!likeArtRepository.existsByArtAndUser(art, user)) {
             throw AnotherArtException.type(ILLEGAL_LIKE_MARKING_CANCEL);
         }
