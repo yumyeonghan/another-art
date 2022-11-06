@@ -1,5 +1,6 @@
 package com.imagine.another_arts.web.user.dto.request;
 
+import com.imagine.another_arts.domain.user.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,8 +52,8 @@ public class UserJoinRequest {
     @ApiModelProperty(value = "사용자 생년월일", required = true, example = "2022-08-22")
     private LocalDate birth;
 
-    public UserJoinRequestDto toServiceDto() {
-        return new UserJoinRequestDto(
+    public User toEntity() {
+        return User.createUser(
                 this.name,
                 this.nickname,
                 this.loginId,

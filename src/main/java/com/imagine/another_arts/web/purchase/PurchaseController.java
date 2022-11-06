@@ -3,9 +3,9 @@ package com.imagine.another_arts.web.purchase;
 import com.imagine.another_arts.domain.purchase.service.PurchaseHistoryService;
 import com.imagine.another_arts.web.purchase.dto.request.PurchaseAuctionArtRequest;
 import com.imagine.another_arts.web.purchase.dto.request.PurchaseGeneralArtRequest;
-import com.imagine.another_arts.web.purchase.dto.response.PurchaseArtResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +21,15 @@ public class PurchaseController {
 
     @PostMapping("/purchase/auction")
     @ApiOperation(value = "경매 작품 구매 API", notes = "경매 ID, 사용자 ID를 통한 낙찰된 경매 작품 구매 API")
-    public PurchaseArtResponse purchaseAuctionArt(@Valid @RequestBody PurchaseAuctionArtRequest auctionArtRequest) {
-        return new PurchaseArtResponse(purchaseHistoryService.purchaseAuctionArt(auctionArtRequest.getAuctionId(), auctionArtRequest.getUserId()));
+    public ResponseEntity<Void> purchaseAuctionArt(@Valid @RequestBody PurchaseAuctionArtRequest purchaseRequest) {
+        purchaseHistoryService.purchaseAuctionArt(purchaseRequest.getAuctionId(), purchaseRequest.getUserId());
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/purchase/general")
     @ApiOperation(value = "일반 작품 구매 API", notes = "작품 ID, 사용자 ID를 통한 일반 작품 구매 API")
-    public PurchaseArtResponse purchaseGeneralArt(@Valid @RequestBody PurchaseGeneralArtRequest generalArtRequest) {
-        return new PurchaseArtResponse(purchaseHistoryService.purchaseGeneralArt(generalArtRequest.getArtId(), generalArtRequest.getUserId()));
+    public ResponseEntity<Void> purchaseGeneralArt(@Valid @RequestBody PurchaseGeneralArtRequest purchaseRequest) {
+        purchaseHistoryService.purchaseGeneralArt(purchaseRequest.getArtId(), purchaseRequest.getUserId());
+        return ResponseEntity.noContent().build();
     }
 }

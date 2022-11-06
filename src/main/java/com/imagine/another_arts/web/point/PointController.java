@@ -20,15 +20,15 @@ public class PointController {
 
     @PostMapping("/point/charge")
     @ApiOperation(value = "포인트 충전", notes = "포인트 충전")
-    public ResponseEntity<Void> pointCharge(@Valid @RequestBody PointUseRequest pointChargeRequest) {
-        pointHistoryService.chargePoint(pointChargeRequest.getLoginId(), pointChargeRequest.getDealAmount());
+    public ResponseEntity<Void> pointCharge(@Valid @RequestBody PointUseRequest chargeRequest) {
+        pointHistoryService.chargePoint(chargeRequest.getLoginId(), chargeRequest.getDealAmount());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/point/refund")
     @ApiOperation(value = "포인트 환불", notes = "포인트 환불")
-    public ResponseEntity<Void> pointRefund(@Valid @RequestBody PointUseRequest pointRefundRequest) {
-        pointHistoryService.refundPoint(pointRefundRequest.getLoginId(), pointRefundRequest.getDealAmount());
+    public ResponseEntity<Void> pointRefund(@Valid @RequestBody PointUseRequest refundRequest) {
+        pointHistoryService.refundPoint(refundRequest.getLoginId(), refundRequest.getDealAmount());
         return ResponseEntity.noContent().build();
     }
 }
