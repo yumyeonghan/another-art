@@ -25,33 +25,39 @@ public class AuctionService {
     private final UserRepository userRepository;
 
     @Transactional
-    public synchronized void updateHighestBidDetails(Long auctionId, Long userId, Long bidPrice) {
+    public synchronized void updateHighestBidDetails(Long auctionId, Long userId, Long newBidPrice) {
         Auction currentAuction = auctionRepository.findByAuctionId(auctionId)
                 .orElseThrow(() -> AnotherArtException.type(AUCTION_NOT_FOUND));
-
-        if (currentAuction.getEndDate().isBefore(LocalDateTime.now())) {
-            throw AnotherArtException.type(CLOSED_AUCTION);
-        } else if (currentAuction.getBidPrice() >= bidPrice) {
-            throw AnotherArtException.type(BID_AMOUNT_NOT_ENOUGH);
-        }
+        validateAuctionState(currentAuction.getEndDate());
+        validateBidPriceIsAcceptable(currentAuction.getBidPrice(), newBidPrice);
 
         User currentBidUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-
-        if (currentBidUser.getAvailablePoint() < bidPrice) {
-            throw AnotherArtException.type(POINT_NOT_ENOUGH);
-        }
+        validateUserCurrentAvailablePointToParticipateAuction(currentBidUser.getAvailablePoint(), newBidPrice);
 
         Optional<User> previousBidUser = Optional.ofNullable(currentAuction.getUser());
         previousBidUser.ifPresent(users -> users.updateAvailablePoint(users.getAvailablePoint() + currentAuction.getBidPrice()));
-        currentBidUser.updateAvailablePoint(currentBidUser.getAvailablePoint() - bidPrice);
-        currentAuction.applyNewBid(currentBidUser, bidPrice);
+        currentBidUser.updateAvailablePoint(currentBidUser.getAvailablePoint() - newBidPrice);
+        currentAuction.applyNewBid(currentBidUser, newBidPrice);
 
-        auctionHistoryRepository.save(AuctionHistory.createAuctionHistory(
-                currentAuction,
-                currentAuction.getArt(),
-                currentBidUser,
-                bidPrice
-        ));
+        auctionHistoryRepository.save(AuctionHistory.createAuctionHistory(currentAuction, currentAuction.getArt(), currentBidUser, newBidPrice));
+    }
+
+    private void validateAuctionState(LocalDateTime auctionEndTime) {
+        if (auctionEndTime.isBefore(LocalDateTime.now())) {
+            throw AnotherArtException.type(CLOSED_AUCTION);
+        }
+    }
+
+    private void validateBidPriceIsAcceptable(Long currentBidPrice, Long newBidPrice) {
+        if (currentBidPrice >= newBidPrice) {
+            throw AnotherArtException.type(BID_AMOUNT_NOT_ENOUGH);
+        }
+    }
+
+    private void validateUserCurrentAvailablePointToParticipateAuction(Long currentAvailablePoint, Long newBidPrice) {
+        if (currentAvailablePoint < newBidPrice) {
+            throw AnotherArtException.type(POINT_NOT_ENOUGH);
+        }
     }
 }
