@@ -67,8 +67,7 @@ public class PurchaseHistoryService {
         applyPurchaseHistoryAndPointHistory(targetArt, purchaseUser, null);
     }
 
-    @Transactional
-    protected void applyPurchaseHistoryAndPointHistory(Art targetArt, User purchaseUser, @Nullable Auction auction) {
+    private void applyPurchaseHistoryAndPointHistory(Art targetArt, User purchaseUser, @Nullable Auction auction) {
         // PurchaseHistory
         purchaseHistoryRepository.save(createPurchaseHistory(targetArt, purchaseUser, auction));
         targetArt.changeSaleStatus(SaleStatus.SOLD_OUT);
@@ -83,8 +82,7 @@ public class PurchaseHistoryService {
                 : PurchaseHistory.createPurchaseHistoryByAuction(purchaseUser, targetArt, auction, auction.getBidPrice());
     }
 
-    @Transactional
-    protected void pointHistoryGenerateProcess(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
+    private void pointHistoryGenerateProcess(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
         // PointHistory Generate & SaveAll
         List<PointHistory> pointHistoryList = createPointHistory(targetArt, artOwner, purchaseUser, auction);
         pointHistoryRepository.saveAll(pointHistoryList);
@@ -109,8 +107,7 @@ public class PurchaseHistoryService {
         );
     }
 
-    @Transactional
-    protected void updateAvailablePoint(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
+    private void updateAvailablePoint(Art targetArt, User artOwner, User purchaseUser, @Nullable Auction auction) {
         if (Objects.isNull(auction)) {
             artOwner.updateAvailablePoint(artOwner.getAvailablePoint() + targetArt.getInitPrice());
             purchaseUser.updateAvailablePoint(purchaseUser.getAvailablePoint() - targetArt.getInitPrice());
