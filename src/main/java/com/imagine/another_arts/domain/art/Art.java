@@ -58,7 +58,7 @@ public class Art {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
-    @OneToMany(mappedBy = "art") // QueryDSL
+    @OneToMany(mappedBy = "art", cascade = {CascadeType.PERSIST}) // QueryDSL
     private List<ArtHashtag> artHashtagList = new ArrayList<>();
 
     @OneToMany(mappedBy = "art") // QueryDSL
