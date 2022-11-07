@@ -47,6 +47,15 @@ public class LikeArtQueryDslRepositoryImpl implements LikeArtQueryDslRepository 
                 .execute();
     }
 
+    @Override
+    @Transactional
+    public Long deleteInBatchByArtId(Long artId) {
+        return query
+                .delete(likeArt)
+                .where(artIdEq(artId))
+                .execute();
+    }
+
     private BooleanExpression artIdEq(Long artId) {
         if (Objects.isNull(artId)) {
             return null;

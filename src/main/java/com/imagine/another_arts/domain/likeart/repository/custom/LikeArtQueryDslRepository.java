@@ -8,4 +8,5 @@ public interface LikeArtQueryDslRepository {
     List<LikeArt> findAllWithFetchArt();
     Long getLikeArtCountByArtId(Long artId);
     Long deleteByArtAndUser(Long artId, Long userId);
+    Long deleteInBatchByArtId(Long artId);
 }

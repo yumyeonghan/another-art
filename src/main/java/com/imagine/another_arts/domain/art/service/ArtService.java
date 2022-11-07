@@ -67,23 +67,16 @@ public class ArtService {
             UploadArtImageInfo fileInfo = getUploadArtImageInfo(uploadFile);
 
             Art art = Art.createArt(
-                    artOwner,
-                    registerRequest.getName(),
-                    registerRequest.getDescription(),
-                    registerRequest.getInitPrice(),
-                    fileInfo.getUploadName(),
-                    fileInfo.getStoregeName()
+                    artOwner, registerRequest.getName(), registerRequest.getDescription(), registerRequest.getInitPrice(),
+                    fileInfo.getUploadName(), fileInfo.getStoregeName()
             );
             art.chooseSaleType(registerRequest.getSaleType());
+            insertHashtagList(registerRequest.getHashtagList(), art); // cascade persist
             artRepository.save(art);
-            insertHashtagList(registerRequest.getHashtagList(), art);
 
             if (registerRequest.getSaleType().equals("auction")) {
                 Auction auction = Auction.createAuction(
-                        registerRequest.getInitPrice(),
-                        registerRequest.getStartDate(),
-                        registerRequest.getEndDate(),
-                        art
+                        registerRequest.getInitPrice(), registerRequest.getStartDate(), registerRequest.getEndDate(), art
                 );
                 auctionRepository.save(auction);
             }
@@ -113,15 +106,12 @@ public class ArtService {
     }
 
     // 작품 등록간 해시태그 등록
-    @Transactional
-    protected void insertHashtagList(List<String> hashtagNameList, Art saveArt) {
+    private void insertHashtagList(List<String> hashtagNameList, Art art) {
         if (Objects.isNull(hashtagNameList) || hashtagNameList.size() == 0) {
             return;
         }
 
-        List<ArtHashtag> artHashtagList = new ArrayList<>();
-        hashtagNameList.forEach(name -> artHashtagList.add(ArtHashtag.insertArtHashtag(saveArt, name)));
-        artHashtagRepository.saveAll(artHashtagList);
+        hashtagNameList.forEach(hashtag -> art.getArtHashtagList().add(ArtHashtag.insertArtHashtag(art, hashtag)));
     }
 
     // 작품 단건 조회
@@ -180,9 +170,9 @@ public class ArtService {
             auctionRepository.delete(auction);
         }
 
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllByArtId(artId);
-        artHashtagRepository.deleteAllInBatch(artHashtagList);
-        artRepository.delete(findArt);
+        artHashtagRepository.deleteInBatchByArtId(artId); // 1) delete artHashtag
+        likeArtRepository.deleteInBatchByArtId(artId); // 2) delete likeARt
+        artRepository.delete(findArt); // 3) delete art
     }
 
     private void hasPurchaseHistory(Art art) {

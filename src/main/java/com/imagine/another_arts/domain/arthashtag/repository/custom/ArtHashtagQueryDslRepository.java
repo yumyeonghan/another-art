@@ -9,5 +9,6 @@ public interface ArtHashtagQueryDslRepository {
     List<String> findHashtagListByArtId(Long artId);
     List<ArtHashtag> findAllWithFetchArt();
     List<ArtHashtag> findAllByArtId(Long artId);
-    Long deleteByArtIdAndHashtagNameIn(Long art_id, Collection<String> hashtagName);
+    Long deleteByArtIdAndHashtagNameIn(Long artId, Collection<String> hashtagName);
+    Long deleteInBatchByArtId(Long artId);
 }
