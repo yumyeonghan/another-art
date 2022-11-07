@@ -170,9 +170,9 @@ public class ArtService {
             auctionRepository.delete(auction);
         }
 
-        List<ArtHashtag> artHashtagList = artHashtagRepository.findAllByArtId(artId);
-        artHashtagRepository.deleteAllInBatch(artHashtagList);
-        artRepository.delete(findArt);
+        artHashtagRepository.deleteInBatchByArtId(artId); // 1) delete artHashtag
+        likeArtRepository.deleteInBatchByArtId(artId); // 2) delete likeARt
+        artRepository.delete(findArt); // 3) delete art
     }
 
     private void hasPurchaseHistory(Art art) {
