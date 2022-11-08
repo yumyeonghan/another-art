@@ -188,7 +188,7 @@ export default {
             console.log("then " + JSON.stringify(res.data));
             this.$store.commit("setSearchType", this.keywordSearchData.type);
             this.$store.commit("setSearchData", JSON.stringify(res.data));
-            this.$router.push(`/searchResults?${this.keywordSearchData.keyword}`);
+            this.$router.push(`/searchResults?keyword=${this.keywordSearchData.keyword}`);
           })
           .catch((res) => {
             console.log("catch " + JSON.stringify(res));
@@ -201,7 +201,7 @@ export default {
             console.log("then " + JSON.stringify(res.data));
             this.$store.commit("setSearchType", this.hashtagSearchData.type);
             this.$store.commit("setSearchData", JSON.stringify(res.data));
-            this.$router.push(`/searchResults?${this.hashtagSearchData.hashtag}`);
+            this.$router.push(`/searchResults?hashtag=${this.hashtagSearchData.hashtag}`);
           })
           .catch((res) => {
             console.log("catch " + JSON.stringify(res));
