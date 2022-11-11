@@ -1,5 +1,6 @@
 package com.imagine.another_arts.domain.user.service;
 
+import com.imagine.another_arts.common.crypto.PasswordEncoder;
 import com.imagine.another_arts.domain.login.dto.UserSessionDto;
 import com.imagine.another_arts.domain.point.PointHistory;
 import com.imagine.another_arts.domain.point.repository.PointHistoryRepository;
@@ -23,16 +24,22 @@ import static com.imagine.another_arts.exception.AnotherArtErrorCode.*;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
 
     @Transactional
     public Long saveUser(User user) {
+        encryptUserPassword(user);
         User saveUser = userRepository.save(user);
         pointHistoryRepository.save(PointHistory.createPointHistory(user));
         return saveUser.getId();
     }
 
+    private void encryptUserPassword(User user) {
+        String encryptPassword = passwordEncoder.encryptPassword(user.getLoginPassword());
+        user.encryptPassword(encryptPassword);
+    }
 
     @Transactional
     public void editUser(Long userId, UserEditRequestDto userEditRequest) {

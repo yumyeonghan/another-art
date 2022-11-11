@@ -64,6 +64,11 @@ public class User {
     }
 
     //==관련 비즈니스 로직 작성 공간==//
+    // 비밀번호 암호화
+    public void encryptPassword(String encryptPassword) {
+        this.loginPassword = encryptPassword;
+    }
+
     // 이름 변경
     public void changeName(String name){
         this.name = name;

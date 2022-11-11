@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserQueryDslR
     Optional<User> findByEmailAndName(String email, String name);
 
     // [로그인 아이디, 이름, 이메일]로 User 찾기
-    Optional<User> findByLoginIdAndNameAndEmail(String loginId, String name, String email);
+    boolean existsByLoginIdAndNameAndEmail(String loginId, String name, String email);
 
     // 회원가입 - 닉네임 중복 체크
     boolean existsByNickname(String nickName);

@@ -13,10 +13,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class PointUseRequest {
     @NotBlank(message = "사용자 로그인 아이디는 필수입니다")
-    @ApiModelProperty(value = "사용자 로그인 아이디", required = true)
+    @ApiModelProperty(value = "사용자 로그인 아이디", example = "user1", required = true)
     private String loginId;
 
     @NotNull(message = "충전/환불 금액은 필수입니다")
-    @ApiModelProperty(value = "충전/환불 금액", required = true)
+    @ApiModelProperty(value = "충전/환불 금액", example = "5000", required = true)
     private Long dealAmount;
 }

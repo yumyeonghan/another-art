@@ -95,7 +95,7 @@ public class ArtController {
     public <T extends AbstractArt> SortedArtResponse<List<T>> hashtagSearchArtList(@Valid @RequestBody HashtagSearchArtRequest searchRequest) {
         PageRequest pageRequest = PageRequest.of(searchRequest.getPage() - 1, SLICE_PER_PAGE);
 
-        if (searchRequest.getType().equals("auction")) {
+        if (searchRequest.getType().equalsIgnoreCase("auction")) {
             Page<AuctionArt> auctionArtListSearchByHashtag = artService.getAuctionArtListSearchByHashtag(searchRequest.getHashtag(), searchRequest.getSort(), pageRequest);
             return new SortedArtResponse<>(
                     auctionArtListSearchByHashtag.getContent().size(),
@@ -117,7 +117,7 @@ public class ArtController {
     public <T extends AbstractArt> SortedArtResponse<List<T>> keywordSearchArtList(@Valid @RequestBody KeywordSearchArtRequest searchRequest) {
         PageRequest pageRequest = PageRequest.of(searchRequest.getPage() - 1, SLICE_PER_PAGE);
 
-        if (searchRequest.getType().equals("auction")) {
+        if (searchRequest.getType().equalsIgnoreCase("auction")) {
             Page<AuctionArt> auctionArtListSearchByKeyword = artService.getAuctionArtListSearchByKeyword(searchRequest.getKeyword(), searchRequest.getSort(), pageRequest);
             return new SortedArtResponse<>(
                     auctionArtListSearchByKeyword.getContent().size(),
@@ -140,7 +140,7 @@ public class ArtController {
         String resource = duplicateCheckRequest.getResource();
         String input = duplicateCheckRequest.getInput();
 
-        if (resource.equals("name")) {
+        if (resource.equalsIgnoreCase("name")) {
             artService.checkDuplicateArtName(input);
             return ResponseEntity.noContent().build();
         } else {

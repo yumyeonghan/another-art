@@ -16,40 +16,40 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserJoinRequest {
     @NotBlank(message = "이름은 필수입니다")
-    @ApiModelProperty(value = "사용자 이름", required = true)
+    @ApiModelProperty(value = "사용자 이름", example = "test", required = true)
     private String name;
 
     @NotBlank(message = "닉네임은 필수입니다")
-    @ApiModelProperty(value = "사용자 닉네임 [Unique Key]", required = true)
+    @ApiModelProperty(value = "사용자 닉네임 [Unique Key]", example = "test", required = true)
     private String nickname;
 
     @NotBlank(message = "아이디는 필수입니다")
-    @ApiModelProperty(value = "로그인 아이디 [Unique Key]", required = true)
+    @ApiModelProperty(value = "로그인 아이디 [Unique Key]", example = "test", required = true)
     private String loginId;
 
     @NotBlank(message = "비밀번호는 필수입니다")
-    @ApiModelProperty(value = "로그인 비밀번호", required = true)
+    @ApiModelProperty(value = "로그인 비밀번호", example = "1234", required = true)
     private String loginPassword;
 
     @NotBlank(message = "이메일은 필수입니다")
-    @ApiModelProperty(value = "사용자 이메일 [Unique Key]", required = true)
+    @ApiModelProperty(value = "사용자 이메일 [Unique Key]", example = "test@gmail.com", required = true)
     private String email;
 
     @NotBlank(message = "학교는 필수입니다")
-    @ApiModelProperty(value = "사용자 재학중인 학교명", required = true)
+    @ApiModelProperty(value = "사용자 재학중인 학교명", example = "경기대학교", required = true)
     private String schoolName;
 
     @NotBlank(message = "전화번호는 필수입니다")
-    @ApiModelProperty(value = "사용자 전화번호 [Unique Key]", required = true)
+    @ApiModelProperty(value = "사용자 전화번호 [Unique Key]", example = "01099999999", required = true)
     private String phoneNumber;
 
     @NotBlank(message = "주소는 필수입니다")
-    @ApiModelProperty(value = "사용자 주소", required = true)
+    @ApiModelProperty(value = "사용자 주소", example = "수원", required = true)
     private String address;
 
     @NotNull(message = "생년월일은 필수입니다")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @ApiModelProperty(value = "사용자 생년월일", required = true, example = "2022-08-22")
+    @ApiModelProperty(value = "사용자 생년월일", example = "2022-11-11", required = true)
     private LocalDate birth;
 
     public User toEntity() {

@@ -12,14 +12,14 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class AuctionBidRequest {
     @NotNull(message = "경매 아이디는 필수입니다")
-    @ApiModelProperty(value = "경매 아이디", required = true, example = "1")
+    @ApiModelProperty(value = "경매 아이디", example = "1", required = true)
     private Long auctionId;
 
     @NotNull(message = "사용자 아이디는 필수입니다")
-    @ApiModelProperty(value = "사용자 아이디", required = true, example = "1")
+    @ApiModelProperty(value = "사용자 아이디", example = "1", required = true)
     private Long userId;
 
     @NotNull(message = "입찰가는 필수입니다")
-    @ApiModelProperty(value = "입찰가", required = true, example = "1000")
+    @ApiModelProperty(value = "입찰가", example = "100000", required = true)
     private Long bidPrice;
 }
