@@ -16,7 +16,6 @@ public class UserSessionDto {
     private String name;
     private String nickname;
     private String loginId;
-    private String loginPassword;
     private String email;
     private String schoolName;
     private String phoneNumber;
@@ -28,7 +27,6 @@ public class UserSessionDto {
         this.name = user.getName();
         this.nickname = user.getNickname();
         this.loginId = user.getLoginId();
-        this.loginPassword = user.getLoginPassword();
         this.email = user.getEmail();
         this.schoolName = user.getSchoolName();
         this.phoneNumber = user.getPhoneNumber();
