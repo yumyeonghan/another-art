@@ -7,7 +7,6 @@ import com.imagine.another_arts.web.login.dto.request.FindPasswordRequest;
 import com.imagine.another_arts.web.login.dto.request.LoginRequest;
 import com.imagine.another_arts.web.login.dto.request.ResetPasswordRequest;
 import com.imagine.another_arts.web.login.dto.response.FindIdResponse;
-import com.imagine.another_arts.web.login.dto.response.FindPasswordResponse;
 import com.imagine.another_arts.web.login.dto.response.LoginResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -71,19 +70,10 @@ public class LoginController {
     }
 
     @PostMapping(value = "/find/password")
-    @ApiOperation(value = "비밀번호 찾기 API", notes = "로그인 아이디, 이름, 이메일을 통해서 사용자의 비밀번호 찾기")
-    public FindPasswordResponse findPassword(@Valid @RequestBody FindPasswordRequest findPasswordRequest) {
-        UserSessionDto userSession = loginService.findPassword(
-                findPasswordRequest.getLoginId(),
-                findPasswordRequest.getName(),
-                findPasswordRequest.getEmail()
-        );
-
-        return new FindPasswordResponse(
-                userSession.getId(),
-                userSession.getLoginId(),
-                userSession.getLoginPassword()
-        );
+    @ApiOperation(value = "비밀번호 찾기 과정에서 사용자 인증 API", notes = "로그인 아이디, 이름, 이메일을 통해서 사용자 정보를 확인하고 비밀번호 재설정 페이지로 이동하기 위해서 필요한 API")
+    public ResponseEntity<Void> findPassword(@Valid @RequestBody FindPasswordRequest findPasswordRequest) {
+        loginService.userAuthenticationForFindPassword(findPasswordRequest.getLoginId(), findPasswordRequest.getName(), findPasswordRequest.getEmail());
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/reset/password")

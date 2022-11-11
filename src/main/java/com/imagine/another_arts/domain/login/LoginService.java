@@ -41,13 +41,11 @@ public class LoginService {
     }
 
     // [로그인 아이디, 이름, 이메일]로 비밀번호 찾기
-    public UserSessionDto findPassword(String loginId, String name, String email){
-        User findUser = userRepository.findByLoginIdAndNameAndEmail(loginId, name, email)
-                .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-
-        return new UserSessionDto(findUser);
+    public void userAuthenticationForFindPassword(String loginId, String name, String email){
+        if (userRepository.existsByLoginIdAndNameAndEmail(loginId, name, email)) {
+            throw AnotherArtException.type(USER_NOT_FOUND);
+        }
     }
-
 
     // 비밀번호 재설정
     @Transactional
