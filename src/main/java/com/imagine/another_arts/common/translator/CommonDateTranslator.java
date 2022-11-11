@@ -1,4 +1,4 @@
-package com.imagine.another_arts.common;
+package com.imagine.another_arts.common.translator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

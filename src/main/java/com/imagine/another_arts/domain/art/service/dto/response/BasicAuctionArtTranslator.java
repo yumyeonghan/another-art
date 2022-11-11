@@ -1,6 +1,6 @@
 package com.imagine.another_arts.domain.art.service.dto.response;
 
-import com.imagine.another_arts.common.CommonDateTranslator;
+import com.imagine.another_arts.common.translator.CommonDateTranslator;
 import com.imagine.another_arts.domain.art.repository.dto.response.BasicAuctionArt;
 import lombok.AccessLevel;
 import lombok.Getter;
