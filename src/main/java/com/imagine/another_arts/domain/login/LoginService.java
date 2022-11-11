@@ -42,7 +42,7 @@ public class LoginService {
 
     // [로그인 아이디, 이름, 이메일]로 비밀번호 찾기
     public void userAuthenticationForFindPassword(String loginId, String name, String email){
-        if (userRepository.existsByLoginIdAndNameAndEmail(loginId, name, email)) {
+        if (!userRepository.existsByLoginIdAndNameAndEmail(loginId, name, email)) {
             throw AnotherArtException.type(USER_NOT_FOUND);
         }
     }
