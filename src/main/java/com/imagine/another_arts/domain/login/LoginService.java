@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.imagine.another_arts.exception.AnotherArtErrorCode.USER_NOT_FOUND;
-import static com.imagine.another_arts.exception.AnotherArtErrorCode.WRONG_PASSWORD;
+import static com.imagine.another_arts.exception.AnotherArtErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,6 +52,13 @@ public class LoginService {
     public void resetPassword(String loginId, String changeLoginPassword){
         User findUser = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-        findUser.changePassword(changeLoginPassword);
+        isSamePasswordAsBefore(findUser.getLoginPassword(), changeLoginPassword);
+        findUser.changePassword(passwordEncoder.encryptPassword(changeLoginPassword));
+    }
+
+    private void isSamePasswordAsBefore(String originPassword, String changePassword) {
+        if (passwordEncoder.isMatch(changePassword, originPassword)) {
+            throw AnotherArtException.type(SAME_PASSWORD_AS_BEFORE);
+        }
     }
 }

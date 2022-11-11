@@ -15,6 +15,7 @@ public enum AnotherArtErrorCode {
     DUPLICATE_USER_PHONENUMBER(HttpStatus.CONFLICT, "중복된 전화번호입니다"),
     ILLEGAL_USER_API_REQUEST(HttpStatus.BAD_REQUEST, "타인의 정보는 요청할 수 없습니다"),
     INELIGIBLE_USER_PURCHASE(HttpStatus.FORBIDDEN, "구매 자격이 없는 사용자입니다"),
+    SAME_PASSWORD_AS_BEFORE(HttpStatus.CONFLICT, "이전에 사용하던 비밀번호로 변경할 수 없습니다"),
 
     // Art
     ART_NOT_FOUND(HttpStatus.NOT_FOUND, "작품 정보가 존재하지 않습니다"),
