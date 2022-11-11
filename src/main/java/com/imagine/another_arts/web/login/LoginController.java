@@ -37,13 +37,7 @@ public class LoginController {
         UserSessionDto userSession = loginService.login(loginRequest.getLoginId(), loginRequest.getLoginPassword());
         HttpSession session = request.getSession();
         session.setAttribute(ANOTHER_ART_SESSION_KEY, userSession);
-
-        return new LoginResponse(
-                userSession.getId(),
-                userSession.getName(),
-                userSession.getNickname(),
-                userSession.getLoginId()
-        );
+        return new LoginResponse(userSession.getId(), userSession.getName(), userSession.getNickname(), userSession.getLoginId());
     }
 
     @PostMapping("/logout")

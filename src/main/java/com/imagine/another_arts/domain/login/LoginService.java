@@ -1,5 +1,6 @@
 package com.imagine.another_arts.domain.login;
 
+import com.imagine.another_arts.common.crypto.PasswordEncoder;
 import com.imagine.another_arts.domain.login.dto.UserSessionDto;
 import com.imagine.another_arts.domain.user.User;
 import com.imagine.another_arts.domain.user.repository.UserRepository;
@@ -15,19 +16,19 @@ import static com.imagine.another_arts.exception.AnotherArtErrorCode.WRONG_PASSW
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LoginService {
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     // 로그인
     public UserSessionDto login(String loginId, String loginPassword) {
         User findUser = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-
         isCorrectPassword(findUser, loginPassword);
         return new UserSessionDto(findUser);
     }
 
     private void isCorrectPassword(User findUser, String loginPassword) {
-        if (!findUser.getLoginPassword().equals(loginPassword)) {
+        if (!passwordEncoder.isMatch(loginPassword, findUser.getLoginPassword())) {
             throw AnotherArtException.type(WRONG_PASSWORD);
         }
     }
