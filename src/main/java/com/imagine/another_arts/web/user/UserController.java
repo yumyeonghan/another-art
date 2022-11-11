@@ -57,19 +57,15 @@ public class UserController {
             case "nickname":
                 userService.hasDuplicateNickname(input);
                 return ResponseEntity.noContent().build();
-
             case "loginId":
                 userService.hasDuplicateLoginId(input);
                 return ResponseEntity.noContent().build();
-
             case "phoneNumber":
                 userService.hasDuplicatePhoneNumber(input);
                 return ResponseEntity.noContent().build();
-
             case "email":
                 userService.hasDuplicateEmail(input);
                 return ResponseEntity.noContent().build();
-
             default:
                 throw AnotherArtException.type(ILLEGAL_URL_REQUEST);
         }

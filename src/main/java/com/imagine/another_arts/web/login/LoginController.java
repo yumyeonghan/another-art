@@ -56,11 +56,7 @@ public class LoginController {
     @ApiOperation(value = "아이디 찾기 API", notes = "이름, 이메일을 통해서 사용자의 아이디 찾기")
     public FindIdResponse findId(@Valid @RequestBody FindIdRequest findIdRequest) {
         UserSessionDto userSession = loginService.findId(findIdRequest.getName(), findIdRequest.getEmail());
-
-        return new FindIdResponse(
-                userSession.getId(),
-                userSession.getLoginId()
-        );
+        return new FindIdResponse(userSession.getId(), userSession.getLoginId());
     }
 
     @PostMapping(value = "/find/password")

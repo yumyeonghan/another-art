@@ -36,7 +36,6 @@ public class LoginService {
     public UserSessionDto findId(String name, String email){
         User findUser = userRepository.findByEmailAndName(email, name)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-
         return new UserSessionDto(findUser);
     }
 
