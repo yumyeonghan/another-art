@@ -14,10 +14,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class MainArtSortRequest {
     @NotBlank(message = "정렬 기준은 필수입니다")
-    @ApiModelProperty(value = "정렬 기준 [date, rdate, price, rprice, count, rcount]", required = true, example = "date")
+    @ApiModelProperty(value = "정렬 기준 [date, rdate, price, rprice, count, rcount]", example = "date", required = true)
     private String sort;
 
     @NotNull(message = "현재 페이지 번호는 필수입니다")
-    @ApiModelProperty(value = "현재 페이지 번호", required = true, example = "1")
+    @ApiModelProperty(value = "현재 페이지 번호", example = "1", required = true)
     private Integer page;
 }

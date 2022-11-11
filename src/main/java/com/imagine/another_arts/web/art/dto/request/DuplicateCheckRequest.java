@@ -12,10 +12,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class DuplicateCheckRequest {
     @NotBlank(message = "체크할 조건은 필수입니다")
-    @ApiModelProperty(value = "중복 체크할 자원 [name]")
+    @ApiModelProperty(value = "중복 체크할 자원 [name]", example = "name", required = true)
     private String resource;
 
     @NotBlank(message = "체크할 조건의 값은 필수입니다")
-    @ApiModelProperty(value = "중복 체크할 자원의 값")
+    @ApiModelProperty(value = "중복 체크할 자원의 값", example = "art1", required = true)
     private String input;
 }

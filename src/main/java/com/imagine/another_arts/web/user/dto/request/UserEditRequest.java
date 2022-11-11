@@ -10,19 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEditRequest {
-    @ApiModelProperty(value = "사용자 이름")
+    @ApiModelProperty(value = "사용자 이름", example = "name")
     private String name;
 
-    @ApiModelProperty(value = "사용자 닉네임")
+    @ApiModelProperty(value = "사용자 닉네임", example = "nickname")
     private String nickname;
 
-    @ApiModelProperty(value = "사용자 재학중인 학교명")
+    @ApiModelProperty(value = "사용자 재학중인 학교명", example = "경기대학교")
     private String schoolName;
 
-    @ApiModelProperty(value = "사용자 전화번호")
+    @ApiModelProperty(value = "사용자 전화번호", example = "01099999999")
     private String phoneNumber;
 
-    @ApiModelProperty(value = "사용자 주소")
+    @ApiModelProperty(value = "사용자 주소", example = "수원")
     private String address;
 
     public UserEditRequestDto toServiceDto() {

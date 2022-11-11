@@ -12,10 +12,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class LoginRequest {
     @NotBlank(message = "아이디는 필수입니다")
-    @ApiModelProperty(value = "로그인 아이디", required = true)
+    @ApiModelProperty(value = "로그인 아이디", example = "user1", required = true)
     private String loginId;
 
     @NotBlank(message = "비밀번호는 필수입니다")
-    @ApiModelProperty(value = "로그인 비밀번호", required = true)
+    @ApiModelProperty(value = "로그인 비밀번호", example = "1234", required = true)
     private String loginPassword;
 }
