@@ -139,7 +139,7 @@ export default {
     clickrRD(){
       this.scrollCheck = 0;
       this.artRequest.sort = 'rdate';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,scroll:this.scroll}})
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.page}})
       console.log(this.artRequest);
       this.fetchData();
 
@@ -147,7 +147,7 @@ export default {
     clickBP(){
       this.scrollCheck = 0;
       this.artRequest.sort = 'price';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, page:this.page}})
       console.log(this.artRequest);
       this.fetchData();
 
@@ -155,7 +155,7 @@ export default {
     clickrBP(){
       this.scrollCheck = 0;
       this.artRequest.sort = 'rprice';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, page:this.page}})
       console.log(this.artRequest);
       this.fetchData();
 
@@ -163,14 +163,14 @@ export default {
     clickBC(){
       this.scrollCheck = 0;
       this.artRequest.sort = 'count';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.page}})
       console.log(this.artRequest);
       this.fetchData();
     },
     clickrBC(){
       this.scrollCheck = 0;
       this.artRequest.sort = 'rcount';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, page:this.page}})
       console.log(this.artRequest);
       this.fetchData();
     },
