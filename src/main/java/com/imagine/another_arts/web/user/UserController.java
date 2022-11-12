@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Objects;
@@ -80,12 +81,12 @@ public class UserController {
     @GetMapping("/session-check")
     @ApiOperation(value = "사용자 세션 체크 API", notes = "Request를 보낸 사용자가 Session을 보유하고 있는지 체크하는 API")
     public UserSessionDto sessionCheck(HttpServletRequest request) {
-        UserSessionDto currentUserSession = (UserSessionDto) request.getSession(false).getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
+        HttpSession session = request.getSession(false);
 
-        if (Objects.isNull(currentUserSession)) {
+        if (Objects.isNull(session) || Objects.isNull(session.getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY))) {
             throw AnotherArtException.type(AUTHENTICATION_USER);
         }
 
-        return currentUserSession;
+        return (UserSessionDto) session.getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
     }
 }

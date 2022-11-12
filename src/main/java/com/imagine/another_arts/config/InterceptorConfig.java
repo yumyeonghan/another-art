@@ -9,12 +9,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        WebMvcConfigurer.super.addInterceptors(registry);
         registry.addInterceptor(new RequestInterceptor())
                 .order(1)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns(
-                        "/api/user", "/api/login", "/api/find/id", "/api/find/password", "/api/user/duplicate-check",
-                        "/api/main/arts", "/api/keyword/arts", "/api/hashtag/arts", "/api/session-check");
+                        "/api/find/**", "/api/reset/password", "/api/login" // LoginController
+                        , "/api/session-check", "/api/user/duplicate-check" // UserController
+                        , "/api/main/arts", "/api/hashtag/arts", "/api/keyword/arts" // ArtController
+                );
     }
 }
