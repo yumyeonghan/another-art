@@ -1,26 +1,54 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<div>
+  <div class="d-flex justify-content-center">
+    <div>
+      <RegisterModals></RegisterModals>
+      <Navbar></Navbar>
+      <p style="height: 100px;">hi
+      </p>
+      <!-- <div class="btn-group">
+        <button @click="$router.push('/');" class="btn btn-outline-dark">Home</button>
+        <button @click="$router.push('/createAccount/termsOfService')"
+          class="btn btn-outline-dark">CreateAccount</button>
+        <button @click="$router.push('/artworkRegister')" class="btn btn-outline-dark">ArtworkRegister</button>
+        <button @click="$router.push('/idFind')" class="btn btn-outline-dark">IdFind</button>
+        <button @click="$router.push('/passwordFind')" class="btn btn-outline-dark">PasswordFind</button>
+        <button @click="$router.push('/userPointCharge')" class="btn btn-outline-dark">UserPointCharge</button>
+        <button @click="$router.push('/userPointRefund')" class="btn btn-outline-dark">UserPointRefund</button>
+      </div> -->
+      
+      <router-view :key="$route.fullPath" />
+      <!-- <router-view /> -->
+      
+    </div>
+  </div>
+  <Footer></Footer>
+</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import RegisterModals from './components/RegisterModals.vue'
+import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      page: 1,
+    }
+  },
+  methods: {
+  },
   components: {
-    HelloWorld
-  }
+    RegisterModals,
+    Navbar,
+    Footer
+}
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
 }
 </style>
