@@ -5,6 +5,7 @@ import com.imagine.another_arts.exception.ErrorResponse;
 import com.imagine.another_arts.web.SessionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,10 @@ public class RequestInterceptor implements HandlerInterceptor{
 
         HttpSession session = request.getSession(false);
         if (Objects.isNull(session) || Objects.isNull(session.getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY))) {
+            if (Objects.equals(request.getMethod(), "GET") && PatternMatchUtils.simpleMatch("/api/art/**", request.getRequestURI())) {
+                return true;
+            }
+
             log.info("미인증 사용자 요청");
             String errorResponseToJSON = objectMapper.writeValueAsString(ErrorResponse.of(AUTHENTICATION_USER));
 
