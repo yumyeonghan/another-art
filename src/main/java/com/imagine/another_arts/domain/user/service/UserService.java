@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 import static com.imagine.another_arts.exception.AnotherArtErrorCode.*;
@@ -106,7 +107,13 @@ public class UserService {
     }
 
     public MyPageUserResponse getUserInformation(HttpServletRequest request, Long userId) {
-        UserSessionDto currentUserSession = getCurrentUserSession(request);
+        HttpSession session = request.getSession(false);
+
+        if (Objects.isNull(session) || Objects.isNull(session.getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY))) {
+            throw AnotherArtException.type(AUTHENTICATION_USER);
+        }
+
+        UserSessionDto currentUserSession = (UserSessionDto) session.getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
         if (!Objects.equals(currentUserSession.getId(), userId)) {
             throw AnotherArtException.type(ILLEGAL_USER_API_REQUEST);
         }
@@ -116,9 +123,5 @@ public class UserService {
         Long currentUserTotalPoint = pointHistoryRepository.findLatestPointByUserId(userId);
 
         return new MyPageUserResponse(findUser, currentUserTotalPoint);
-    }
-
-    private UserSessionDto getCurrentUserSession(HttpServletRequest request) {
-        return (UserSessionDto) request.getSession(false).getAttribute(SessionFactory.ANOTHER_ART_SESSION_KEY);
     }
 }
