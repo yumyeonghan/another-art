@@ -136,23 +136,43 @@ export default {
       this.$router.push(`/vue?page=${this.artRequest.page}`);
       this.scrollToTop();
     },
-    clickRD() {
-      this.$router.push({ Path: '/', query: { sort: 'date', page: this.page } })
+    clickrRD(){
+      this.scrollCheck = 0;
+      this.artRequest.sort = 'rdate';
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,scroll:this.scroll}})
+      console.log(this.artRequest);
+      this.fetchData();
+
     },
-    clickrRD() {
-      this.$router.push({ Path: '/', query: { sort: 'rdate', page: this.page } })
+    clickBP(){
+      this.scrollCheck = 0;
+      this.artRequest.sort = 'price';
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      console.log(this.artRequest);
+      this.fetchData();
+
     },
-    clickBP() {
-      this.$router.push({ Path: '/', query: { sort: 'price', page: this.page } })
+    clickrBP(){
+      this.scrollCheck = 0;
+      this.artRequest.sort = 'rprice';
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      console.log(this.artRequest);
+      this.fetchData();
+
     },
-    clickrBP() {
-      this.$router.push({ Path: '/', query: { sort: 'rprice', page: this.page } })
+    clickBC(){
+      this.scrollCheck = 0;
+      this.artRequest.sort = 'count';
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      console.log(this.artRequest);
+      this.fetchData();
     },
-    clickBC() {
-      this.$router.push({ Path: '/', query: { sort: 'count', page: this.page } })
-    },
-    clickrBC() {
-      this.$router.push({ Path: '/', query: { sort: 'rcount', page: this.page } })
+    clickrBC(){
+      this.scrollCheck = 0;
+      this.artRequest.sort = 'rcount';
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, scroll:this.scroll}})
+      console.log(this.artRequest);
+      this.fetchData();
     },
   }
 }
