@@ -60,8 +60,7 @@
 
                         <div class="row g-3 text-center">
                             <button type="button" @click="requestPay"
-                                class="btn btn-lg btn-outline-dark col-md-6 offset-md-3 p-2 fs-5"
-                                style="background-color: #3181F6; color: white; border-radius: 9px; border-color: #3181F6;">충전</button>
+                                class="btn btn-lg btn-outline-primary col-md-6 offset-md-3 p-2 fs-5">충전</button>
                         </div>
                         <!-- <div class="text-center">
                             <button type="button" @click="cancelPay" class="btn btn-outline-dark">cancelPay</button>

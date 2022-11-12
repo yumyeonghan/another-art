@@ -3,8 +3,8 @@
     <!--정렬-->
     <div>
     </div>
-    <div class="d-flex justify-content-center align-items-center flex-row">
-      <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">정렬
+    <div class="clearfix">
+      <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split float-end" style="margin: 3% 2% -2% 0;" data-bs-toggle="dropdown">정렬
         기준</button>
       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
         <li>

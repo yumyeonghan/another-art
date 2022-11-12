@@ -6,6 +6,7 @@ import ArtworkRegister from './views/art/ArtworkRegister.vue'
 import CreateAccount from './views/user/CreateAccount.vue'
 import IdFind from './views/login/IdFind.vue'
 import PasswordFind from './views/login/PasswordFind.vue'
+import PasswordReset from './views/login/PasswordReset.vue'
 import UserPointCharge from './views/myPage/UserPointCharge.vue'
 import UserPointRefund from './views/myPage/UserPointRefund.vue'
 import ArtworkPurchase from './views/art/ArtworkPurchase.vue'
@@ -62,6 +63,10 @@ const routes = [
   {
     path: "/passwordFind",
     component: PasswordFind,
+  },
+  {
+    path: "/passwordReset",
+    component: PasswordReset,
   },
   {
     path: "/userPointCharge",

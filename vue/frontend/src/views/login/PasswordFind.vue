@@ -3,7 +3,7 @@
     <div class="container px-4s my-5">
 
       <!-- passwordFindModal -->
-      <div class="modal fade" id="passwordFindModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      <!-- <div class="modal fade" id="passwordFindModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!--모달-->
       <!-- <div class="black-bg" v-show="isShow">
@@ -103,9 +103,10 @@ export default {
         .then((res) => {
           this.result = { ...res.data };
           console.log(JSON.stringify(res.data));
-          this.isShow = true;
+          this.$router.push(`/passwordReset?loginId=${this.passwordFindForm.loginId}`);
         }).catch((res) => {
           console.log("catch " + res.data);
+          alert('정보가 일치하지 않습니다');
         })
     },
     modalControl(boolean) {

@@ -32,18 +32,18 @@
             <!-- src="https://via.placeholder.com/470x305" -->
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12 offset-md-1 mt-2">
-            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
-                style="width: 23.3%; height: 100px;"></a>
-            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
-                style="width: 23.3%; height: 100px;"></a>
-            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
-                style="width: 23.3%; height: 100px;"></a>
-            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
-                style="width: 23.3%; height: 100px;"></a>
-          </div>
-        </div>
+<!--        <div class="row">-->
+<!--          <div class="col-md-12 offset-md-1 mt-2">-->
+<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+<!--                style="width: 23.3%; height: 100px;"></a>-->
+<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+<!--                style="width: 23.3%; height: 100px;"></a>-->
+<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+<!--                style="width: 23.3%; height: 100px;"></a>-->
+<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+<!--                style="width: 23.3%; height: 100px;"></a>-->
+<!--          </div>-->
+<!--        </div>-->
 
       </div>
 
@@ -51,31 +51,7 @@
         <div class="s_product_text">
           <div class="row g-3 mt-2">
             <div class="mb-2">
-              <h3>{{ art.auctionArt.artName }}</h3>
-            </div>
-
-            <div class="mb-2">
-              <h3> 시작 경매가: {{ art.auctionArt.artInitPrice }}원<br>현재 경매가: {{ art.auctionArt.highestBidPrice }}원 </h3>
-            </div>
-
-            <hr>
-
-            <div class="mb-2">
-              <ul class="list-group list-group-horizontal">
-                <li class="list-group-item" style="border: none;">
-                  <font-awesome-icon icon="fa-solid fa-gavel" class="mx-1" />
-                  <a> {{ art.auctionArtBidCount }}</a>
-                </li>
-                <li class="list-group-item" style="border: none;">
-                  <font-awesome-icon icon="fa-solid fa-eye" class="mx-1" />
-                  <a> 46 </a>
-                </li>
-                <li class="list-group-item" style="border: none;">
-                  <font-awesome-icon icon="fa-solid fa-clock" class="mx-1" />
-                  <a> {{art.auctionArt.auctionStartDate.split("T")[0]}} ~
-                    {{art.auctionArt.auctionEndDate.split("T")[0]}}</a>
-                </li>
-              </ul>
+              <h2>{{ art.auctionArt.artName }} - {{ art.auctionArt.artOwnerNickname }}</h2>
             </div>
 
             <div class="mb-2">
@@ -86,7 +62,38 @@
                 {{ art.auctionArt.artDescription }}
               </p>
             </div>
+
+            <hr>
+
+            <div class="mb-2">
+              <p>입찰 횟수 | {{ art.auctionArtBidCount }}회</p>
+              <p>경매 시작 날짜 | {{ art.auctionArt.auctionStartDate }}</p>
+              <p>경매 종료 날짜 | {{ art.auctionArt.auctionEndDate }}</p>
+<!--              <ul class="list-group list-group-horizontal">-->
+<!--                <li class="list-group-item" style="border: none;">-->
+<!--                  <font-awesome-icon icon="fa-solid fa-gavel" class="mx-1" />-->
+<!--                  <a> {{ art.auctionArtBidCount }}</a>-->
+<!--                </li>-->
+<!--                <li class="list-group-item" style="border: none;">-->
+<!--                  <font-awesome-icon icon="fa-solid fa-eye" class="mx-1" />-->
+<!--                  <a> 46 </a>-->
+<!--                </li>-->
+<!--                <li class="list-group-item" style="border: none;">-->
+<!--                  <font-awesome-icon icon="fa-solid fa-clock" class="mx-1" />-->
+<!--                  <a> {{art.auctionArt.auctionStartDate.split("T")[0]}} ~-->
+<!--                    {{art.auctionArt.auctionEndDate.split("T")[0]}}</a>-->
+<!--                </li>-->
+<!--              </ul>-->
+            </div>
+
+            <hr>
+
+            <div class="mb-2">
+              <h4>시작 경매가 | {{ art.auctionArt.artInitPrice }}원</h4>
+              <h4>현재 경매가 | {{ art.auctionArt.highestBidPrice }}원 ({{ art.auctionArt.highestBidUserNickname }})</h4>
+            </div>
           </div>
+          <br>
           <div class="card_area">
             <div class="row g-3">
               <div class="col-md-3">
@@ -94,11 +101,11 @@
                   <font-awesome-icon icon="fa-regular fa-heart" /> 찜
                 </a>
               </div>
-              <div v-if="isForSale == true" class="col-md-3">
+              <div v-if="isForSale === true" class="col-md-2">
                 <a href="#" class="btn btn-lg btn-outline-success" data-bs-toggle="modal" data-bs-target="#auctionModal"
                   style="border-radius: 6px; width: 120px;">응찰하기</a>
               </div>
-              <div v-if="isForSale == false && isHighestBidUser == true" class="col-md-3">
+              <div v-if="isForSale === false && isHighestBidUser === true" class="col-md-2">
                 <a href="#" class="btn btn-lg btn-outline-primary" @click="purchaseArt"
                   style="border-radius: 6px; width: 120px;">구매하기</a>
               </div>
@@ -107,7 +114,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div><br><br><br>
 </template>
 
 <script>
@@ -218,12 +225,9 @@ export default {
     let today = new Date();
     let endDate = new Date(this.art.auctionArt.auctionEndDate);
     let remainTime = endDate.getTime() - today.getTime();
-    console.log('today ' + today);
-    console.log('endDate ' + endDate);
-    console.log('remainTime ' + remainTime);
 
     axios.get('/api/session-check').then((res) => {
-      console.log('success ' + JSON.stringify(res.data));
+      console.log('session-check success ' + JSON.stringify(res.data));
       if (remainTime <= 0) {
         this.isForSale = false;
         if (this.art.highestBidUserId == res.data.id) {
@@ -235,7 +239,7 @@ export default {
         }
       }
     }).catch((res) => {
-      console.log('fail ' + res);
+      console.log('session-check fail ' + res);
     })
   },
 }

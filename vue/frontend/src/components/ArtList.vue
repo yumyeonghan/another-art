@@ -1,7 +1,8 @@
 <template>
   <div class="col">
-    <div class="card" style="border: 3px solid cornflowerblue;">
-      <div class="card-header" style="background-color: white;">
+    <!-- style="border: 1px solid cornflowerblue;" -->
+    <div class="card border-black-50">
+      <!-- <div class="card-header" style="background-color: white;">
         <a @click="goPurchasePage(art)" href="#"><img
             :src="require(`../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
             style="width: 100%;"></a>
@@ -18,8 +19,24 @@
         <p><b>경매 시작 날짜</b><br><small>{{ art.auctionArt.auctionStartDate }}</small></p>
         <p><b>경매 종료 날짜</b><br><small>{{ art.auctionArt.auctionEndDate }}</small></p>
         <p><b>현재 경매횟수</b><br><small>{{ art.auctionArtBidCount }}회</small></p>
+      </div> -->
+      <div class="" style="background-color: white;">
+        <a @click="goPurchasePage(art)" href="#"><img
+            :src="require(`../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" 
+            alt="" style="width: 100%; height: 200px; margin-bottom: 10px;"></a>
       </div>
-      <div class="card-footer" style="background-color: white;">
+      <div class="card-header" style="background-color: white;">
+        <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
+          <h3> {{ art.auctionArt.artName }}</h3>
+          <h6> {{ art.auctionArt.artOwnerNickname }} </h6>
+        </a>
+      </div>
+      <div class="card-body" style="background-color: white;">
+        <p><b>현재 경매가</b><br><small>{{ art.auctionArt.highestBidPrice }}원</small></p>
+        <p><b>현재 응찰횟수</b><br><small>{{ art.auctionArtBidCount }}회</small></p>
+        <p><b>경매 종료 날짜</b><br><small>{{ art.auctionArt.auctionEndDate }}</small></p>
+      </div>
+      <div class="card-footer" style="background-color: white; height: 65px;">
         <span className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small label>#{{ tag }}</span>
       </div>
     </div>

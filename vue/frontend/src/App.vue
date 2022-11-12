@@ -17,8 +17,8 @@
         <button @click="$router.push('/userPointRefund')" class="btn btn-outline-dark">UserPointRefund</button>
       </div> -->
       
-      <!-- :key="$route.fullPath" -->
-      <router-view></router-view>
+      <router-view :key="$route.fullPath" />
+      <!-- <router-view /> -->
       
     </div>
   </div>

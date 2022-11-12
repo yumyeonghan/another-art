@@ -253,6 +253,8 @@ export default {
                     { 'Content-Type': 'multipart/form-data' }
             }).then((res) => {
                 console.log("then res: " + JSON.stringify(res.data));
+                alert('등록 완료');
+                this.$router.push('/vue');
             }).catch((res) => {
                 console.log("catch res: " + JSON.stringify(res.data));
             })

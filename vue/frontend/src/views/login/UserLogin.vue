@@ -79,21 +79,15 @@ export default {
             sessionStorage.setItem("loginData", JSON.stringify(this.loginedData));
             console.log("sessionStorage loginData: " + JSON.parse(sessionStorage.getItem("loginData")));
             this.$store.commit("setIsLogined", true);
+            this.$store.commit("setLoginUserId", this.loginedData.userId);
+            this.$store.commit("setLoginUserId", JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId);
+            console.log("userId store -> " + this.$store.state.loginUserId);
             this.$router.push('/vue');
           })
           .catch((res) => {
             console.log("catch " + res.data);
           })
     },
-  },
-  beforeMount() {
-    // 로그인 중인 유저 정보가 존재할 떄
-    if (this.$store.state.loginData != null) {
-      this.$store.state.isLogined = true;
-      // 로그인 중인 유저 정보가 존재하지 않을 때
-    } else {
-      this.$store.state.isLogined = false;
-    }
   },
 }
 </script>

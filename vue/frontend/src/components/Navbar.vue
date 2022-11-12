@@ -2,7 +2,7 @@
   <div>
     <!-- AISearchModal -->
     <div class="modal fade" id="AISearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content h-598">
           <div class="modal-header">
@@ -16,8 +16,7 @@
               <div id="label-container" class="w-100 mt-3"></div>
             </div>
             <div @click="artworkHashtagSearch" class="text-center h-60 mt-3" style="vertical-align: bottom;">
-              <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
-                      aria-label="Close">검색하기
+              <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">검색하기
               </button>
             </div>
           </div>
@@ -26,13 +25,12 @@
     </div>
 
     <nav id="main-navbar"
-         class="fixed-top navbar navbar-expand-lg navbar-light bg-white py-4 border-bottom border-black-50">
+      class="fixed-top navbar navbar-expand-lg navbar-light bg-white py-4 border-bottom border-black-50">
       <div class="container-fluid">
         <!-- Container wrapper -->
-        <a @click="$router.push('/vue');" class="navbar-brand fs-3" href="#">Another Art</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+        <a @click="$router.push('/vue');" class="navbar-brand fs-3" style="margin-left: 1%;" href="#">Another Art</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -65,23 +63,21 @@
           <!-- class="d-none d-md-flex justify-content-center" -->
 
           <div class="mx-auto input-group w-auto my-auto">
-            <select v-model="keywordSearchData.type" class="btn btn-outline-secondary rounded-start"
-                    aria-expanded="false" @change="test"
-                    style="border-end-end-radius: 0; border-start-end-radius: 0;">
+            <select v-model="keywordSearchData.type" class="btn btn-outline-primary rounded-start" aria-expanded="false"
+              @change="test" style="border-end-end-radius: 0; border-start-end-radius: 0;">
               <option :value="typeList[0].type">{{ typeList[0].name }}</option>
               <option :value="typeList[1].type">{{ typeList[1].name }}</option>
             </select>
 
             <input autocomplete="off" type="text" v-model="keywordSearchData.keyword"
-                   class="form-control rounded-0 border border-primary" placeholder='Search'
-                   style="min-width: 225px; max-width: 600px;" aria-label="Text input with dropdown button"/>
-            <button @click="artworkKeywordSearch"
-                    class="input-group-text border border-primary bg-white form-control">
-              <font-awesome-icon icon="search"/>
+              class="form-control rounded-0 border border-primary" placeholder='Search'
+              style="min-width: 225px; max-width: 600px;" aria-label="Text input with dropdown button" />
+            <button @click="artworkKeywordSearch" class="input-group-text border border-primary bg-white form-control">
+              <font-awesome-icon icon="search" />
             </button>
             <button @click="init" class="input-group-text border border-primary bg-white form-control"
-                    data-bs-toggle="modal" data-bs-target="#AISearchModal">
-              <font-awesome-icon icon="fa-solid fa-robot"/>
+              data-bs-toggle="modal" data-bs-target="#AISearchModal">
+              <font-awesome-icon icon="fa-solid fa-robot" />
               <!-- <font-awesome-icon icon="fa-regular fa-image" /> -->
             </button>
           </div>
@@ -92,15 +88,13 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <!-- 비로그인 시 -->
               <li v-if="$store.state.isLogined === false" class="nav-item">
-                <a href="#" @click="$router.push('/userLogin')" class="nav-link active"
-                   aria-current="page">로그인</a>
+                <a href="#" @click="$router.push('/userLogin')" class="nav-link active" aria-current="page">로그인</a>
               </li>
               <li v-if="$store.state.isLogined === false" class="nav-item">
                 <h6 class="nav-link active text-secondary" aria-current="page" href="#">|</h6>
               </li>
               <li v-if="$store.state.isLogined === false" class="nav-item">
-                <a href="#" @click="$router.push('/createAccount/userRegister')"
-                   class="nav-link active">회원가입</a>
+                <a href="#" @click="$router.push('/createAccount/userRegister')" class="nav-link active">회원가입</a>
               </li>
               <!-- 로그인 시 -->
               <li v-if="$store.state.isLogined === true" class="nav-item">
@@ -184,39 +178,39 @@ export default {
     artworkKeywordSearch() {
       console.log(this.keywordSearchData);
       axios.post('/api/keyword/arts', this.keywordSearchData)
-          .then((res) => {
-            console.log("then " + JSON.stringify(res.data));
-            this.$store.commit("setSearchType", this.keywordSearchData.type);
-            this.$store.commit("setSearchData", JSON.stringify(res.data));
-            this.$router.push(`/searchResults?keyword=${this.keywordSearchData.keyword}`);
-          })
-          .catch((res) => {
-            console.log("catch " + JSON.stringify(res));
-          })
+        .then((res) => {
+          console.log("then " + JSON.stringify(res.data));
+          this.$store.commit("setSearchType", this.keywordSearchData.type);
+          this.$store.commit("setSearchData", JSON.stringify(res.data));
+          this.$router.push(`/searchResults?keyword=${this.keywordSearchData.keyword}`);
+        })
+        .catch((res) => {
+          console.log("catch " + JSON.stringify(res));
+        })
     },
     artworkHashtagSearch() {
       console.log(this.hashtagSearchData);
       axios.post('/api/hashtag/arts', this.hashtagSearchData)
-          .then((res) => {
-            console.log("then " + JSON.stringify(res.data));
-            this.$store.commit("setSearchType", this.hashtagSearchData.type);
-            this.$store.commit("setSearchData", JSON.stringify(res.data));
-            this.$router.push(`/searchResults?hashtag=${this.hashtagSearchData.hashtag}`);
-          })
-          .catch((res) => {
-            console.log("catch " + JSON.stringify(res));
-          })
+        .then((res) => {
+          console.log("then " + JSON.stringify(res.data));
+          this.$store.commit("setSearchType", this.hashtagSearchData.type);
+          this.$store.commit("setSearchData", JSON.stringify(res.data));
+          this.$router.push(`/searchResults?hashtag=${this.hashtagSearchData.hashtag}`);
+        })
+        .catch((res) => {
+          console.log("catch " + JSON.stringify(res));
+        })
     },
     logout() {
       axios.post('/api/logout')
-          .then(() => {
-            sessionStorage.clear();
-            this.$store.commit("setIsLogined", false);
-            this.$router.push('/vue')
-          })
-          .catch(() => {
+        .then(() => {
+          sessionStorage.clear();
+          this.$store.commit("setIsLogined", false);
+          this.$router.push('/vue')
+        })
+        .catch(() => {
 
-          })
+        })
     },
     // AI 추천 검색
     // Load the image model and setup the webcam
@@ -278,7 +272,28 @@ export default {
     isHashtagSearchKeywordEmpty() {
       return this.hashtagSearchData.hashtag == '';
     }
-  }
+  },
+  beforeMount() {
+    axios.post('/api/session-check').then((res) => {
+      console.log("session-check success -> " + JSON.stringify(res.data));
+      this.$store.commit('setSessionData', {...res.data});
+      console.log("sessionData -> " + JSON.stringify(this.$store.state.sessionData));
+      console.log("isLogined -> " + this.$store.state.isLogined);
+    }).catch((res) => {
+      console.log("session-check fail -> " + JSON.stringify(res));
+      this.$store.commit('setSessionData', {});
+      console.log("sessionData -> " + JSON.stringify(this.$store.state.sessionData));
+      console.log("isLogined -> " + this.$store.state.isLogined);
+    });
+
+    // 로그인 중인 유저 정보가 존재하지 않을 때
+    if (Object.keys(this.$store.state.sessionData).length === 0) {
+      this.$store.state.isLogined = false;
+    // 로그인 중인 유저 정보가 존재할 떄
+    } else {
+      this.$store.state.isLogined = true;
+    }
+  },
 
 }
 </script>

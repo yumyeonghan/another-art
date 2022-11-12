@@ -3,6 +3,8 @@ import { createStore } from 'vuex'
 const store = createStore({
   state() {
     return {
+      // 메인페이지 현재 페이지
+      currentPage: 1,
       count: 0,
       // 회원가입
       registerData: {
@@ -11,9 +13,21 @@ const store = createStore({
       univName: '',
       // 로그인
       isLogined: false,
+      loginUserId: 0,
       loginData: JSON.parse(sessionStorage.getItem("loginData")),
       // 세션 정보
-      sessionData: {},
+      sessionData: {
+        // "id": 1,
+        // "name": "빈센트 반 고흐",
+        // "nickname": "고흐",
+        // "loginId": "user1",
+        // "loginPassword": "1234",
+        // "email": "anotherart1@gmail.com",
+        // "schoolName": "경기대학교",
+        // "phoneNumber": "01011110000",
+        // "address": "양양",
+        // "birth": "2000-01-27"
+      },
       // 검색 결과
       searchData: {
         count: 0,
@@ -120,6 +134,15 @@ const store = createStore({
     setSelectedArt(state, payload) {
       state.selectedArt = { ...payload };
     },
+    setCreateNum(state) {
+      state.createNum++;
+    },
+    setCurrentPage(state, payload) {
+      state.currentPage = payload;
+    },
+    setLoginUserId(state, payload) {
+      state.loginUserId = payload;
+    }
   }
 })
 
