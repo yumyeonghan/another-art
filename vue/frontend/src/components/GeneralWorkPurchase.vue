@@ -132,10 +132,8 @@ export default {
             axios.post('/api/purchase/general', this.purchaseData).then((res) => {
                 console.log("req: " + JSON.stringify(this.purchaseData));
                 console.log("res: " + JSON.stringify(res.data));
-                if (res.data.purchaseId) {
                     alert('구매완료');
                     this.$router.push('/vue');
-                }
             }).catch((res) => {
                 console.log("catch: " + JSON.stringify(res.data));
             })

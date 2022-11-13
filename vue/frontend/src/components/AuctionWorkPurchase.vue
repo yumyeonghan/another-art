@@ -177,21 +177,20 @@ export default {
   methods: {
     bidArt() {
       axios.post(`/api/bid`, this.bidData).then((res) => {
-        console.log('this.bidData ' + JSON.stringy(this.bidData));
-        console.log('success ' + JSON.stringify(res));
-        console.log('응찰완료');
+        console.log('this.bidData -> ' + JSON.stringify(this.bidData));
+        console.log('bid success -> ' + JSON.stringify(res));  
+        alert('응찰완료');
+        this.$router.push('/vue');
       }).catch((res) => {
-        console.log('fail: ' + JSON.stringify(res));
+        console.log('bid fail -> ' + JSON.stringify(res));
       })
     },
     purchaseArt() {
       axios.post('/api/purchase/auction', this.purchaseData).then((res) => {
         console.log("req: " + JSON.stringify(this.purchaseData));
         console.log("res: " + JSON.stringify(res.data));
-        if (res.data.purchaseId) {
           alert('구매완료');
           this.$router.push('/vue');
-        }
       }).catch((res) => {
         console.log("catch: " + JSON.stringify(res.data));
       })
