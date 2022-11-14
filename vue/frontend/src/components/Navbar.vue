@@ -11,9 +11,9 @@
           </div>
           <div class="modal-body">
             <div class="input-group rounded text-center">
-              <h1 v-if="isHashtagSearchKeywordEmpty" class="w-100">Loading∙∙∙</h1>
-              <div id="webcam-container" class="w-100"></div>
-              <div id="label-container" class="w-100 mt-3"></div>
+                <h1 v-if="isHashtagSearchKeywordEmpty" class="w-100">Loading∙∙∙</h1>
+                <div id="webcam-container" class="w-100"></div>
+                <div id="label-container" class="w-100 mt-3"></div>
             </div>
             <div @click="artworkHashtagSearch" class="text-center h-60 mt-3" style="vertical-align: bottom;">
               <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">검색하기
@@ -75,7 +75,7 @@
             <button @click="artworkKeywordSearch" class="input-group-text border border-primary bg-white form-control">
               <font-awesome-icon icon="search" />
             </button>
-            <button @click="init" class="input-group-text border border-primary bg-white form-control"
+            <button @click="activeAIModal" class="input-group-text border border-primary bg-white form-control"
               data-bs-toggle="modal" data-bs-target="#AISearchModal">
               <font-awesome-icon icon="fa-solid fa-robot" />
               <!-- <font-awesome-icon icon="fa-regular fa-image" /> -->
@@ -172,6 +172,7 @@ export default {
         }
       ],
       num: 0,
+      AIModalCount: 0,
     }
   },
   methods: {
@@ -211,6 +212,12 @@ export default {
         .catch(() => {
 
         })
+    },
+    activeAIModal() {
+      if (this.AIModalCount == 0) {
+        this.init();
+      }
+      this.AIModalCount++;
     },
     // AI 추천 검색
     // Load the image model and setup the webcam
