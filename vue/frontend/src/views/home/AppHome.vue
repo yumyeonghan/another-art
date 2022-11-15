@@ -114,7 +114,7 @@ export default {
     goToPage(page) {
       this.$store.commit('setCurrentPage', page);
       this.fetchData();
-      this.$router.push(`/vue?page=${this.artRequest.page}`);
+      this.$router.push(`/?page=${this.artRequest.page}`);
     },
     goToPreviousPage() {
       this.$store.commit('setCurrentPage', this.$store.state.currentPage - 1);
@@ -123,7 +123,7 @@ export default {
         return 0;
       }
       this.fetchData();
-      this.$router.push(`/vue?page=${this.artRequest.page}`);
+      this.$router.push(`/?page=${this.artRequest.page}`);
       this.scrollToTop();
     },
     goToNextPage() {
@@ -133,7 +133,7 @@ export default {
         return 0;
       }
       this.fetchData();
-      this.$router.push(`/vue?page=${this.artRequest.page}`);
+      this.$router.push(`/?page=${this.artRequest.page}`);
       this.scrollToTop();
     },
     clickrRD(){

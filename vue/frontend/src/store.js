@@ -30,7 +30,7 @@ const store = createStore({
       },
       // 검색 결과
       searchData: {
-        count: 0,
+        contentSize: 0,
         artList: [
           {
             artLikeCount: 9,
@@ -125,7 +125,7 @@ const store = createStore({
       state.univName = payload;
     },
     setSearchData(state, payload) {
-      state.searchData.count = JSON.parse(payload).count;
+      state.searchData.contentSize = JSON.parse(payload).contentSize;
       state.searchData.artList = [...JSON.parse(payload).artList];
     },
     setSearchType(state, payload) {

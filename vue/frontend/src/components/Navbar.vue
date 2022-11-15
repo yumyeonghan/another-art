@@ -28,7 +28,7 @@
       class="fixed-top navbar navbar-expand-lg navbar-light bg-white py-4 border-bottom border-black-50">
       <div class="container-fluid">
         <!-- Container wrapper -->
-        <a @click="$router.push('/vue');" class="navbar-brand fs-3" style="margin-left: 1%;" href="#">Another Art</a>
+        <a @click="$router.push('/');" class="navbar-brand fs-3" style="margin-left: 1%;" href="#">Another Art</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -88,13 +88,13 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <!-- 비로그인 시 -->
               <li v-if="$store.state.isLogined === false" class="nav-item">
-                <a href="#" @click="$router.push('/userLogin')" class="nav-link active" aria-current="page">로그인</a>
+                <a href="#" @click="$router.push('/login')" class="nav-link active" aria-current="page">로그인</a>
               </li>
               <li v-if="$store.state.isLogined === false" class="nav-item">
                 <h6 class="nav-link active text-secondary" aria-current="page" href="#">|</h6>
               </li>
               <li v-if="$store.state.isLogined === false" class="nav-item">
-                <a href="#" @click="$router.push('/createAccount/userRegister')" class="nav-link active">회원가입</a>
+                <a href="#" @click="$router.push('/signup')" class="nav-link active">회원가입</a>
               </li>
               <!-- 로그인 시 -->
               <li v-if="$store.state.isLogined === true" class="nav-item">
@@ -104,9 +104,9 @@
                 <h6 class="nav-link active text-secondary" aria-current="page" href="#">|</h6>
               </li>
               <li v-if="$store.state.isLogined === true" class="nav-item">
-                <a href="#" @click="$router.push('/myPage')" class="nav-link active">마이페이지</a>
+                <a href="#" @click="$router.push('/user')" class="nav-link active">마이페이지</a>
               </li>
-              <button @click="$router.push('/artworkRegister')" class="btn btn-outline-primary mx-2">
+              <button v-if="$store.state.isLogined === true" @click="$router.push('/art/register')" class="btn btn-outline-primary mx-2">
                 작품 등록
               </button>
             </ul>
@@ -183,7 +183,7 @@ export default {
           console.log("then " + JSON.stringify(res.data));
           this.$store.commit("setSearchType", this.keywordSearchData.type);
           this.$store.commit("setSearchData", JSON.stringify(res.data));
-          this.$router.push(`/searchResults?keyword=${this.keywordSearchData.keyword}`);
+          this.$router.push(`/search?keyword=${this.keywordSearchData.keyword}`);
         })
         .catch((res) => {
           console.log("catch " + JSON.stringify(res));
@@ -196,7 +196,7 @@ export default {
           console.log("then " + JSON.stringify(res.data));
           this.$store.commit("setSearchType", this.hashtagSearchData.type);
           this.$store.commit("setSearchData", JSON.stringify(res.data));
-          this.$router.push(`/searchResults?hashtag=${this.hashtagSearchData.hashtag}`);
+          this.$router.push(`/search?hashtag=${this.hashtagSearchData.hashtag}`);
         })
         .catch((res) => {
           console.log("catch " + JSON.stringify(res));
@@ -207,7 +207,7 @@ export default {
         .then(() => {
           sessionStorage.clear();
           this.$store.commit("setIsLogined", false);
-          this.$router.push('/vue')
+          this.$router.push('/')
         })
         .catch(() => {
 

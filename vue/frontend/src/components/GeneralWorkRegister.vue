@@ -208,7 +208,7 @@ export default {
             }).then((res) => {
                 console.log("then res: " + JSON.stringify(res.data));
                 alert('등록 완료');
-                this.$router.push('/vue');
+                this.$router.push('/');
             }).catch((res) => {
                 console.log("catch res: " + JSON.stringify(res.data));
             })

@@ -29,9 +29,9 @@
     </div>
 
     <div class="text-center">
-      <button class="link-color-black btn btn-light" @click="$router.push('/idFind')">아이디 찾기</button> |
-      <button class="link-color-black btn btn-light" @click="$router.push('/passwordFind')">비밀번호 찾기/재설정</button> |
-      <button class="link-color-black btn btn-light" @click="$router.push('/createAccount/userRegister')">회원가입</button>
+      <button class="link-color-black btn btn-light" @click="$router.push('/find-id')">아이디 찾기</button> |
+      <button class="link-color-black btn btn-light" @click="$router.push('/find-password')">비밀번호 찾기/재설정</button> |
+      <button class="link-color-black btn btn-light" @click="$router.push('/signup')">회원가입</button>
     </div>
     <br>
     <br>
@@ -82,7 +82,7 @@ export default {
             this.$store.commit("setLoginUserId", this.loginedData.userId);
             this.$store.commit("setLoginUserId", JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId);
             console.log("userId store -> " + this.$store.state.loginUserId);
-            this.$router.push('/vue');
+            this.$router.push('/');
           })
           .catch((res) => {
             console.log("catch " + res.data);

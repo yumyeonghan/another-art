@@ -133,7 +133,7 @@ export default {
                 console.log("req: " + JSON.stringify(this.purchaseData));
                 console.log("res: " + JSON.stringify(res.data));
                     alert('구매완료');
-                    this.$router.push('/vue');
+                    this.$router.push('/');
             }).catch((res) => {
                 console.log("catch: " + JSON.stringify(res.data));
             })

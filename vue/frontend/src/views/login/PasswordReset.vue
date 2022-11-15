@@ -58,7 +58,7 @@ export default {
           this.result = { ...res.data };
           console.log(JSON.stringify(res.data));
           alert('비밀번호 재설정 완료');
-          this.$router.push('/vue');
+          this.$router.push('/');
           this.isShow = true;
         }).catch((res) => {
           console.log("catch " + res.data);

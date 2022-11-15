@@ -2,8 +2,6 @@ import { createWebHistory, createRouter } from "vue-router"
 import AppHome from './views/home/AppHome.vue'
 import UserRegister from './views/user/UserRegister.vue'
 import ArtworkRegister from './views/art/ArtworkRegister.vue'
-// import TermsOfService from './views/TermsOfService.vue'
-import CreateAccount from './views/user/CreateAccount.vue'
 import IdFind from './views/login/IdFind.vue'
 import PasswordFind from './views/login/PasswordFind.vue'
 import PasswordReset from './views/login/PasswordReset.vue'
@@ -17,80 +15,58 @@ import MyPage from './views/myPage/MyPage.vue'
 
 const routes = [
   {
-    path: "/createAccount",
-    component: CreateAccount,
-    children: [
-      // {
-      //   path: "termsOfService",
-      //   component: TermsOfService,
-      // },
-      {
-        path: "userRegister",
-        component: UserRegister,
-      },
-    ]
+    path: "/signup",
+    component: UserRegister,
   },
   {
-    path: "/myPage",
+    path: "/user",
     component: MyPage,
     children: [
       {
-        path: "updateUserInfo",
+        path: "edit",
         component: UpdateUserInfo,
       },
       {
-        path: "userPointCharge",
+        path: "point",
         component: UserPointCharge,
       },
       {
-        path: "userPointRefund",
+        path: "refund",
         component: UserPointRefund,
       },
     ]
   },
   {
-    path: "/vue",
+    path: "/",
     component: AppHome,
   },
   {
-    path: "/artworkRegister",
+    path: "/art/register",
     component: ArtworkRegister,
   },
   {
-    path: "/idFind",
+    path: "/find-id",
     component: IdFind,
   },
   {
-    path: "/passwordFind",
+    path: "/find-password",
     component: PasswordFind,
   },
   {
-    path: "/passwordReset",
+    path: "/reset-password",
     component: PasswordReset,
   },
   {
-    path: "/userPointCharge",
-    component: UserPointCharge,
-  },
-  {
-    path: "/userPointRefund",
-    component: UserPointRefund,
-  },
-  {
-    path: "/artworkPurchase",
+    path: "/art/detail",
     component: ArtworkPurchase,
   },
   {
-    path: "/userLogin",
+    path: "/login",
     component: UserLogin,
   },
   {
-    path: "/searchResults",
+    path: "/search",
     component: SearchResults,
-  },
-  {
-    path: "/updateUserInfo",
-    component: UpdateUserInfo,
   },
 ];
 

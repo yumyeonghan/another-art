@@ -113,7 +113,7 @@ export default {
                     // }
                     console.log(JSON.stringify(res));
                     alert('회원정보 수정 완료');
-                    this.$router.push('/vue');
+                    this.$router.push('/');
                 }).catch((res)=> {
                     console.log('fail:' + JSON.stringify(res));
                 });

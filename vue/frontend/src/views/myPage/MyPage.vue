@@ -71,7 +71,7 @@
       <div class="row align-items-md-stretch">
         <div class="col-md-6 p-3">
           <div class="h-100 p-3 text-bg-light rounded-3">
-            <a @click="$router.push('/userPointCharge')" href="#" class="item" style="color: black; text-decoration: none;">
+            <a @click="$router.push('/user/point')" href="#" class="item" style="color: black; text-decoration: none;">
               <h4 class="text-center">포인트 충전 ></h4>
             </a>
           </div>
@@ -79,7 +79,7 @@
 
         <div class="col-md-6 p-3">
           <div class="h-100 p-3 text-bg-light rounded-3">
-            <a @click="$router.push('/updateUserInfo')" href="#" class="item" style="color: black; text-decoration: none;">
+            <a @click="$router.push('/user/edit')" href="#" class="item" style="color: black; text-decoration: none;">
               <h4 class="text-center">회원정보 수정 ></h4>
             </a>
           </div>

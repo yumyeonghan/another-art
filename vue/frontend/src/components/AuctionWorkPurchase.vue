@@ -180,7 +180,7 @@ export default {
         console.log('this.bidData -> ' + JSON.stringify(this.bidData));
         console.log('bid success -> ' + JSON.stringify(res));  
         alert('응찰완료');
-        this.$router.push('/vue');
+        this.$router.push('/');
       }).catch((res) => {
         console.log('bid fail -> ' + JSON.stringify(res));
       })
@@ -190,7 +190,7 @@ export default {
         console.log("req: " + JSON.stringify(this.purchaseData));
         console.log("res: " + JSON.stringify(res.data));
           alert('구매완료');
-          this.$router.push('/vue');
+          this.$router.push('/');
       }).catch((res) => {
         console.log("catch: " + JSON.stringify(res.data));
       })
@@ -234,7 +234,7 @@ export default {
           alert('축하합니다! 낙찰입니다. 작품을 구매하세요.');
         } else {
           alert('작품이 다른 사용자에게 낙찰되었습니다. 메인 페이지로 이동합니다.');
-          this.$router.push('/vue');
+          this.$router.push('/');
         }
       }
     }).catch((res) => {

@@ -4,7 +4,7 @@
     <div v-if="searchType === 'auction'">
       <div class="album py-5">
         <div class="container">
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+          <div :class="rowStyle">
             <div v-for="(art,i) in searchData.artList" :key="i">
               <div class="col">
                 <div class="card border-black-50">
@@ -79,17 +79,23 @@ export default {
   data: () => ({
     searchType: '',
     searchData: {},
+    rowStyle: 'row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3',
+    colStyle: 'col',
   }),
   beforeMount() {
     this.searchData = { ...this.$store.state.searchData };
     this.searchType = this.$store.state.searchType;
-    console.log("searchType: " + this.searchType);
+    if (this.searchData.contentSize == 1) {
+      this.rowStyle='row g-3';
+    } else {
+      this.rowStyle='row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3';
+    }
   },
   methods: {
     goPurchasePage(art) {
       this.$store.commit("setSelectedArt", art);
       console.log("selectedArt: " + JSON.stringify(this.$store.state.selectedArt));
-      this.$router.push('/artworkPurchase');
+      this.$router.push('/art/detail');
     }
   }
 }

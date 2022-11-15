@@ -54,7 +54,7 @@ export default {
       this.$store.commit("setSelectedArt", art);
       this.$store.commit("setSearchType", 'auction');
       console.log("selectedArt: " + JSON.stringify(this.$store.state.selectedArt));
-      this.$router.push('/artworkPurchase');
+      this.$router.push('/art/detail');
     },
   }
 }

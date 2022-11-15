@@ -103,7 +103,7 @@ export default {
         .then((res) => {
           this.result = { ...res.data };
           console.log(JSON.stringify(res.data));
-          this.$router.push(`/passwordReset?loginId=${this.passwordFindForm.loginId}`);
+          this.$router.push(`/reset-password?loginId=${this.passwordFindForm.loginId}`);
         }).catch((res) => {
           console.log("catch " + res.data);
           alert('정보가 일치하지 않습니다');

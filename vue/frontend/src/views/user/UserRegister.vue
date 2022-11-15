@@ -189,6 +189,7 @@ export default {
                     console.log(res);
                     this.$store.commit("setSessionData", JSON.stringify(res.data));
                     console.log(this.$store.state.sessionData);
+                    this.$router.push('/');
                 }).catch((res)=> {
                     console.log('fail:' + res);
                 });
