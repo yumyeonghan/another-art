@@ -14,7 +14,6 @@ public enum AnotherArtErrorCode {
     DUPLICATE_USER_NICKNAME(HttpStatus.CONFLICT, "중복된 닉네임입니다"),
     DUPLICATE_USER_PHONENUMBER(HttpStatus.CONFLICT, "중복된 전화번호입니다"),
     ILLEGAL_USER_API_REQUEST(HttpStatus.BAD_REQUEST, "타인의 정보는 요청할 수 없습니다"),
-    INELIGIBLE_USER_PURCHASE(HttpStatus.FORBIDDEN, "구매 자격이 없는 사용자입니다"),
     SAME_PASSWORD_AS_BEFORE(HttpStatus.CONFLICT, "이전에 사용하던 비밀번호로 변경할 수 없습니다"),
 
     // Art
@@ -35,6 +34,10 @@ public enum AnotherArtErrorCode {
 
     // Point
     POINT_NOT_ENOUGH(HttpStatus.CONFLICT, "포인트가 부족합니다"),
+
+    // Purchase
+    INELIGIBLE_USER_PURCHASE(HttpStatus.FORBIDDEN, "구매 자격이 없는 사용자입니다"),
+    ILLEGAL_PURCHASE_ACCESS(HttpStatus.CONFLICT, "본인 작품을 입찰 또는 구매할 수 없습니다"),
 
     // API Request
     ILLEGAL_URL_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다"),

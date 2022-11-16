@@ -39,14 +39,14 @@ public class PurchaseHistoryService {
     public void purchaseAuctionArt(Long auctionId, Long userId) {
         Auction auction = auctionRepository.findByAuctionId(auctionId)
                 .orElseThrow(() -> AnotherArtException.type(AUCTION_NOT_FOUND));
-        isAuctionInProgress(auction); // Validation
+        isAuctionInProgress(auction);
 
         Art targetArt = auction.getArt();
-        isAlreadySoldOut(targetArt); // Validation
+        isAlreadySoldOut(targetArt);
 
         User purchaseUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-        isQualifiedUser(auction.getUser(), purchaseUser); // Validation
+        isQualifiedUser(auction.getUser(), purchaseUser);
 
         // PointHistory & PurchaseHistory Process
         applyPurchaseHistoryAndPointHistory(targetArt, purchaseUser, auction);
@@ -57,11 +57,12 @@ public class PurchaseHistoryService {
     public void purchaseGeneralArt(Long artId, Long userId) {
         Art targetArt = artRepository.findByArtId(artId)
                 .orElseThrow(() -> AnotherArtException.type(ART_NOT_FOUND));
-        isAlreadySoldOut(targetArt); // Validation
+        isAlreadySoldOut(targetArt);
 
         User purchaseUser = userRepository.findById(userId)
                 .orElseThrow(() -> AnotherArtException.type(USER_NOT_FOUND));
-        hasSufficientPoint(purchaseUser, targetArt.getInitPrice()); // Validation
+        isUserEqualsArtOwner(purchaseUser, targetArt);
+        hasSufficientPoint(purchaseUser, targetArt.getInitPrice());
 
         // PointHistory & PurchaseHistory Process
         applyPurchaseHistoryAndPointHistory(targetArt, purchaseUser, null);
@@ -137,8 +138,14 @@ public class PurchaseHistoryService {
     }
 
     private void isQualifiedUser(User highestBidUser, User purchaseUser) {
-        if (!highestBidUser.equals(purchaseUser)) {
+        if (!Objects.equals(highestBidUser.getId(), purchaseUser.getId())) {
             throw AnotherArtException.type(INELIGIBLE_USER_PURCHASE);
+        }
+    }
+
+    private void isUserEqualsArtOwner(User purchaseUser, Art targetArt) {
+        if (Objects.equals(purchaseUser.getId(), targetArt.getUser().getId())) {
+            throw AnotherArtException.type(ILLEGAL_PURCHASE_ACCESS);
         }
     }
 
