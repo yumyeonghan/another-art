@@ -5,6 +5,7 @@ const store = createStore({
     return {
       // 메인페이지 현재 페이지
       currentPage: 1,
+      sort: 'date',
       count: 0,
       // 회원가입
       registerData: {
@@ -142,7 +143,10 @@ const store = createStore({
     },
     setLoginUserId(state, payload) {
       state.loginUserId = payload;
-    }
+    },
+    setSort(state, payload) {
+      state.sort = payload;
+    },
   }
 })
 

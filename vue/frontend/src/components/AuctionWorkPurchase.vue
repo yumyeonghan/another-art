@@ -183,6 +183,15 @@ export default {
         this.$router.push('/');
       }).catch((res) => {
         console.log('bid fail -> ' + JSON.stringify(res));
+        if(res.message == 'Request failed with status code 400'){
+          alert('현재 경매가보다 높은 금액을 제시해주세요.');
+        }
+        else if(res.message == 'Request failed with status code 401'){
+          alert('로그인 후 응찰을 시도해주세요.');
+        }
+        else{
+          alert('응찰에 실패했습니다.')
+        }
       })
     },
     purchaseArt() {

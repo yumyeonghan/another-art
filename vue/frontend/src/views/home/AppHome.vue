@@ -78,7 +78,7 @@ export default {
       img: '',
       artRequest: {
         page: this.$store.state.currentPage,
-        sort: "date",
+        sort: this.$store.state.sort,
       }
     }
   },
@@ -111,6 +111,16 @@ export default {
           console.log(error);
         });
     },
+    fetchArtData(){
+      axios.post(`api/main/arts`, this.artRequest)
+          .then(res => {
+            this.contents = [...res.data.artList];
+            this.$router.push(`/?sort=${this.artRequest.sort}&page=${this.artRequest.page}`);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    },
     goToPage(page) {
       this.$store.commit('setCurrentPage', page);
       this.fetchData();
@@ -136,44 +146,51 @@ export default {
       this.$router.push(`/?page=${this.artRequest.page}`);
       this.scrollToTop();
     },
-    clickrRD(){
-      this.scrollCheck = 0;
-      this.artRequest.sort = 'rdate';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.page}})
+    clickRD(){
+      this.artRequest.sort = 'date';
+      this.$store.commit('setSort',this.artRequest.sort);
+      this.fetchArtData();
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
       console.log(this.artRequest);
-      this.fetchData();
+    },
+
+    clickrRD(){
+      this.artRequest.sort = 'rdate';
+      this.$store.commit('setSort',this.artRequest.sort);
+      this.fetchArtData();
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
+      console.log(this.artRequest);
+
 
     },
     clickBP(){
-      this.scrollCheck = 0;
       this.artRequest.sort = 'price';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, page:this.page}})
+      this.$store.commit('setSort',this.artRequest.sort);
+      this.fetchArtData();
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
       console.log(this.artRequest);
-      this.fetchData();
-
     },
     clickrBP(){
-      this.scrollCheck = 0;
       this.artRequest.sort = 'rprice';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, page:this.page}})
+      this.$store.commit('setSort',this.artRequest.sort);
+      this.fetchArtData();
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
       console.log(this.artRequest);
-      this.fetchData();
-
     },
     clickBC(){
-      this.scrollCheck = 0;
       this.artRequest.sort = 'count';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.page}})
+      this.$store.commit('setSort',this.artRequest.sort);
+      this.fetchArtData();
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
       console.log(this.artRequest);
-      this.fetchData();
     },
     clickrBC(){
-      this.scrollCheck = 0;
       this.artRequest.sort = 'rcount';
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort, page:this.page}})
+      this.$store.commit('setSort',this.artRequest.sort);
+      this.fetchArtData();
+      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
       console.log(this.artRequest);
-      this.fetchData();
-    },
+    }
   }
 }
 
