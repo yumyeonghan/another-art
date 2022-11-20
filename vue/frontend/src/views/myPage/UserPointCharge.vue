@@ -147,8 +147,11 @@ export default {
                 console.log("session-check success: " + JSON.stringify(res.data));
                 this.$store.commit('setSessionData', res.data);
                 console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
-            }).catch((res) => {
-                console.log('session-check fail:' + res);
+            }).catch((err) => {
+                let errMsg = JSON.stringify(err.response.data.message);
+                errMsg = errMsg.substring(1, errMsg.length - 1);
+                console.log("errMsg -> " + errMsg);
+                alert(errMsg);
             });
     },
 

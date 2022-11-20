@@ -45,8 +45,9 @@
                             <div class="col-md-6 offset-md-3">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <input type="text" v-model="formData.address" class="form-control form-control-lg p-3"
-                                    id="address" name="address" placeholder="주소" required>
+                                        <input type="text" v-model="formData.address"
+                                            class="form-control form-control-lg p-3" id="address" name="address"
+                                            placeholder="주소" required>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="button" @click="execDaumPostcode" value="주소 검색"
@@ -114,8 +115,11 @@ export default {
                     console.log(JSON.stringify(res));
                     alert('회원정보 수정 완료');
                     this.$router.push('/');
-                }).catch((res)=> {
-                    console.log('fail:' + JSON.stringify(res));
+                }).catch((err) => {
+                    let errMsg = JSON.stringify(err.response.data.message);
+                    errMsg = errMsg.substring(1, errMsg.length - 1);
+                    console.log("errMsg -> " + errMsg);
+                    alert(errMsg);
                 });
         },
         execDaumPostcode() {

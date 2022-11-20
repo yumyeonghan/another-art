@@ -11,9 +11,9 @@
           </div>
           <div class="modal-body">
             <div class="input-group rounded text-center">
-                <h1 v-if="isHashtagSearchKeywordEmpty" class="w-100">Loading∙∙∙</h1>
-                <div id="webcam-container" class="w-100"></div>
-                <div id="label-container" class="w-100 mt-3"></div>
+              <h1 v-if="isHashtagSearchKeywordEmpty" class="w-100">Loading∙∙∙</h1>
+              <div id="webcam-container" class="w-100"></div>
+              <div id="label-container" class="w-100 mt-3"></div>
             </div>
             <div @click="artworkHashtagSearch" class="text-center h-60 mt-3" style="vertical-align: bottom;">
               <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">검색하기
@@ -106,7 +106,7 @@
               <li v-if="$store.state.isLogined === true" class="nav-item">
                 <a href="#" @click="$router.push('/user')" class="nav-link active">마이페이지</a>
               </li>
-              <button v-if="$store.state.isLogined === true" @click="$router.push('/art/register')" class="btn btn-outline-primary mx-2">
+              <button @click="artRegister" class="btn btn-outline-primary mx-2">
                 작품 등록
               </button>
             </ul>
@@ -171,6 +171,12 @@ export default {
           name: '일반 작품',
         }
       ],
+      loginData: {
+        userId: '초기값',
+        userName: "초기값",
+        userNickname: '초기값',
+        loginId: '초기값',
+      },
       num: 0,
       AIModalCount: 0,
     }
@@ -184,9 +190,11 @@ export default {
           this.$store.commit("setSearchType", this.keywordSearchData.type);
           this.$store.commit("setSearchData", JSON.stringify(res.data));
           this.$router.push(`/search?keyword=${this.keywordSearchData.keyword}`);
-        })
-        .catch((res) => {
-          console.log("catch " + JSON.stringify(res));
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
         })
     },
     artworkHashtagSearch() {
@@ -197,21 +205,39 @@ export default {
           this.$store.commit("setSearchType", this.hashtagSearchData.type);
           this.$store.commit("setSearchData", JSON.stringify(res.data));
           this.$router.push(`/search?hashtag=${this.hashtagSearchData.hashtag}`);
-        })
-        .catch((res) => {
-          console.log("catch " + JSON.stringify(res));
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
         })
     },
     logout() {
       axios.post('/api/logout')
         .then(() => {
-          sessionStorage.clear();
+          // sessionStorage.clear();
+          sessionStorage.setItem("loginData", JSON.stringify(this.loginData));
           this.$store.commit("setIsLogined", false);
+          this.$store.commit("setLoginData", {
+            userId: '초기값',
+            userName: "초기값",
+            userNickname: '초기값',
+            loginId: '초기값',
+          });
           this.$router.push('/')
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
         })
-        .catch(() => {
-
-        })
+    },
+    artRegister() {
+      if (this.$store.state.isLogined === true) {
+        this.$router.push('/art/register');
+      } else {
+        alert('로그인하지 않은 사용자입니다');
+      }
     },
     activeAIModal() {
       if (this.AIModalCount == 0) {
@@ -283,7 +309,7 @@ export default {
   beforeMount() {
     axios.post('/api/session-check').then((res) => {
       console.log("session-check success -> " + JSON.stringify(res.data));
-      this.$store.commit('setSessionData', {...res.data});
+      this.$store.commit('setSessionData', { ...res.data });
       console.log("sessionData -> " + JSON.stringify(this.$store.state.sessionData));
       console.log("isLogined -> " + this.$store.state.isLogined);
     }).catch((res) => {
@@ -296,7 +322,7 @@ export default {
     // 로그인 중인 유저 정보가 존재하지 않을 때
     if (Object.keys(this.$store.state.sessionData).length === 0) {
       this.$store.state.isLogined = false;
-    // 로그인 중인 유저 정보가 존재할 떄
+      // 로그인 중인 유저 정보가 존재할 떄
     } else {
       this.$store.state.isLogined = true;
     }

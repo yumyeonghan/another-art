@@ -8,13 +8,13 @@
         </div>
 
         <div class="col-md-4 offset-md-4">
-          <input type="password" v-model="passwordResetForm.changePassword" class="form-control form-control-lg p-3" id="password"
-            name="name" placeholder="새 비밀번호" required>
+          <input type="password" v-model="passwordResetForm.changePassword" class="form-control form-control-lg p-3"
+            id="password" name="name" placeholder="새 비밀번호" required>
         </div>
 
         <div class="col-md-4 offset-md-4">
-          <input type="password" class="form-control form-control-lg p-3" id="password2"
-            name="loginId" placeholder="새 비밀번호 확인" required>
+          <input type="password" class="form-control form-control-lg p-3" id="password2" name="loginId"
+            placeholder="새 비밀번호 확인" required>
         </div>
 
       </div>
@@ -29,7 +29,7 @@
             type="submit" id="signup">확인</button>
         </div>
       </div>
-      
+
     </div>
   </div>
 </template>
@@ -60,8 +60,11 @@ export default {
           alert('비밀번호 재설정 완료');
           this.$router.push('/');
           this.isShow = true;
-        }).catch((res) => {
-          console.log("catch " + res.data);
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
         })
     },
     modalControl(boolean) {

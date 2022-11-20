@@ -74,7 +74,7 @@
             type="submit" id="signup" data-bs-toggle="modal" data-bs-target="#passwordFindModal">계속</button>
         </div>
       </div>
-      
+
     </div>
   </div>
 </template>
@@ -104,9 +104,11 @@ export default {
           this.result = { ...res.data };
           console.log(JSON.stringify(res.data));
           this.$router.push(`/reset-password?loginId=${this.passwordFindForm.loginId}`);
-        }).catch((res) => {
-          console.log("catch " + res.data);
-          alert('정보가 일치하지 않습니다');
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
         })
     },
     modalControl(boolean) {

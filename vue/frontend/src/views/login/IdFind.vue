@@ -100,8 +100,11 @@ export default {
           this.result = { ...res.data };
           console.log(JSON.stringify(res.data));
           this.isShow = true;
-        }).catch((res) => {
-          console.log("catch " + res.data);
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
         })
     },
     modalControl(boolean) {

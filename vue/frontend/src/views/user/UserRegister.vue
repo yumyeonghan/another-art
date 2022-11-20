@@ -5,7 +5,7 @@
                 <div class="col-md-10 position-static d-block p-3 text-black"
                     style="--bs-bg-opacity: .4; --bs-text-opacity: 0.6;">
                     <div class="p-4">
-                         <!-- style="--bs-text-opacity: 0.6;" -->
+                        <!-- style="--bs-text-opacity: 0.6;" -->
                         <h4 class="mb-3 text-center text-black fs-2 fw-bold">회원가입</h4>
                     </div>
                     <!-- @submit.prevent="submitForm" -->
@@ -146,7 +146,8 @@
                         </div>
 
                         <div class="row g-3">
-                            <button type="button" @click="submitForm($router)" class="btn btn-outline-dark btn-lg col-md-6 offset-md-3 p-3" id="signup"
+                            <button type="button" @click="submitForm($router)"
+                                class="btn btn-outline-dark btn-lg col-md-6 offset-md-3 p-3" id="signup"
                                 style="opacity: 0.7;">완료</button>
                         </div>
                     </div>
@@ -190,8 +191,11 @@ export default {
                     this.$store.commit("setSessionData", JSON.stringify(res.data));
                     console.log(this.$store.state.sessionData);
                     this.$router.push('/');
-                }).catch((res)=> {
-                    console.log('fail:' + res);
+                }).catch((err) => {
+                    let errMsg = JSON.stringify(err.response.data.message);
+                    errMsg = errMsg.substring(1, errMsg.length - 1);
+                    console.log("errMsg -> " + errMsg);
+                    alert(errMsg);
                 });
 
             // const data = this.formData;

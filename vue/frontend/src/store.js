@@ -6,7 +6,7 @@ const store = createStore({
       // 메인페이지 현재 페이지
       currentPage: 1,
       sort: 'date',
-      count: 0,
+      isArtRegistered: 0,
       // 회원가입
       registerData: {
         userId: '',
@@ -15,7 +15,12 @@ const store = createStore({
       // 로그인
       isLogined: false,
       loginUserId: 0,
-      loginData: JSON.parse(sessionStorage.getItem("loginData")),
+      loginData: {
+        userId: '0',
+        userName:"초기값",
+        userNickname:'초기값',
+        loginId:'user0',
+      },
       // 세션 정보
       sessionData: {
         // "id": 1,
@@ -143,6 +148,12 @@ const store = createStore({
     },
     setLoginUserId(state, payload) {
       state.loginUserId = payload;
+    },
+    setLoginData(state, payload) {
+      state.loginData = payload;
+    },
+    setIsArtRegistered(state, payload) {
+      state.isArtRegistered = payload;
     },
     setSort(state, payload) {
       state.sort = payload;

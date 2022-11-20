@@ -5,7 +5,7 @@
       <div class="album py-5">
         <div class="container">
           <div :class="rowStyle">
-            <div v-for="(art,i) in searchData.artList" :key="i">
+            <div v-for="(art, i) in searchData.artList" :key="i">
               <div class="col">
                 <div class="card border-black-50">
                   <div class="" style="background-color: white;">
@@ -25,8 +25,9 @@
                     <p><b>경매 종료 날짜</b><br><small>{{ art.auctionArt.auctionEndDate }}</small></p>
                   </div>
                   <div class="card-footer" style="background-color: white; height: 65px;">
-                    <span className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small label>#{{
-                    tag }}</span>
+                    <span className="product_tag" v-for="(tag, index) in art.artHashtagList" :key="index" small label>#{{
+                        tag
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -41,7 +42,7 @@
       <div class="album py-5">
         <div class="container">
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-            <div v-for="(art,i) in searchData.artList" :key="i">
+            <div v-for="(art, i) in searchData.artList" :key="i">
               <div class="col">
                 <div class="card border-black-50">
                   <div class="" style="background-color: white;">
@@ -56,12 +57,12 @@
                     </a>
                   </div>
                   <div class="card-body" style="background-color: white;">
-                    <p><b>현재 판매가</b><br><small>{{art.generalArt.artInitPrice}}원</small></p>
-                    <p><b>좋아요 횟수</b><br><small>{{art.artLikeCount}}회</small></p>
+                    <p><b>현재 판매가</b><br><small>{{ art.generalArt.artInitPrice }}원</small></p>
+                    <p><b>좋아요 횟수</b><br><small>{{ art.artLikeCount }}회</small></p>
                   </div>
                   <div class="card-footer" style="background-color: white; height: 65px;">
-                    <span className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small
-                      label>#{{tag}}</span>
+                    <span className="product_tag" v-for="(tag, index) in art.artHashtagList" :key="index" small
+                      label>#{{ tag }}</span>
                   </div>
                 </div>
               </div>
@@ -86,9 +87,9 @@ export default {
     this.searchData = { ...this.$store.state.searchData };
     this.searchType = this.$store.state.searchType;
     if (this.searchData.contentSize == 1) {
-      this.rowStyle='row g-3';
+      this.rowStyle = 'row g-3';
     } else {
-      this.rowStyle='row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3';
+      this.rowStyle = 'row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3';
     }
   },
   methods: {

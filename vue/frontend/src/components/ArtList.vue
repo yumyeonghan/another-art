@@ -22,8 +22,8 @@
       </div> -->
       <div class="" style="background-color: white;">
         <a @click="goPurchasePage(art)" href="#"><img
-            :src="require(`../../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" 
-            alt="" style="width: 100%; height: 200px; margin-bottom: 10px;"></a>
+            :src="require(`@/../../../src/main/resources/images/${art.auctionArt.artStorageName}`)" alt=""
+            style="width: 100%; height: 200px; margin-bottom: 10px;"></a>
       </div>
       <div class="card-header" style="background-color: white;">
         <a @click="goPurchasePage(art)" href="#" style="text-decoration: none; color: black;">
@@ -37,7 +37,8 @@
         <p><b>경매 종료 날짜</b><br><small>{{ art.auctionArt.auctionEndDate }}</small></p>
       </div>
       <div class="card-footer" style="background-color: white; height: 65px;">
-        <span className="product_tag" v-for="(tag,index) in art.artHashtagList" :key="index" small label>#{{ tag }}</span>
+        <span className="product_tag" v-for="(tag, index) in art.artHashtagList" :key="index" small label>#{{ tag
+        }}</span>
       </div>
     </div>
   </div>

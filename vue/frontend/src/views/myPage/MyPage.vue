@@ -127,25 +127,33 @@ export default {
   },
   beforeMount() {
     axios.get('/api/session-check')
-        .then((res) => {
-          let result = res.data;
-          console.log("session-check success: " + JSON.stringify(res.data));
-          this.$store.commit('setSessionData', res.data);
-          console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
+      .then((res) => {
+        let result = res.data;
+        console.log("session-check success: " + JSON.stringify(res.data));
+        this.$store.commit('setSessionData', res.data);
+        console.log('sessionData: ' + JSON.stringify(this.$store.state.sessionData));
 
-          this.userData.email = this.$store.state.sessionData.email;
-          this.userData.phoneNumber = this.$store.state.sessionData.phoneNumber;
-          this.userData.address = this.$store.state.sessionData.address;
+        this.userData.email = this.$store.state.sessionData.email;
+        this.userData.phoneNumber = this.$store.state.sessionData.phoneNumber;
+        this.userData.address = this.$store.state.sessionData.address;
 
-          axios.get('/api/user/' + result['id'])
-              .then((res) => {
-                console.log("--> " + JSON.stringify(res, null, 2));
-                this.userInfo = res.data;
-              })
-        })
-        .catch((res) => {
-          console.log('session-check fail:' + res);
-        });
+        axios.get('/api/user/' + result['id'])
+          .then((res) => {
+            console.log("--> " + JSON.stringify(res, null, 2));
+            this.userInfo = res.data;
+          }).catch((err) => {
+            let errMsg = JSON.stringify(err.response.data.message);
+            errMsg = errMsg.substring(1, errMsg.length - 1);
+            console.log("errMsg -> " + errMsg);
+            alert(errMsg);
+          })
+      })
+      .catch((err) => {
+        let errMsg = JSON.stringify(err.response.data.message);
+        errMsg = errMsg.substring(1, errMsg.length - 1);
+        console.log("errMsg -> " + errMsg);
+        alert(errMsg);
+      });
   },
 }
 </script>
@@ -223,7 +231,7 @@ div {
 }
 
 /* 텍스트 */
-.summaryContainer .item > div:nth-child(2) {
+.summaryContainer .item>div:nth-child(2) {
   font-size: 13px;
 }
 
@@ -321,7 +329,7 @@ div {
   color: #c2c2c2;
 }
 
-.listContainer .smallLight > span {
+.listContainer .smallLight>span {
   margin-left: 10px;
 }
 
@@ -351,7 +359,7 @@ div {
   color: black;
 }
 
-.infoContainer .item > div:first-child {
+.infoContainer .item>div:first-child {
   margin-bottom: 2px;
 }
 

@@ -4,7 +4,8 @@
     <div>
     </div>
     <div class="clearfix">
-      <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split float-end" style="margin: 3% 2% -2% 0;" data-bs-toggle="dropdown">정렬
+      <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split float-end"
+        style="margin: 3% 2% -2% 0;" data-bs-toggle="dropdown">정렬
         기준</button>
       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
         <li>
@@ -107,19 +108,25 @@ export default {
           console.log('Hello --> ' + JSON.stringify(this.contents, null, 2));
           console.log('Hello --> ' + JSON.stringify(this.pagination, null, 2));
         })
-        .catch(error => {
-          console.log(error);
+        .catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
         });
     },
-    fetchArtData(){
+    fetchArtData() {
       axios.post(`api/main/arts`, this.artRequest)
-          .then(res => {
-            this.contents = [...res.data.artList];
-            this.$router.push(`/?sort=${this.artRequest.sort}&page=${this.artRequest.page}`);
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        .then(res => {
+          this.contents = [...res.data.artList];
+          this.$router.push(`/?sort=${this.artRequest.sort}&page=${this.artRequest.page}`);
+        })
+        .catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
+        });
     },
     goToPage(page) {
       this.$store.commit('setCurrentPage', page);
@@ -146,49 +153,49 @@ export default {
       this.$router.push(`/?page=${this.artRequest.page}`);
       this.scrollToTop();
     },
-    clickRD(){
+    clickRD() {
       this.artRequest.sort = 'date';
-      this.$store.commit('setSort',this.artRequest.sort);
+      this.$store.commit('setSort', this.artRequest.sort);
       this.fetchArtData();
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
+      this.$router.push({ Path: '/', query: { sort: this.artRequest.sort, page: this.artRequest.page } });
       console.log(this.artRequest);
     },
 
-    clickrRD(){
+    clickrRD() {
       this.artRequest.sort = 'rdate';
-      this.$store.commit('setSort',this.artRequest.sort);
+      this.$store.commit('setSort', this.artRequest.sort);
       this.fetchArtData();
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
+      this.$router.push({ Path: '/', query: { sort: this.artRequest.sort, page: this.artRequest.page } });
       console.log(this.artRequest);
 
 
     },
-    clickBP(){
+    clickBP() {
       this.artRequest.sort = 'price';
-      this.$store.commit('setSort',this.artRequest.sort);
+      this.$store.commit('setSort', this.artRequest.sort);
       this.fetchArtData();
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
+      this.$router.push({ Path: '/', query: { sort: this.artRequest.sort, page: this.artRequest.page } });
       console.log(this.artRequest);
     },
-    clickrBP(){
+    clickrBP() {
       this.artRequest.sort = 'rprice';
-      this.$store.commit('setSort',this.artRequest.sort);
+      this.$store.commit('setSort', this.artRequest.sort);
       this.fetchArtData();
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
+      this.$router.push({ Path: '/', query: { sort: this.artRequest.sort, page: this.artRequest.page } });
       console.log(this.artRequest);
     },
-    clickBC(){
+    clickBC() {
       this.artRequest.sort = 'count';
-      this.$store.commit('setSort',this.artRequest.sort);
+      this.$store.commit('setSort', this.artRequest.sort);
       this.fetchArtData();
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
+      this.$router.push({ Path: '/', query: { sort: this.artRequest.sort, page: this.artRequest.page } });
       console.log(this.artRequest);
     },
-    clickrBC(){
+    clickrBC() {
       this.artRequest.sort = 'rcount';
-      this.$store.commit('setSort',this.artRequest.sort);
+      this.$store.commit('setSort', this.artRequest.sort);
       this.fetchArtData();
-      this.$router.push({Path:'/', query: {sort:this.artRequest.sort,page:this.artRequest.page}});
+      this.$router.push({ Path: '/', query: { sort: this.artRequest.sort, page: this.artRequest.page } });
       console.log(this.artRequest);
     }
   }

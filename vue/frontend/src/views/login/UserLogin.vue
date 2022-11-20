@@ -11,12 +11,12 @@
     <div class="row g-3">
       <div class="col-md-6 offset-md-3">
         <input type="text" v-model="loginData.loginId" class="form-control form-control-lg p-2" id="loginId"
-               name="loginId" placeholder="아이디" required>
+          name="loginId" placeholder="아이디" required>
       </div>
 
       <div class="col-md-6 offset-md-3">
         <input type="password" v-model="loginData.loginPassword" class="form-control form-control-lg p-2"
-               id="loginPassword" name="loginPassword" placeholder="비밀번호" required>
+          id="loginPassword" name="loginPassword" placeholder="비밀번호" required>
       </div>
 
       <div class="col-md-6 offset-md-3">
@@ -74,19 +74,23 @@ export default {
   methods: {
     login() {
       axios.post('/api/login', this.loginData)
-          .then((res) => {
-            this.loginedData = JSON.stringify(res.data);
-            sessionStorage.setItem("loginData", JSON.stringify(this.loginedData));
-            console.log("sessionStorage loginData: " + JSON.parse(sessionStorage.getItem("loginData")));
-            this.$store.commit("setIsLogined", true);
-            this.$store.commit("setLoginUserId", this.loginedData.userId);
-            this.$store.commit("setLoginUserId", JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId);
-            console.log("userId store -> " + this.$store.state.loginUserId);
-            this.$router.push('/');
-          })
-          .catch((res) => {
-            console.log("catch " + res.data);
-          })
+        .then((res) => {
+          this.loginedData = JSON.stringify(res.data);
+          sessionStorage.setItem("loginData", JSON.stringify(this.loginedData));
+          console.log("sessionStorage loginData: " + JSON.parse(sessionStorage.getItem("loginData")));
+          this.$store.commit("setLoginData", res.data);
+          this.$store.commit("setIsLogined", true);
+          this.$store.commit("setLoginUserId", this.loginedData.userId);
+          this.$store.commit("setLoginUserId", JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId);
+          console.log("userId store -> " + this.$store.state.loginUserId);
+          this.$router.push('/');
+        })
+        .catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          alert(errMsg);
+        })
     },
   },
 }

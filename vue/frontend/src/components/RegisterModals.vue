@@ -12,16 +12,17 @@
                     <div class="modal-body">
                         <div class="input-group rounded">
                             <input v-model="loginId.input" type="search" class="form-control rounded" placeholder="아이디"
-                                aria-label="Search" aria-describedby="search-addon" autofucus/>
+                                aria-label="Search" aria-describedby="search-addon" autofucus />
                             <span class="input-group-text border-0" id="search-addon">
                                 <button type="button" @click="userIdSearch" class="btn">검색</button>
                             </span>
                             <div>
-                                
+
                             </div>
                         </div>
                         <div class="text-center mt-4">
-                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" aria-label="Close" :disabled="buttonDisable == true">사용하기</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" aria-label="Close"
+                                :disabled="buttonDisable == true">사용하기</button>
                         </div>
                     </div>
                 </div>
@@ -38,18 +39,19 @@
                     </div>
                     <div class="modal-body">
                         <div class="input-group rounded">
-                            <input v-model="univSearchKeyword" type="search" class="form-control rounded" placeholder="학교명"
-                                aria-label="Search" aria-describedby="search-addon" autofucus/>
+                            <input v-model="univSearchKeyword" type="search" class="form-control rounded"
+                                placeholder="학교명" aria-label="Search" aria-describedby="search-addon" autofucus />
                             <span class="input-group-text border-0" id="search-addon">
                                 <button type="button" @click="univSearch(univSearchKeyword)" class="btn">검색</button>
                             </span>
                         </div>
                         <div v-for="(univ, i) in univInfoList[0]" :key="i" class="mt-3">
                             <div>
-                                <button type="button" @click="setUnivName(univ.schoolName, univ.campusName)" 
-                                class="btn btn-outline-dark pt-3" style="width: 466px;"  data-bs-dismiss="modal" aria-label="Close">
-                                <h4>{{ univ.schoolName }} ({{ univ.campusName }})</h4>
-                                <p>{{ univ.adres }}</p>
+                                <button type="button" @click="setUnivName(univ.schoolName, univ.campusName)"
+                                    class="btn btn-outline-dark pt-3" style="width: 466px;" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                    <h4>{{ univ.schoolName }} ({{ univ.campusName }})</h4>
+                                    <p>{{ univ.adres }}</p>
                                 </button>
                             </div>
                         </div>
@@ -138,9 +140,11 @@ export default {
                     console.log('success ' + JSON.stringify(res));
                     alert('사용할 수 있는 이메일입니다');
                     this.buttonDisable = false;
-                }).catch((res) => {
-                    console.log(JSON.stringify(res));
-                    alert('이미 존재하는 아이디입니다');
+                }).catch((err) => {
+                    let errMsg = JSON.stringify(err.response.data.message);
+                    errMsg = errMsg.substring(1, errMsg.length - 1);
+                    console.log("errMsg -> " + errMsg);
+                    alert(errMsg);
                 })
         },
 

@@ -19,8 +19,8 @@
                             </span>
                         </div>
                         <div class="text-center mt-4">
-                            <button type="button" class="btn btn-outline-primary"
-                                data-bs-dismiss="modal" aria-label="Close">사용하기</button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
+                                aria-label="Close">사용하기</button>
                         </div>
                     </div>
                 </div>
@@ -65,8 +65,8 @@
                                     <label for="tag" class="form-label">해시태그</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" :value="hashtagList"
-                                        class="form-control form-control-lg p-3" id="tag" name="tag" disabled required>
+                                    <input type="text" :value="hashtagList" class="form-control form-control-lg p-3"
+                                        id="tag" name="tag" disabled required>
                                 </div>
                                 <div class="col-md-4">
                                     <button class="form-control btn btn-outline-secondary p-3" data-bs-toggle="modal"
@@ -120,7 +120,7 @@
                                 </button>
                             </label>
                             <input type="file" @change="upload" accept="image/*" enctype="multipart/form-data"
-                            id="imageFile" name="file" class="inputfile" style="display: none;" />
+                                id="imageFile" name="file" class="inputfile" style="display: none;" />
                             <div class="card-body pt-4">
                                 <!-- <h2 class="card-title"></h2> -->
                                 <p class="card-text">이미지 파일을 추가하면 오른쪽 공간에 이미지가 표시됩니다.</p>
@@ -209,8 +209,11 @@ export default {
                 console.log("then res: " + JSON.stringify(res.data));
                 alert('등록 완료');
                 this.$router.push('/');
-            }).catch((res) => {
-                console.log("catch res: " + JSON.stringify(res.data));
+            }).catch((err) => {
+                let errMsg = JSON.stringify(err.response.data.message);
+                errMsg = errMsg.substring(1, errMsg.length - 1);
+                console.log("errMsg -> " + errMsg);
+                alert(errMsg);
             })
         },
     },

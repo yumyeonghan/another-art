@@ -9,7 +9,7 @@
                         <!-- src="https://via.placeholder.com/470x305" -->
                     </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-12 offset-md-1 mt-2">
                         <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
                                 style="width: 23.3%; height: 100px;"></a>
@@ -20,7 +20,7 @@
                         <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"
                                 style="width: 23.3%; height: 100px;"></a>
                     </div>
-                </div>
+                </div> -->
 
             </div>
 
@@ -82,6 +82,7 @@
                 </div>
             </div>
         </div>
+        <br><br><br>
     </div>
 </template>
 
@@ -115,11 +116,13 @@ export default {
             },
             purchaseData: {
                 artId: this.$store.state.selectedArt.generalArt.artId,
-                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+                // userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+                userId: parseInt(this.$store.state.loginData.userId),
             },
             likeData: {
                 artId: this.$store.state.selectedArt.generalArt.artId,
-                userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+                // userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+                userId: parseInt(this.$store.state.loginData.userId),
             },
             isLiked: false,
             likeButtonStyle: 'btn btn-lg btn-outline-danger',
@@ -132,10 +135,17 @@ export default {
             axios.post('/api/purchase/general', this.purchaseData).then((res) => {
                 console.log("req: " + JSON.stringify(this.purchaseData));
                 console.log("res: " + JSON.stringify(res.data));
-                    alert('구매완료');
-                    this.$router.push('/');
-            }).catch((res) => {
-                console.log("catch: " + JSON.stringify(res.data));
+                alert('구매완료');
+                this.$router.push('/');
+            }).catch((err) => {
+                let errMsg = JSON.stringify(err.response.data.message);
+                errMsg = errMsg.substring(1, errMsg.length - 1);
+                console.log("errMsg -> " + errMsg);
+                if (this.purchaseData.userId == 0) {
+                    alert('로그인하지 않은 사용자입니다');
+                } else {
+                    alert(errMsg);
+                }
             })
         },
         likeArtControl() {
@@ -146,8 +156,15 @@ export default {
                     console.log("res: " + JSON.stringify(res.data));
                     this.isLiked = true;
                     this.likeButtonStyle = 'btn btn-lg btn-danger';
-                }).catch((res) => {
-                    console.log("catch: " + JSON.stringify(res.data));
+                }).catch((err) => {
+                    let errMsg = JSON.stringify(err.response.data.message);
+                    errMsg = errMsg.substring(1, errMsg.length - 1);
+                    console.log("errMsg -> " + errMsg);
+                    if (this.likeData.userId == 0) {
+                        alert('로그인하지 않은 사용자입니다');
+                    } else {
+                        alert(errMsg);
+                    }
                 })
                 // 작품 좋아요 취소
             } else if (this.isLiked) {
@@ -156,8 +173,15 @@ export default {
                     console.log("res: " + JSON.stringify(res.data));
                     this.isLiked = false;
                     this.likeButtonStyle = 'btn btn-lg btn-outline-danger';
-                }).catch((res) => {
-                    console.log("catch: " + JSON.stringify(res.data));
+                }).catch((err) => {
+                    let errMsg = JSON.stringify(err.response.data.message);
+                    errMsg = errMsg.substring(1, errMsg.length - 1);
+                    console.log("errMsg -> " + errMsg);
+                    if (this.likeData.userId == 0) {
+                        alert('로그인하지 않은 사용자입니다');
+                    } else {
+                        alert(errMsg);
+                    }
                 });
             }
         },

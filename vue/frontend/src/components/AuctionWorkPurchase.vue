@@ -6,7 +6,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">경매 응찰</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">경매 입찰</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -16,7 +16,7 @@
             </div>
             <div class="text-center mt-4">
               <button type="button" @click="bidArt" class="btn btn-outline-primary" data-bs-dismiss="modal"
-                aria-label="Close">응찰하기</button>
+                aria-label="Close">입찰하기</button>
             </div>
           </div>
         </div>
@@ -32,18 +32,18 @@
             <!-- src="https://via.placeholder.com/470x305" -->
           </div>
         </div>
-<!--        <div class="row">-->
-<!--          <div class="col-md-12 offset-md-1 mt-2">-->
-<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
-<!--                style="width: 23.3%; height: 100px;"></a>-->
-<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
-<!--                style="width: 23.3%; height: 100px;"></a>-->
-<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
-<!--                style="width: 23.3%; height: 100px;"></a>-->
-<!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
-<!--                style="width: 23.3%; height: 100px;"></a>-->
-<!--          </div>-->
-<!--        </div>-->
+        <!--        <div class="row">-->
+        <!--          <div class="col-md-12 offset-md-1 mt-2">-->
+        <!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+        <!--                style="width: 23.3%; height: 100px;"></a>-->
+        <!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+        <!--                style="width: 23.3%; height: 100px;"></a>-->
+        <!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+        <!--                style="width: 23.3%; height: 100px;"></a>-->
+        <!--            <a href="#"><img src="../assets/6e0dc3f002.png" class="mx-1 border border-1"-->
+        <!--                style="width: 23.3%; height: 100px;"></a>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
       </div>
 
@@ -69,21 +69,21 @@
               <p>입찰 횟수 | {{ art.auctionArtBidCount }}회</p>
               <p>경매 시작 날짜 | {{ art.auctionArt.auctionStartDate }}</p>
               <p>경매 종료 날짜 | {{ art.auctionArt.auctionEndDate }}</p>
-<!--              <ul class="list-group list-group-horizontal">-->
-<!--                <li class="list-group-item" style="border: none;">-->
-<!--                  <font-awesome-icon icon="fa-solid fa-gavel" class="mx-1" />-->
-<!--                  <a> {{ art.auctionArtBidCount }}</a>-->
-<!--                </li>-->
-<!--                <li class="list-group-item" style="border: none;">-->
-<!--                  <font-awesome-icon icon="fa-solid fa-eye" class="mx-1" />-->
-<!--                  <a> 46 </a>-->
-<!--                </li>-->
-<!--                <li class="list-group-item" style="border: none;">-->
-<!--                  <font-awesome-icon icon="fa-solid fa-clock" class="mx-1" />-->
-<!--                  <a> {{art.auctionArt.auctionStartDate.split("T")[0]}} ~-->
-<!--                    {{art.auctionArt.auctionEndDate.split("T")[0]}}</a>-->
-<!--                </li>-->
-<!--              </ul>-->
+              <!--              <ul class="list-group list-group-horizontal">-->
+              <!--                <li class="list-group-item" style="border: none;">-->
+              <!--                  <font-awesome-icon icon="fa-solid fa-gavel" class="mx-1" />-->
+              <!--                  <a> {{ art.auctionArtBidCount }}</a>-->
+              <!--                </li>-->
+              <!--                <li class="list-group-item" style="border: none;">-->
+              <!--                  <font-awesome-icon icon="fa-solid fa-eye" class="mx-1" />-->
+              <!--                  <a> 46 </a>-->
+              <!--                </li>-->
+              <!--                <li class="list-group-item" style="border: none;">-->
+              <!--                  <font-awesome-icon icon="fa-solid fa-clock" class="mx-1" />-->
+              <!--                  <a> {{art.auctionArt.auctionStartDate.split("T")[0]}} ~-->
+              <!--                    {{art.auctionArt.auctionEndDate.split("T")[0]}}</a>-->
+              <!--                </li>-->
+              <!--              </ul>-->
             </div>
 
             <hr>
@@ -103,9 +103,9 @@
               </div>
               <div v-if="isForSale === true" class="col-md-2">
                 <a href="#" class="btn btn-lg btn-outline-success" data-bs-toggle="modal" data-bs-target="#auctionModal"
-                  style="border-radius: 6px; width: 120px;">응찰하기</a>
+                  style="border-radius: 6px; width: 120px;">입찰하기</a>
               </div>
-              <div v-if="isForSale === false && isHighestBidUser === true" class="col-md-2">
+              <div v-if="isForSale === false && isHighestBidUser === true" class="col-md-2 offset-md-2">
                 <a href="#" class="btn btn-lg btn-outline-primary" @click="purchaseArt"
                   style="border-radius: 6px; width: 120px;">구매하기</a>
               </div>
@@ -114,7 +114,8 @@
         </div>
       </div>
     </div>
-  </div><br><br><br>
+    <br><br><br>
+  </div>
 </template>
 
 <script>
@@ -158,15 +159,18 @@ export default {
       bidData: {
         auctionId: this.$store.state.selectedArt.auctionArt.auctionId,
         bidPrice: 0,
-        userId: JSON.parse(JSON.parse(sessionStorage.getItem('loginData'))).userId,
+        // userId: JSON.parse(sessionStorage.getItem('loginData')).userId,
+        userId: parseInt(this.$store.state.loginData.userId),
       },
       purchaseData: {
         auctionId: this.$store.state.selectedArt.auctionArt.auctionId,
-        userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+        // userId: JSON.parse(sessionStorage.getItem('loginData')).userId,
+        userId: parseInt(this.$store.state.loginData.userId),
       },
       likeData: {
         artId: this.$store.state.selectedArt.auctionArt.artId,
-        userId: JSON.parse(JSON.parse(sessionStorage.getItem("loginData"))).userId,
+        // userId: JSON.parse(sessionStorage.getItem('loginData')).userId,
+        userId: parseInt(this.$store.state.loginData.userId),
       },
       isForSale: true,
       isHighestBidUser: false,
@@ -178,19 +182,17 @@ export default {
     bidArt() {
       axios.post(`/api/bid`, this.bidData).then((res) => {
         console.log('this.bidData -> ' + JSON.stringify(this.bidData));
-        console.log('bid success -> ' + JSON.stringify(res));  
-        alert('응찰완료');
+        console.log('bid success -> ' + JSON.stringify(res));
+        alert('입찰 완료');
         this.$router.push('/');
-      }).catch((res) => {
-        console.log('bid fail -> ' + JSON.stringify(res));
-        if(res.message == 'Request failed with status code 400'){
-          alert('현재 경매가보다 높은 금액을 제시해주세요.');
-        }
-        else if(res.message == 'Request failed with status code 401'){
-          alert('로그인 후 응찰을 시도해주세요.');
-        }
-        else{
-          alert('응찰에 실패했습니다.')
+      }).catch((err) => {
+        let errMsg = JSON.stringify(err.response.data.message);
+        errMsg = errMsg.substring(1, errMsg.length - 1);
+        console.log("errMsg -> " + errMsg);
+        if (this.bidData.userId == 0) {
+          alert('로그인하지 않은 사용자입니다');
+        } else {
+          alert(errMsg);
         }
       })
     },
@@ -198,10 +200,17 @@ export default {
       axios.post('/api/purchase/auction', this.purchaseData).then((res) => {
         console.log("req: " + JSON.stringify(this.purchaseData));
         console.log("res: " + JSON.stringify(res.data));
-          alert('구매완료');
-          this.$router.push('/');
-      }).catch((res) => {
-        console.log("catch: " + JSON.stringify(res.data));
+        alert('구매 완료');
+        this.$router.push('/');
+      }).catch((err) => {
+        let errMsg = JSON.stringify(err.response.data.message);
+        errMsg = errMsg.substring(1, errMsg.length - 1);
+        console.log("errMsg -> " + errMsg);
+        if (this.purchaseData.userId == 0) {
+          alert('로그인하지 않은 사용자입니다');
+        } else {
+          alert(errMsg);
+        }
       })
     },
     likeArtControl() {
@@ -212,23 +221,46 @@ export default {
           console.log("res: " + JSON.stringify(res.data));
           this.isLiked = true;
           this.likeButtonStyle = 'btn btn-lg btn-danger';
-        }).catch((res) => {
-          console.log("catch: " + JSON.stringify(res.data));
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          if (this.likeData.userId == 0) {
+            alert('로그인하지 않은 사용자입니다');
+          } else {
+            alert(errMsg);
+          }
         })
-      // 작품 좋아요 취소
+        // 작품 좋아요 취소
       } else if (this.isLiked) {
         axios.post('/api/art/cancel', this.likeData).then((res) => {
           console.log("req: " + JSON.stringify(this.likeData));
           console.log("res: " + JSON.stringify(res.data));
           this.isLiked = false;
           this.likeButtonStyle = 'btn btn-lg btn-outline-danger';
-        }).catch((res) => {
-          console.log("catch: " + JSON.stringify(res.data));
+        }).catch((err) => {
+          let errMsg = JSON.stringify(err.response.data.message);
+          errMsg = errMsg.substring(1, errMsg.length - 1);
+          console.log("errMsg -> " + errMsg);
+          if (this.likeData.userId == 0) {
+            alert('로그인하지 않은 사용자입니다');
+          } else {
+            alert(errMsg);
+          }
         });
       }
     },
   },
   beforeMount() {
+    // console.log("this.$store.state.loginData -> " + this.$store.state.loginData);
+    // console.log("sessionStorage.getItem('loginData') -> " + JSON.parse(sessionStorage.getItem('loginData')));
+    // console.log("isNaN(sessionStorage.getItem('loginData')) -> " + isNaN(JSON.parse(sessionStorage.getItem('loginData'))));
+    console.log("userId -> " + this.bidData.userId);
+    // if (isNaN(sessionStorage.getItem('loginData'))) {
+    //   this.bidData.userId = '초기값';
+    //   this.purchaseData.userId = '초기값';
+    //   this.likeData.userID = '초기값';
+    // }
     this.art = { ...this.$store.state.selectedArt };
     let today = new Date();
     let endDate = new Date(this.art.auctionArt.auctionEndDate);
