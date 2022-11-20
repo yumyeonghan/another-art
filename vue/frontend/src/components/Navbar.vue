@@ -237,6 +237,7 @@ export default {
         this.$router.push('/art/register');
       } else {
         alert('로그인하지 않은 사용자입니다');
+        this.$router.push('/login');
       }
     },
     activeAIModal() {

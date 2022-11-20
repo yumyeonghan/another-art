@@ -147,18 +147,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mt-3">
+
+                    <div v-if="previewImg == ''" class="col-md-6 mt-3">
                         <div class="row">
-                            <div class="col-md-5">
-                                <img src="https://via.placeholder.com/150" class="mb-4" style="height:125px;">
-                                <img src="https://via.placeholder.com/150" style="height:125px;">
-                            </div>
-                            <div class="col-md-5 offset-md-1">
-                                <img src="https://via.placeholder.com/150" class="mb-4" style="height:125px;">
-                                <img src="https://via.placeholder.com/150" style="height:125px;">
+                            <div class="mb-4 text-black-50 text-center" style="height: 100%; padding: 50% 0%">
+                                <h5>등록된 이미지가 없습니다.</h5>
                             </div>
                         </div>
                     </div>
+                    <div v-else class="col-md-6 mt-3">
+                        <div class="row">
+                            <img :src="previewImg" class="mb-4">
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -194,6 +196,7 @@ export default {
             hashtagList: [],
             hashtagIndex: 0,
             hashtagKeyword: '',
+            previewImg: '',
         }
     },
     props: {
@@ -222,6 +225,10 @@ export default {
         //         console.log(obj);
         //     }
         // },
+        upload() {
+            let file = document.getElementById("imageFile");
+            this.previewImg = URL.createObjectURL(file.files[0]);
+        },
         addHashtag(hashtag) {
             this.hashtagList.push(hashtag);
             this.hashtagKeyword = '';
