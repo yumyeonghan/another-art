@@ -23,9 +23,9 @@ public class ArtRegisterRequest {
     private Long initPrice;
     private MultipartFile file;
     private List<String> hashtagList;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime startDate;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime endDate;
 
     public ArtRegisterRequestDto toAuctioArtDto() {
