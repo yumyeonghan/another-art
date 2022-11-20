@@ -109,7 +109,7 @@
                             <label for="" class="form-label">경매 시작날짜 선택</label>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <input type="date" v-model="artData.startDate" class="form-control p-3" id="date"
+                                    <input type="datetime-local" v-model="artData.startDate" class="form-control p-3" id="date"
                                         name="startDate">
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
                             <label for="" class="form-label">경매 종료날짜 선택</label>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <input type="date" v-model="artData.endDate" class="form-control p-3" id="date"
+                                    <input type="datetime-local" v-model="artData.endDate" class="form-control p-3" id="date"
                                         name="endDate">
                                 </div>
                             </div>
@@ -244,13 +244,13 @@ export default {
 
 
             formData.append('file', file.files[0]);
-            formData.append('endDate', this.artData.endDate + " 00:00:00");
+            formData.append('endDate', this.artData.endDate);
             formData.append('saleType', this.artData.saleType);
             formData.append('name', this.artData.name);
             formData.append('initPrice', this.artData.initPrice);
             formData.append('description', this.artData.description);
             formData.append('userId', this.artData.userId);
-            formData.append('startDate', this.artData.startDate + " 00:00:00");
+            formData.append('startDate', this.artData.startDate);
             formData.append('hashtagList', this.hashtagList);
             console.log("formdata: " + JSON.stringify(formData));
 
