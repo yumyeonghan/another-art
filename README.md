@@ -15,12 +15,15 @@
 
 ## Authors
 - [@yumyeonghan (유명한, 팀장)](https://github.com/yumyeonghan)
-- 
+- [@holyPigeon (정재우, 팀원)](https://github.com/holyPigeon)
 
-## Tech Stack
+## Tech Stacks
 **Client(Web)**
 
 ![ㅇㅇ](https://img.shields.io/badge/Web-Vue-brightgreen)
+![ㅇㅇ](https://img.shields.io/badge/Web-Vuex-green)
+![ㅇㅇ](https://img.shields.io/badge/Web-jQuery-orange)
+![ㅇㅇ](https://img.shields.io/badge/Web-Axios-blue)
 ![ㅇㅇ](https://img.shields.io/badge/Web-Bootstrap-blueviolet)
 
 
@@ -32,13 +35,25 @@
 
 ## Features
 - 회원가입
+  - 사용자 회원가입 기능
+  - 아이디 중복체크
+  - 공공데이터포탈의 대학 정보조회 API를 활용한 학교명 검색
+  - 다음 우편번호 조회 API를 활용한 주소 검색
 - 로그인
+  - 사용자 로그인 기능
+  - 아이디 또는 비밀번호 분실 시 찾기 및 재설정
 - 마이페이지
-  - ㄴ
-  - ㄴ
+  - 사용자 정보의 조회 및 수정
+  - 잔여 포인트 조회 및 충전
 - 작품 crud
+  - 작품 등록
 - 경매
+  - 작품 응찰
+  - 작품 찜
+  - 최대 금액 응찰자 입찰
 - 검색
+  - 경매작품 검색 및 일반작품 검색
+  - 웹캠상의 이미지를 활용한 AI객체탐지 검색
 - (기능, 설명 자세하게 나열 해야함...)
 
 ## Demo
