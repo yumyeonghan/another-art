@@ -1,17 +1,17 @@
 # 상상기업: Another Art, 작품 경매 웹 애플리케이션
 
-2022 상상기업 프로젝트 [3.9 ~ 11.25]
+2022 상상기업 프로젝트 [3.9 ~ 11.24]
 
 ## Shedules
 - 기업 공모 및 구성원 모집 [3.9 - 3.29]
 - 조직 구성 완료 및 선정 [3.30 ~ 4.5]
-- 사업계획서 제출 [5.4 ~ 5.10]
-- 중간보고서(1차) 제출 [6.1 ~ 6.7]
-- 중간보고서(2차) 제출 [9.8 ~ 9.14]
-- 발표 포스터 제출 [10.13 ~ 10.19]
-- SW상상기업 전시발표회 [11.23]
-- 상상기업 결선 PT발표 [11.24]
-- 최종 사업보고서 제출 [11.25]
+- [사업계획서 제출](https://github.com/yumyeonghan/Another_Art/files/10328556/SW.pdf) [5.4 ~ 5.10]
+- [중간보고서(1차) 제출](https://github.com/yumyeonghan/Another_Art/files/10328572/18.SW.1.pdf) [6.1 ~ 6.7]
+- [중간보고서(2차) 제출](https://github.com/yumyeonghan/Another_Art/files/10328574/SW.2._Another.Art.pdf) [9.8 ~ 9.14]
+- [발표 포스터 제출](https://github.com/yumyeonghan/Another_Art/files/10328568/2022.SW._._Another.Art_.pdf) [10.13 ~ 10.19]
+- SW상상기업 전시발표회(예선 통과) [11.23]
+- [상상기업 결선 PT발표(우수상 수여)](https://github.com/yumyeonghan/Another_Art/files/10328567/SW.PT.pdf) [11.24]
+
 
 ## Authors
 - [@yumyeonghan (유명한, 팀장)](https://github.com/yumyeonghan)
@@ -45,8 +45,7 @@
 - 마이페이지
   - 사용자 정보의 조회 및 수정
   - 잔여 포인트 조회 및 충전
-- 작품 crud
-  - 작품 등록
+- 작품 등록
 - 경매
   - 작품 응찰
   - 작품 찜
@@ -54,6 +53,10 @@
 - 검색
   - 경매작품 검색 및 일반작품 검색
   - 웹캠상의 이미지를 활용한 AI객체탐지 검색
+- 조회
+  - 날짜 기준
+  - ...
+  
 - (기능, 설명 자세하게 나열 해야함...)
 
 ## Demo
