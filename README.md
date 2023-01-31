@@ -13,7 +13,7 @@
 - [중간보고서(2차) 제출](https://github.com/yumyeonghan/Another_Art/files/10328574/SW.2._Another.Art.pdf) [9.8 ~ 9.14]
 - [발표 포스터 제출](https://github.com/yumyeonghan/Another_Art/files/10328568/2022.SW._._Another.Art_.pdf) [10.13 ~ 10.19]
 - SW상상기업 전시발표회(예선 통과) [11.23]
-- [상상기업 결선 PT발표(우수상 수여)](https://github.com/yumyeonghan/Another_Art/files/10328567/SW.PT.pdf) [11.24]
+- [상상기업 결선 PT발표(우수상 수여)](https://github.com/yumyeonghan/Another_Art/files/10547190/default.pdf) [11.24]
 
 <br>
 <hr>
