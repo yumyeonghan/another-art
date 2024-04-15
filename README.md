@@ -77,7 +77,7 @@
     <td align="center">유명한 (팀장)</td>
     <td align="center"><a href="https://github.com/sjiwon/Advanced-Another-Art">서지원 (팀원)</a></td>
     <td align="center">남은찬 (팀원)</td>
-    <td align="center">이상현 (팀원)</td>
+    <td align="center"><a href="https://github.com/dev-ant">이상현 (팀원)</a></td>
   </tr>
 </table>
 
